@@ -3,8 +3,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/reviewpractice.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import 'drawer.dart';
-import 'floatingdialog.dart';
+import '../drawer.dart';
+import '../floatingdialog.dart';
 
 bool LoggedIn = false;
 GoogleSignInAccount? A;

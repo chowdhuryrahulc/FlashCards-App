@@ -1,4 +1,4 @@
-import 'package:flashcards/allset.dart';
+import 'package:flashcards/views/allset.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -29,7 +29,7 @@ class _googleState extends State<google> {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Firstpage()));
     }
-     }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class _googleState extends State<google> {
             logindata.setBool('loginx', false);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Firstpage()));
-            },
+          },
           child: Text("Sign In via Google")),
     ));
   }

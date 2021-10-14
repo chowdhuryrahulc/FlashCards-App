@@ -2,7 +2,7 @@
 // import 'package:flashcards/Database.dart';
 // import 'dart:ui';
 
-import 'package:flashcards/allset.dart';
+import 'package:flashcards/views/allset.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_core/firebase_core.dart';
