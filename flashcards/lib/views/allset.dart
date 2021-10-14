@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flashcards/database/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/reviewpractice.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,6 +10,7 @@ import '../floatingdialog.dart';
 bool LoggedIn = false;
 GoogleSignInAccount? A;
 GoogleSignIn sign = GoogleSignIn();
+title? titl;
 
 class Firstpage extends StatefulWidget {
   // static var dark;
@@ -28,7 +30,11 @@ class _FirstpageState extends State<Firstpage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.refresh)),
+          IconButton(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: Icon(Icons.refresh)),
           IconButton(
               onPressed: () async {
                 await launch("https://www.youtube.com/");
@@ -52,17 +58,11 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(),
-      body: ListView(children: [
-        SizedBox(
-          height: 150,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: reviewpractice(litems: litems),
-          ),
-        ),
-      ]),
+      drawer: drawer(context),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: reviewpractice(litems: litems),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
         icon: Icon(Icons.add),

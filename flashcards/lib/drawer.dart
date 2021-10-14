@@ -1,11 +1,10 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'class.dart';
 
-Drawer drawer() {
+Drawer drawer(context) {
   late GoogleSignInAccount A;
-  var dark = Charmender();
   return Drawer(
     child: ListView(
       children: [
@@ -18,9 +17,10 @@ Drawer drawer() {
         ),
         ListTile(
           trailing: Switch(
-              value: darkx,
+              value: context.watch<darktheme>()._dark,
               onChanged: (changed) {
-                darkx = changed;
+                context.read<darktheme>().change(changed);
+                // darkx = changed;
               }),
         ),
         InkWell(
@@ -46,7 +46,11 @@ Drawer drawer() {
           title: Text("Toggle Night Theme"),
         ),
         ListTile(
-          leading: Icon(Icons.settings),
+          leading: IconButton(
+              onPressed: () {
+                AppSettings.openSoundSettings();
+              },
+              icon: Icon(Icons.settings)),
           title: Text("Settings"),
         ),
         ListTile(
@@ -85,4 +89,13 @@ Drawer drawer() {
       ],
     ),
   );
+}
+
+class darktheme extends ChangeNotifier {
+  bool _dark = false;
+  bool get dark => _dark;
+  void change(value) {
+    _dark = value;
+    notifyListeners();
+  }
 }
