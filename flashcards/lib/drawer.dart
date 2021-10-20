@@ -2,6 +2,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/provider.dart';
 
 Drawer drawer(context) {
   late GoogleSignInAccount A;
@@ -17,9 +18,10 @@ Drawer drawer(context) {
         ),
         ListTile(
           trailing: Switch(
-              value: context.watch<darktheme>()._dark,
+              value: false,
+              //context.watch<darktheme>()._dark,
               onChanged: (changed) {
-                context.read<darktheme>().change(changed);
+                //context.read<darktheme>().change(changed);
                 // darkx = changed;
               }),
         ),
@@ -89,13 +91,4 @@ Drawer drawer(context) {
       ],
     ),
   );
-}
-
-class darktheme extends ChangeNotifier {
-  bool _dark = false;
-  bool get dark => _dark;
-  void change(value) {
-    _dark = value;
-    notifyListeners();
-  }
 }

@@ -18,18 +18,18 @@ class _googleState extends State<google> {
   @override
   void initState() {
     super.initState();
-    check_if_already_login();
+    // check_if_already_login();
   }
 
-  void check_if_already_login() async {
-    logindata = await SharedPreferences.getInstance();
-    newuser = (logindata.getBool('loginx') ?? true);
-    print(newuser);
-    if (newuser == false) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Firstpage()));
-    }
-  }
+  // void check_if_already_login() async {
+  //   logindata = await SharedPreferences.getInstance();
+  //   newuser = (logindata.getBool('loginx') ?? true);
+  //   print(newuser);
+  //   if (newuser == false) {
+  //     Navigator.push(
+  //         context, MaterialPageRoute(builder: (context) => Firstpage()));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +38,9 @@ class _googleState extends State<google> {
       child: ElevatedButton(
           onPressed: () async {
             await sign.signIn();
-            print('Successfull');
-            logindata.setBool('loginx', false);
+            // print('Successfull');
+            // logindata.setBool('loginx', false);
+            Helperfunctions.saveuserLoggedInSharedPreference(true);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => Firstpage()));
           },

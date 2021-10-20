@@ -29,8 +29,10 @@ class DBManager {
     final List<Map<String, dynamic>> maps = await _database!.query('title');
     return List.generate(
         maps.length,
-        (i) =>
-            title(name: maps[i]['name'], description: maps[i]['description']));
+        (i) => title(
+            id: maps[i]['id'],
+            name: maps[i]['name'],
+            description: maps[i]['description']));
   }
 
   Future<int> updateTitle(title title) async {
@@ -53,6 +55,6 @@ class title {
 
   title({this.id, required this.name, required this.description});
   Map<String, dynamic> toMap() {
-    return {'name': name, 'course': description};
+    return {'id': id, 'name': name, 'description': description};
   }
 }
