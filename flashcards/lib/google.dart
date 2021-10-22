@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-late GoogleSignInAccount A;
+GoogleSignInAccount? A;
 GoogleSignIn sign = GoogleSignIn();
 
 class google extends StatefulWidget {
@@ -18,18 +18,7 @@ class _googleState extends State<google> {
   @override
   void initState() {
     super.initState();
-    // check_if_already_login();
   }
-
-  // void check_if_already_login() async {
-  //   logindata = await SharedPreferences.getInstance();
-  //   newuser = (logindata.getBool('loginx') ?? true);
-  //   print(newuser);
-  //   if (newuser == false) {
-  //     Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => Firstpage()));
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +26,12 @@ class _googleState extends State<google> {
         body: Center(
       child: ElevatedButton(
           onPressed: () async {
+            // print(A!.displayName ?? '');
+
             await sign.signIn();
-            // print('Successfull');
-            // logindata.setBool('loginx', false);
             Helperfunctions.saveuserLoggedInSharedPreference(true);
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => Firstpage()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Firstpage(A: A)));
           },
           child: Text("Sign In via Google")),
     ));

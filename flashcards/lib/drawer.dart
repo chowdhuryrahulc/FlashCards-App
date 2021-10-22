@@ -3,15 +3,17 @@ import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
-Drawer drawer(context) {
-  late GoogleSignInAccount A;
+Drawer drawer(context, b, {GoogleSignInAccount? AM}) {
+  // late ;
   return Drawer(
     child: ListView(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text(""
-              // A!.displayName ?? ''
+          accountName: Text(''
+              // AM!.displayName ?? ''
               ), //showing null value
           accountEmail: Text(""),
           currentAccountPicture: CircleAvatar(),
@@ -21,6 +23,7 @@ Drawer drawer(context) {
               value: false,
               //context.watch<darktheme>()._dark,
               onChanged: (changed) {
+                // print(AM!.displayName ?? '');
                 //context.read<darktheme>().change(changed);
                 // darkx = changed;
               }),
@@ -47,26 +50,57 @@ Drawer drawer(context) {
           leading: Icon(Icons.highlight),
           title: Text("Toggle Night Theme"),
         ),
-        ListTile(
-          leading: IconButton(
-              onPressed: () {
-                AppSettings.openSoundSettings();
-              },
-              icon: Icon(Icons.settings)),
-          title: Text("Settings"),
+        InkWell(
+          onTap: () {
+            AppSettings.openSoundSettings();
+          },
+          child: ListTile(
+            leading: Icon(Icons.settings),
+            title: Text("Settings"),
+          ),
         ),
         ListTile(
           leading: Icon(Icons.backup),
           title: Text("Backup"),
         ),
-        ListTile(
-          leading: Icon(Icons.mail),
-          title: Text("Contact Us"),
+        InkWell(
+          onTap: () {
+            launch('mailto:prabir0712@gmail.com');
+          },
+          child: ListTile(
+            leading: Icon(Icons.mail),
+            title: Text("Contact Us"),
+          ),
         ),
         Divider(),
-        ListTile(
-          leading: Icon(Icons.school),
-          title: Text("For teachers"),
+        InkWell(
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: Text('For teachers'),
+                    content: Text(
+                        'If you are working in education please contact me by email.'),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text('CLOSE')),
+                      TextButton(
+                          onPressed: () {
+                            launch('mailto:prabir0712@gmail.com?');
+                          },
+                          child: Text('CONTACT US')),
+                    ],
+                  );
+                });
+          },
+          child: ListTile(
+            leading: Icon(Icons.school),
+            title: Text("For teachers"),
+          ),
         ),
         ListTile(
           leading: Icon(Icons.computer),
@@ -76,9 +110,15 @@ Drawer drawer(context) {
           leading: Icon(Icons.help),
           title: Text("Help"),
         ),
-        ListTile(
-          leading: Icon(Icons.share),
-          title: Text("Share App"),
+        InkWell(
+          onTap: () {
+            Share.share(
+                'Cheak out this free flashcards app! https://schools.app');
+          },
+          child: ListTile(
+            leading: Icon(Icons.share),
+            title: Text("Share App"),
+          ),
         ),
         ListTile(
           leading: Icon(Icons.language),

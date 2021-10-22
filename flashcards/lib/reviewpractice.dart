@@ -1,4 +1,5 @@
-import 'package:flashcards/database/database_helper.dart';
+import 'dart:ui';
+
 import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/allset.dart';
 import 'package:flashcards/writeexample.dart';
@@ -65,9 +66,17 @@ class _reviewpracticeState extends State<reviewpractice> {
                                   PopupMenuItem(
                                     child: InkWell(
                                       onTap: () {
+                                        bool? edi = true;
                                         floatingdialog(context,
-                                            title: ttl.name,
-                                            description: ttl.description);
+                                                title: ttl.name,
+                                                description: ttl.description,
+                                                edit: edi,
+                                                ttl: ttl)
+                                            .then((value) {
+                                          setState(() {
+                                            Navigator.pop(context);
+                                          });
+                                        });
                                         // Navigator.pop(context);
                                       },
                                       child: Row(
@@ -202,25 +211,75 @@ class _reviewpracticeState extends State<reviewpractice> {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) =>
-                                            SimpleDialog(
-                                              children: [
-                                                FloatingActionButton(
-                                                    onPressed: () {},
-                                                    child: Text(
-                                                        "GENERATE SHARE LINK")),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                        "Pro: 7 day link expiration"),
-                                                    Switch(
-                                                        value: true,
-                                                        onChanged:
-                                                            (changed) {}),
-                                                  ],
+                                            Dialog(
+                                              insetPadding:
+                                                  EdgeInsets.symmetric(
+                                                      vertical:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              1.7,
+                                                      horizontal: 20),
+                                              child: Scaffold(
+                                                appBar: AppBar(
+                                                  leading: IconButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      icon: Icon(Icons.close)),
+                                                  title: Text('Share - Beta'),
                                                 ),
-                                                Text(
-                                                    "*The expiration of the link is 3 days")
-                                              ],
+                                                body: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      15.0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      FloatingActionButton
+                                                          .extended(
+                                                              onPressed: () {},
+                                                              label: SizedBox(
+                                                                width: MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width /
+                                                                    2,
+                                                                child: Text(
+                                                                  "GENERATE SHARE LINK",
+                                                                  // style: TextStyle(
+                                                                  //     fontSize:
+                                                                  //         14
+                                                                  // ),
+                                                                ),
+                                                              )),
+                                                      SizedBox(
+                                                        height: 30,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                            "Pro: 7 day link expiration",
+                                                          ),
+                                                          Switch(
+                                                              value: false,
+                                                              onChanged:
+                                                                  (changed) {}),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Opacity(
+                                                            opacity: 0.5,
+                                                            child: Text(
+                                                                "* The expiration of the link is 3 days"),
+                                                          ),
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                             ));
                                   },
                                   icon: Icon(Icons.share)))

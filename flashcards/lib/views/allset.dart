@@ -13,7 +13,7 @@ GoogleSignIn sign = GoogleSignIn();
 title? titl;
 
 class Firstpage extends StatefulWidget {
-  const Firstpage({Key? key}) : super(key: key);
+  const Firstpage({Key? key, A}) : super(key: key);
 
   @override
   _FirstpageState createState() => _FirstpageState();
@@ -56,7 +56,7 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(context),
+      drawer: drawer(context, A),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: reviewpractice(),
@@ -119,10 +119,10 @@ class _FirstpageState extends State<Firstpage> {
 }
 
 @override
-floatingdialog(BuildContext context, {String? title, String? description}) {
+floatingdialog(BuildContext context,
+    {String? title, String? description, bool? edit, title? ttl}) {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  // print(title);
   if (title != null) {
     titleController.text = title;
     // descriptionController.text= description;
@@ -156,89 +156,178 @@ floatingdialog(BuildContext context, {String? title, String? description}) {
         return StatefulBuilder(builder: (context, setState) {
           return Form(
             key: _formKey,
-            child: SimpleDialog(
-              //?title,content
-              contentPadding: EdgeInsets.all(10),
-              children: [
-                TextFormField(
-                  validator: (val) =>
-                      val!.isNotEmpty ? null : 'Name Should Not Be Empty',
-                  controller: titleController,
-                  decoration: InputDecoration(
-                      labelText: "Name",
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10.0)))),
-                ),
-                TextField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                      labelText: "Description-optional",
-                      border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(10.0)))),
-                ),
-                Row(
-                  children: [
-                    Text("Category"),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.access_alarm),
-                    )
-                  ],
-                ),
-                Text("Term language"),
-                DropdownButton<String>(
-                  //!drop down
-                  value: Z,
-                  hint: Text('English'),
-                  onChanged: (String? N) {
-                    if (N != null) {
-                      Z = N;
-                    }
-                  },
-                  items: J,
-                ),
-                Text("Definition language"),
-                DropdownButton<String>(
-                  value: M,
-                  hint: Text('English'),
-                  onChanged: (String? N1) {
-                    if (N1 != null) {
-                      M = N1;
-                    }
-                  },
-                  items: J,
-                ),
-                Text(
-                    "In case of missing languages, or if audio does not work you need to install the language."),
-                TextButton(onPressed: () {}, child: Text("INSTALL LANGUAGES")),
-                FloatingActionButton.extended(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _submitTitle(context, titleController.text,
-                            descriptionController.text);
-                        setState(() {
-                          Navigator.pop(context);
-                        });
-                      }
-                    },
-                    label: Text("ADD CARDS")),
-              ],
-            ),
+            child: Dialog(
+                insetPadding: EdgeInsets.all(20),
+                //?title,content
+                // contentPadding: EdgeInsets.all(10),
+                child: Scaffold(
+                    appBar: AppBar(
+                      leading: IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.close)),
+                      actions: [
+                        IconButton(
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                _submitTitle(context, titleController.text,
+                                    descriptionController.text,
+                                    editx: edit, ttl: ttl);
+                                setState(() {
+                                  Navigator.pop(context);
+                                });
+                              }
+                            },
+                            icon: Icon(Icons.check))
+                      ],
+                    ),
+                    body: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              validator: (val) => val!.isNotEmpty
+                                  ? null
+                                  : 'Name Should Not Be Empty',
+                              controller: titleController,
+                              decoration: InputDecoration(
+                                  labelText: "Name",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)))),
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            TextField(
+                              controller: descriptionController,
+                              decoration: InputDecoration(
+                                  labelText: "Description-optional",
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0)))),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text("Category"),
+                                IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.access_alarm),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Term language",
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                DropdownButton<String>(
+                                  //!drop down
+                                  value: Z,
+                                  hint: Text('English'),
+                                  onChanged: (String? N) {
+                                    if (N != null) {
+                                      Z = N;
+                                    }
+                                  },
+                                  items: J,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                Text("Definition language"),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              children: [
+                                DropdownButton<String>(
+                                  value: M,
+                                  hint: Text('English'),
+                                  onChanged: (String? N1) {
+                                    if (N1 != null) {
+                                      M = N1;
+                                    }
+                                  },
+                                  items: J,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Center(
+                              child: Text(
+                                  "In case of missing languages, or if audio does not work you need to install the language."),
+                            ),
+                            TextButton(
+                                onPressed: () {},
+                                child: Text("INSTALL LANGUAGES")),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width:
+                                  (MediaQuery.of(context).size.width / 2) + 10,
+                              child: FloatingActionButton.extended(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      _submitTitle(
+                                          context,
+                                          titleController.text,
+                                          descriptionController.text,
+                                          editx: edit,
+                                          ttl: ttl);
+                                      setState(() {
+                                        Navigator.pop(context);
+                                      });
+                                    }
+                                  },
+                                  label: Text("ADD CARDS")),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ))),
           );
         });
       });
 }
 
-_submitTitle(BuildContext context, ttleControl, descripControl) {
+_submitTitle(BuildContext context, ttleControl, descripControl,
+    {bool? editx, title? ttl}) {
   final DBManager dbManager = DBManager();
+  // title? TTitle;
 
-  if (titl == null) {
+  if (editx == null) {
     title ttl = title(name: ttleControl, description: descripControl);
     dbManager.insertTitle(ttl).then((value) => null);
   } else {
-    title ttl = title(name: ttleControl, description: descripControl);
-    dbManager.updateTitle(ttl);
+    print('FloaTing EditOr ${ttleControl}');
+    ttl!.name = ttleControl;
+    ttl.description = descripControl;
+    // title ttl = title(name: ttleControl, description: descripControl);
+    dbManager.updateTitle(ttl).then((value) => null);
   }
 }
