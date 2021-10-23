@@ -3,7 +3,7 @@ import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
 
 class Insidepage extends StatefulWidget {
   const Insidepage({Key? key}) : super(key: key);
@@ -15,11 +15,11 @@ class Insidepage extends StatefulWidget {
 class _InsidepageState extends State<Insidepage> {
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("users").snapshots();
-  final TTS = FlutterTts();
+  // final TTS = FlutterTts();
 
-  Future S(X) async {
-    await TTS.speak(X);
-  }
+  // Future S(X) async {
+  //   await TTS.speak(X);
+  // }
 
   int N = 0;
   // var X;
@@ -88,7 +88,7 @@ class _InsidepageState extends State<Insidepage> {
                                       bottom: 0,
                                       child: IconButton(
                                         onPressed: () {
-                                          S("${data.docs[N]['name']}");
+                                          // S("${data.docs[N]['name']}");
                                         },
                                         icon: Icon(Icons.play_circle_outline),
                                       ),
@@ -131,7 +131,7 @@ class _InsidepageState extends State<Insidepage> {
                                       bottom: 0,
                                       child: IconButton(
                                         onPressed: () {
-                                          S("${data.docs[N]['Notes']}");
+                                          // S("${data.docs[N]['Notes']}");
                                         },
                                         icon: Icon(Icons.play_circle_outline),
                                       ),

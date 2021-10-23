@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flashcards/database/database_helper.dart';
-import 'package:flashcards/views/allset.dart';
+import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/writeexample.dart';
 import 'package:flutter/material.dart';
 

@@ -1,5 +1,8 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:async';
 import 'package:flashcards/database/database_helper.dart';
+import 'package:flashcards/google.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/reviewpractice.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,12 +11,12 @@ import '../drawer.dart';
 // import '../floatingdialog.dart';
 
 bool LoggedIn = false;
-GoogleSignInAccount? A;
 GoogleSignIn sign = GoogleSignIn();
 title? titl;
 
 class Firstpage extends StatefulWidget {
-  const Firstpage({Key? key, A}) : super(key: key);
+  GoogleSignInAccount? googleAccount;
+  Firstpage({this.googleAccount, Key? key}) : super(key: key);
 
   @override
   _FirstpageState createState() => _FirstpageState();
@@ -56,7 +59,7 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(context, A),
+      drawer: drawer(context, widget.googleAccount),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: reviewpractice(),
@@ -94,7 +97,7 @@ class _FirstpageState extends State<Firstpage> {
                   sign.signIn().then((userdata) {
                     // setState(() {
                     LoggedIn = true;
-                    A = userdata;
+                    // A = userdata;
                     print(LoggedIn);
                     // });
                     Navigator.pop(context);
@@ -162,6 +165,7 @@ floatingdialog(BuildContext context,
                 // contentPadding: EdgeInsets.all(10),
                 child: Scaffold(
                     appBar: AppBar(
+                      elevation: 0.0,
                       leading: IconButton(
                           onPressed: () {
                             Navigator.pop(context);

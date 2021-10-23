@@ -1,4 +1,6 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,17 +8,19 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
-Drawer drawer(context, b, {GoogleSignInAccount? AM}) {
+Drawer drawer(context, AM) {
+  final user = FirebaseAuth.instance.currentUser!;
   // late ;
   return Drawer(
     child: ListView(
       children: [
         UserAccountsDrawerHeader(
-          accountName: Text(''
-              // AM!.displayName ?? ''
-              ), //showing null value
-          accountEmail: Text(""),
-          currentAccountPicture: CircleAvatar(),
+          accountName: Text(user.displayName!),
+          accountEmail: Text(user.email!),
+          currentAccountPicture: CircleAvatar(
+            backgroundImage: NetworkImage(user.photoURL!),
+            radius: 50,
+          ),
         ),
         ListTile(
           trailing: Switch(
@@ -124,9 +128,14 @@ Drawer drawer(context, b, {GoogleSignInAccount? AM}) {
           leading: Icon(Icons.language),
           title: Text("Install Languages"),
         ),
-        ListTile(
-          leading: Icon(Icons.account_circle),
-          title: Text("Sign Out"),
+        InkWell(
+          onTap: () {
+            Provider.of<GoogleSignInProvider>(context, listen: false).logout();
+          },
+          child: ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text("Sign Out"),
+          ),
         ),
       ],
     ),
