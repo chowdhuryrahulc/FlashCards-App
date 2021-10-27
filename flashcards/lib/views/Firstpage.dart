@@ -2,7 +2,7 @@
 
 import 'dart:async';
 import 'package:flashcards/database/database_helper.dart';
-import 'package:flashcards/google.dart';
+import 'package:flashcards/views/google.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/reviewpractice.dart';
 import 'package:google_sign_in/google_sign_in.dart';

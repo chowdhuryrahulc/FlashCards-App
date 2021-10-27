@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flashcards/google.dart';
+import 'package:flashcards/views/google.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
