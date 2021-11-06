@@ -6,14 +6,12 @@ import 'package:flashcards/writeexample.dart';
 import 'package:flutter/material.dart';
 
 import 'card.dart';
+import 'views/grid_view.dart';
 
 class reviewpractice extends StatefulWidget {
   const reviewpractice({
     Key? key,
-    // required this.litems,
   }) : super(key: key);
-
-  // final List<String> litems;
 
   @override
   State<reviewpractice> createState() => _reviewpracticeState();
@@ -22,7 +20,6 @@ class reviewpractice extends StatefulWidget {
 class _reviewpracticeState extends State<reviewpractice> {
   final DBManager dbManager = DBManager();
   List<title>? titleList;
-  // title? ttle;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +185,8 @@ class _reviewpracticeState extends State<reviewpractice> {
                                         Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) => write()));
+                                                builder: (context) =>
+                                                    gridView()));
                                       },
                                       child: Text("PRACTICE"),
                                       style: ButtonStyle(

@@ -30,30 +30,29 @@ class _InsidepageState extends State<Insidepage> {
         IconButton(onPressed: () {}, icon: Icon(Icons.flip_to_front)),
       ]),
       body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: users,
-                      builder: (
-                        BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot,
-                      ) {
-                        if (snapshot.hasError) {
-                          return Text("Something went wrong");
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Text("Loading");
-                        }
-                        final data = snapshot.requireData;
-                        {
-                          return FlipCard(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: users,
+                    builder: (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot,
+                    ) {
+                      if (snapshot.hasError) {
+                        return Text("Something went wrong");
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text("Loading");
+                      }
+                      final data = snapshot.requireData;
+                      {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: FlipCard(
                             front: GestureDetector(
                               onHorizontalDragStart:
                                   (DragStartDetails dragStartDetails) {
@@ -153,65 +152,65 @@ class _InsidepageState extends State<Insidepage> {
                                 ),
                               ),
                             ),
-                          );
-                        }
-                      }),
+                          ),
+                        );
+                      }
+                    }),
+              ),
+            ),
+            InkWell(
+              child: Container(
+                height: 56,
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    //problem:- cant streach button to specified size
+                    Container(
+                      height: 56,
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            N = N + 1;
+                          });
+                        },
+                        child: Text("Hard"),
+                        color: Colors.red,
+                      ),
+                    ),
+                    Container(
+                      height: 56,
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            N = N + 1;
+                          });
+                        },
+                        child: Text("Normal"),
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Container(
+                      height: 56,
+                      width: MediaQuery.of(context).size.width / 3,
+                      child: MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            N = N + 1;
+                          });
+                        },
+                        child: Text("Easy"),
+                        color: Colors.green,
+                      ),
+                    )
+                  ],
                 ),
               ),
-              InkWell(
-                child: Container(
-                  height: 56,
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      //problem:- cant streach button to specified size
-                      Container(
-                        height: 56,
-                        width: MediaQuery.of(context).size.width / 3,
-                        child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              N = N + 1;
-                            });
-                          },
-                          child: Text("Hard"),
-                          color: Colors.red,
-                        ),
-                      ),
-                      Container(
-                        height: 56,
-                        width: MediaQuery.of(context).size.width / 3,
-                        child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              N = N + 1;
-                            });
-                          },
-                          child: Text("Normal"),
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Container(
-                        height: 56,
-                        width: MediaQuery.of(context).size.width / 3,
-                        child: MaterialButton(
-                          onPressed: () {
-                            setState(() {
-                              N = N + 1;
-                            });
-                          },
-                          child: Text("Easy"),
-                          color: Colors.green,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ]),
-      )),
+            ),
+          ])),
     );
   }
 }

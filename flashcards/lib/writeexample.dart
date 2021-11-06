@@ -54,7 +54,9 @@ class _writeState extends State<write> {
                                 BorderRadius.all(Radius.circular(10.0)))),
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showBottomSheet(false);
+                      },
                       icon: Icon(Icons.access_time_filled_rounded),
                       iconSize: 15),
                   TextField(
@@ -68,7 +70,9 @@ class _writeState extends State<write> {
                                 BorderRadius.all(Radius.circular(10.0)))),
                   ),
                   IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        showBottomSheet(true);
+                      },
                       icon: Icon(Icons.access_time_filled_rounded),
                       iconSize: 15),
                   Text("Tag",
@@ -143,5 +147,33 @@ class _writeState extends State<write> {
         // FloatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
+  }
+
+  void showBottomSheet(visible) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(mainAxisSize: MainAxisSize.min, children: [
+            ListTile(
+                leading: Icon(Icons.share),
+                title: Text('Add drawing'),
+                onTap: () {}),
+            ListTile(
+                leading: Icon(Icons.photo),
+                title: Text('Select from gallery'),
+                onTap: () {}),
+            ListTile(
+                leading: Icon(Icons.camera_alt),
+                title: Text('Take photo'),
+                onTap: () {}),
+            Visibility(
+              visible: visible,
+              child: ListTile(
+                  leading: Icon(Icons.delete),
+                  title: Text('Clear image'),
+                  onTap: () {}),
+            ),
+          ]);
+        });
   }
 }
