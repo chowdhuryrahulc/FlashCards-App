@@ -1,5 +1,6 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
+import 'package:flashcards/views/grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_core/firebase_core.dart';
@@ -50,149 +51,164 @@ class _writeState extends State<write> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => Firstpage()));
-            },
-            icon: Icon(Icons.clear_sharp)),
-        actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.help_outline_rounded)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      TextFormField(
-                        validator: (val) =>
-                            val!.isNotEmpty ? null : 'Term Should Not Be Empty',
-                        controller: termController,
-                        // onChanged: (value) {
-                        // term = value;
-                        // },
-                        decoration: InputDecoration(
-                            hintText: "TERM",
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)))),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            showBottomSheet(false);
-                          },
-                          icon: Icon(Icons.access_time_filled_rounded),
-                          iconSize: 15),
-                      TextFormField(
-                        validator: (val) => val!.isNotEmpty
-                            ? null
-                            : 'Defination Should Not Be Empty',
-                        controller: definationController,
-                        // onChanged: (value) {
-                        // definition = value;
-                        // },
-                        decoration: InputDecoration(
-                            hintText: "DEFINITION",
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)))),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            showBottomSheet(true);
-                          },
-                          icon: Icon(Icons.access_time_filled_rounded),
-                          iconSize: 15),
-                      Text("Tag",
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      ListTile(
-                        title: Row(
-                          children: [
-                            Text("Advanced",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
-                            Switch(
-                                value: HIDDEN,
-                                onChanged: (changed) {
-                                  setState(() {
-                                    HIDDEN = changed;
-                                  });
-                                }),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: HIDDEN,
-                    child: Column(
+    return WillPopScope(
+      onWillPop: Navigator.push(
+          context, MaterialPageRoute(builder: (context) => gridView())),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Firstpage()));
+              },
+              icon: Icon(Icons.clear_sharp)),
+          actions: [
+            IconButton(
+                onPressed: () {}, icon: Icon(Icons.help_outline_rounded)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Column(
                       children: [
+                        TextFormField(
+                          validator: (val) => val!.isNotEmpty
+                              ? null
+                              : 'Term Should Not Be Empty',
+                          controller: termController,
+                          // onChanged: (value) {
+                          // term = value;
+                          // },
+                          decoration: InputDecoration(
+                              hintText: "TERM",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)))),
+                        ),
                         ListTile(
-                          title: TextFormField(
-                            controller: exampleController,
-                            onChanged: (value) {
-                              // example = value;
-                            },
-                            decoration: InputDecoration(
-                                hintText: "Examples",
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)))),
+                          leading: IconButton(
+                              onPressed: () {
+                                showBottomSheet(false);
+                              },
+                              icon: Icon(Icons.access_time_filled_rounded),
+                              iconSize: 15),
+                        ),
+                        TextFormField(
+                          validator: (val) => val!.isNotEmpty
+                              ? null
+                              : 'Defination Should Not Be Empty',
+                          controller: definationController,
+                          // onChanged: (value) {
+                          // definition = value;
+                          // },
+                          decoration: InputDecoration(
+                              hintText: "DEFINITION",
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)))),
+                        ),
+                        ListTile(
+                          leading: IconButton(
+                              onPressed: () {
+                                showBottomSheet(true);
+                              },
+                              icon: Icon(Icons.access_time_filled_rounded),
+                              iconSize: 15),
+                        ),
+                        Text("Tag",
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold)),
+                        ListTile(
+                          title: Row(
+                            children: [
+                              Text("Advanced",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold)),
+                              Switch(
+                                  value: HIDDEN,
+                                  onChanged: (changed) {
+                                    setState(() {
+                                      HIDDEN = changed;
+                                    });
+                                  }),
+                            ],
                           ),
                         ),
-                        ListTile(
-                            title: TextField(
-                              // onChanged: (value) {
-                              //   url = value;
-                              // },
+                      ],
+                    ),
+                    Visibility(
+                      visible: HIDDEN,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: TextFormField(
+                              controller: exampleController,
+                              onChanged: (value) {
+                                // example = value;
+                              },
                               decoration: InputDecoration(
-                                  hintText: "URL",
+                                  hintText: "Examples",
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)))),
                             ),
-                            trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.account_balance_rounded))),
-                      ],
+                          ),
+                          ListTile(
+                              title: TextField(
+                                // onChanged: (value) {
+                                //   url = value;
+                                // },
+                                decoration: InputDecoration(
+                                    hintText: "URL",
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)))),
+                              ),
+                              trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.account_balance_rounded))),
+                        ],
+                      ),
                     ),
-                  ),
-                  FloatingActionButton.extended(
-                    label: Text('ADD NEXT CARD'),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        _submitTitle(context, termController.text,
-                            definationController.text,
-                            exampleControl: exampleController.text,
-                            editxy: widget.editxyz,
-                            ttl: widget.ttl);
-                      }
+                    FloatingActionButton.extended(
+                      label: Text('ADD NEXT CARD'),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          _submitTitle(context, termController.text,
+                              definationController.text,
+                              exampleControl: exampleController.text,
+                              editxy: widget.editxyz,
+                              ttl: widget.ttl);
+                          setState(() {
+                            termController.text = '';
+                            definationController.text = '';
+                          });
+                        }
 
-                      // await users.add({
-                      //   'name': '$term',
-                      //   'age': '$definition',
-                      //   'Notes': '$example'
-                      // }).then((value) => print('user added'));
-                    },
-                  ),
-                ],
+                        // await users.add({
+                        //   'name': '$term',
+                        //   'age': '$definition',
+                        //   'Notes': '$example'
+                        // }).then((value) => print('user added'));
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        // HIDDEN=true? TextField();
+          // HIDDEN=true? TextField();
 
-        // FloatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          // FloatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        ),
       ),
     );
   }

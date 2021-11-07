@@ -15,6 +15,111 @@ class _gridViewState extends State<gridView> {
   final DBManager2 dbManager2 = DBManager2();
 
   List<nd_title>? titleList;
+  @override
+  CardGridX(BuildContext context, nd_title list) {
+    final DBManager2 dbManager2 = DBManager2();
+
+    // Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              list.term,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text(list.defination, style: TextStyle(fontSize: 15)),
+            SizedBox(height: 15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                InkWell(
+                    onTap: () {
+                      // dbManager2.updateFavoriteTitle(widget.list);
+                      // updateFavoriteTitle();
+                    },
+                    // child: if(widget.list.favorite==true){icon: Icon(Icons.favorite_border)} else{icon: Icon(Icons.favorite_border)}
+                    // child: widget.list.favorite!
+                    //     ? Icon(Icons.favorite_border)
+                    //     : Icon(Icons.favorite_border)
+                    // child: Icon(() {
+                    //   if (widget.list.favorite == 1) {
+                    //     Icons.favorite;
+                    //   } else {
+                    //     Icons.favorite_border;
+                    //   }
+                    // }()),
+                    child: Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                    )), //TODO update favouite
+                PopupMenuButton(itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem(
+                        child: InkWell(
+                      onTap: () {
+                        bool? edi = true;
+                        // print(list.term);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => write(
+                                      editxyz: edi,
+                                      termxyz: list.term,
+                                      definationxyz: list.defination,
+                                      ttl: list,
+                                    )));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [Icon(Icons.edit), Text(' Edit')],
+                      ),
+                    )),
+                    PopupMenuItem(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [Icon(Icons.show_chart), Text(' Progress')],
+                    )),
+                    PopupMenuItem(
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.add_circle_outline),
+                        Text(' Add to ignored')
+                      ],
+                    )),
+                    PopupMenuItem(
+                        child: InkWell(
+                      onTap: () {
+                        // delete
+                        // setState(() {
+                        dbManager2
+                            .deleteTitle(list.nd_id!)
+                            .then((value) => setState(() {
+                                  Navigator.pop(context);
+                                }));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          Text(' Remove')
+                        ],
+                      ),
+                    ))
+                  ];
+                }),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +147,7 @@ class _gridViewState extends State<gridView> {
                   itemCount: titleList!.length, //!
                   itemBuilder: (context, index) {
                     // print(titleList![index].nd_id);
-                    return CardGrid(list: titleList![index]);
+                    return CardGridX(context, titleList![index]);
                   },
                   staggeredTileBuilder: (index) => StaggeredTile.fit(1),
                   mainAxisSpacing: 2.0,
@@ -66,114 +171,18 @@ class _gridViewState extends State<gridView> {
   }
 }
 
-class CardGrid extends StatefulWidget {
-  CardGrid({Key? key, required this.list}) : super(key: key);
-  nd_title list;
+@override
 
-  @override
-  State<CardGrid> createState() => _CardGridState();
-}
+// class CardGrid extends StatefulWidget {
+//   CardGrid({Key? key, required this.list}) : super(key: key);
 
-class _CardGridState extends State<CardGrid> {
-  final DBManager2 dbManager2 = DBManager2();
+//   @override
+//   State<CardGrid> createState() => _CardGridState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.list.term,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(widget.list.defination, style: TextStyle(fontSize: 15)),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                    onTap: () {
-                      dbManager2.updateFavoriteTitle(widget.list);
-                      // updateFavoriteTitle();
-                    },
-                    // child: if(widget.list.favorite==true){icon: Icon(Icons.favorite_border)} else{icon: Icon(Icons.favorite_border)}
-                    // child: widget.list.favorite!
-                    //     ? Icon(Icons.favorite_border)
-                    //     : Icon(Icons.favorite_border)
-                    child: Icon(Icons.favorite_border)), //TODO update favouite
-                PopupMenuButton(itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                        child: InkWell(
-                      onTap: () {
-                        bool? edi = true;
-                        // print(list.term);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => write(
-                                      editxyz: edi,
-                                      termxyz: widget.list.term,
-                                      definationxyz: widget.list.defination,
-                                      ttl: widget.list,
-                                    )));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [Icon(Icons.edit), Text(' Edit')],
-                      ),
-                    )),
-                    PopupMenuItem(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Icon(Icons.show_chart), Text(' Progress')],
-                    )),
-                    PopupMenuItem(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.add_circle_outline),
-                        Text(' Add to ignored')
-                      ],
-                    )),
-                    PopupMenuItem(
-                        child: InkWell(
-                      onTap: () {
-                        // delete
-                        // setState(() {
-                        dbManager2.deleteTitle(widget.list.nd_id!).then(
-                            (value) => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => gridView())));
-                        // titleList!.removeAt(index);
-                        // Navigator.pop(context);
-                        // setState(() {});
-                        // });
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.delete, color: Colors.red),
-                          Text(' Remove')
-                        ],
-                      ),
-                    ))
-                  ];
-                }),
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class _CardGridState extends State<CardGrid> {
+
+// }
 
 // class ListXYZ {
 //   String word;
@@ -188,3 +197,7 @@ class _CardGridState extends State<CardGrid> {
 //   ListXYZ(word: 'borgen', defination: 'borrow'),
 //   ListXYZ(word: 'inhaltlich', defination: 'content'),
 // ];
+
+updateFavoriteTitle(bool favoriteToggle) {
+  favoriteToggle = !favoriteToggle;
+}

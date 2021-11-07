@@ -14,10 +14,10 @@ class DBManager2 {
     if (_database2 == null) {
       //If Database doesnt exist, then only create the Database
       _database2 = await openDatabase(
-          join(await getDatabasesPath(), "Title2.db"),
+          join(await getDatabasesPath(), "Title3.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE nd_title (nd_id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT, defination TEXT, example TEXT, url TEXT, favorite BOOL, archive BOOL, current_set TEXT)");
+            "CREATE TABLE nd_title (nd_id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT, defination TEXT, example TEXT, url TEXT, favorite BOOLEAN, archive BOOL, current_set TEXT)");
       });
     }
   }
@@ -69,7 +69,7 @@ class nd_title {
   String defination;
   String? example;
   String? url;
-  bool? favorite;
+  int? favorite;
   String? current_set;
   bool? archive;
 
@@ -98,7 +98,7 @@ class nd_title {
   Map<String, dynamic> toFavoriteMap() {
     return {
       'nd_id': nd_id,
-      'favorite': true,
+      'favorite': 1,
     };
   }
 }
