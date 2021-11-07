@@ -230,7 +230,7 @@ _submitTitle(BuildContext context, termControl, definationControl,
     {exampleControl, bool? editxy, nd_title? ttl}) {
   final DBManager2 dbManager2 = DBManager2();
   // title? TTitle;
-  print(editxy);
+  // print(ttl!.nd_id);
   if (editxy == null) {
     nd_title ttl = nd_title(
         term: termControl,
@@ -238,7 +238,7 @@ _submitTitle(BuildContext context, termControl, definationControl,
         example: exampleControl);
     dbManager2.insertTitle(ttl).then((value) => null);
   } else {
-    print('FloaTing EditOr ${termControl}');
+    // print('FloaTing EditOr ${ttl!.nd_id}');
     ttl!.term = termControl;
     ttl.defination = definationControl;
     // title ttl = title(name: ttleControl, description: descripControl);

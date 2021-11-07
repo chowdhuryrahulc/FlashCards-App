@@ -46,14 +46,20 @@ class DBManager2 {
 
   Future<int> updateTitle(nd_title nd_title) async {
     await nd_openDb();
-    // print();
     return await _database2!.update('nd_title', nd_title.toMap(),
-        where: 'id=?', whereArgs: [nd_title.nd_id]);
+        where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
+  }
+
+  Future<int> updateFavoriteTitle(nd_title nd_title) async {
+    await nd_openDb();
+    print('favorite changed to True');
+    return await _database2!.update('nd_title', nd_title.toFavoriteMap(),
+        where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
   }
 
   Future<void> deleteTitle(int nd_id) async {
     await nd_openDb();
-    await _database2!.delete('nd_title', where: 'id=?', whereArgs: [nd_id]);
+    await _database2!.delete('nd_title', where: 'nd_id=?', whereArgs: [nd_id]);
   }
 }
 
@@ -86,6 +92,13 @@ class nd_title {
       'favorite': favorite,
       'current_set': current_set,
       'archive': archive
+    };
+  }
+
+  Map<String, dynamic> toFavoriteMap() {
+    return {
+      'nd_id': nd_id,
+      'favorite': true,
     };
   }
 }

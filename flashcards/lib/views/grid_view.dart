@@ -41,6 +41,7 @@ class _gridViewState extends State<gridView> {
                   crossAxisCount: 2,
                   itemCount: titleList!.length, //!
                   itemBuilder: (context, index) {
+                    // print(titleList![index].nd_id);
                     return CardGrid(list: titleList![index]);
                   },
                   staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -65,9 +66,16 @@ class _gridViewState extends State<gridView> {
   }
 }
 
-class CardGrid extends StatelessWidget {
+class CardGrid extends StatefulWidget {
   CardGrid({Key? key, required this.list}) : super(key: key);
   nd_title list;
+
+  @override
+  State<CardGrid> createState() => _CardGridState();
+}
+
+class _CardGridState extends State<CardGrid> {
+  final DBManager2 dbManager2 = DBManager2();
 
   @override
   Widget build(BuildContext context) {
@@ -79,22 +87,46 @@ class CardGrid extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              list.term,
+              widget.list.term,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text(list.defination, style: TextStyle(fontSize: 15)),
+            Text(widget.list.defination, style: TextStyle(fontSize: 15)),
             SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.favorite_border),
+                InkWell(
+                    onTap: () {
+                      dbManager2.updateFavoriteTitle(widget.list);
+                      // updateFavoriteTitle();
+                    },
+                    // child: if(widget.list.favorite==true){icon: Icon(Icons.favorite_border)} else{icon: Icon(Icons.favorite_border)}
+                    // child: widget.list.favorite!
+                    //     ? Icon(Icons.favorite_border)
+                    //     : Icon(Icons.favorite_border)
+                    child: Icon(Icons.favorite_border)), //TODO update favouite
                 PopupMenuButton(itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Icon(Icons.edit), Text(' Edit')],
+                        child: InkWell(
+                      onTap: () {
+                        bool? edi = true;
+                        // print(list.term);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => write(
+                                      editxyz: edi,
+                                      termxyz: widget.list.term,
+                                      definationxyz: widget.list.defination,
+                                      ttl: widget.list,
+                                    )));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [Icon(Icons.edit), Text(' Edit')],
+                      ),
                     )),
                     PopupMenuItem(
                         child: Row(
@@ -112,27 +144,16 @@ class CardGrid extends StatelessWidget {
                     PopupMenuItem(
                         child: InkWell(
                       onTap: () {
-                        bool? edi = true;
-                        // print(list.term);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => write(
-                                      editxyz: edi,
-                                      termxyz: list.term,
-                                      definationxyz: list.defination,
-                                      ttl: list,
-                                    )));
-
-                        // floatingdialog(context,
-                        //         title: ttl.name,
-                        //         description: ttl.description,
-                        //         edit: edi,
-                        //         ttl: ttl)
-                        //     .then((value) {
-                        //   setState(() {
-                        //     Navigator.pop(context);
-                        //   });
+                        // delete
+                        // setState(() {
+                        dbManager2.deleteTitle(widget.list.nd_id!).then(
+                            (value) => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => gridView())));
+                        // titleList!.removeAt(index);
+                        // Navigator.pop(context);
+                        // setState(() {});
                         // });
                       },
                       child: Row(
