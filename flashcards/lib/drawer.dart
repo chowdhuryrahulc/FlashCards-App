@@ -10,7 +10,6 @@ import 'package:share/share.dart';
 
 Drawer drawer(context, AM) {
   final user = FirebaseAuth.instance.currentUser!;
-  // late ;
   return Drawer(
     child: ListView(
       children: [

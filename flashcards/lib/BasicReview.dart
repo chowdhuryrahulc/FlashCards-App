@@ -5,14 +5,14 @@ import 'package:flutter/painting.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:flutter_tts/flutter_tts.dart';
 
-class Insidepage extends StatefulWidget {
-  const Insidepage({Key? key}) : super(key: key);
+class BasicReview extends StatefulWidget {
+  const BasicReview({Key? key}) : super(key: key);
 
   @override
-  _InsidepageState createState() => _InsidepageState();
+  _BasicReviewState createState() => _BasicReviewState();
 }
 
-class _InsidepageState extends State<Insidepage> {
+class _BasicReviewState extends State<BasicReview> {
   final Stream<QuerySnapshot> users =
       FirebaseFirestore.instance.collection("users").snapshots();
   // final TTS = FlutterTts();

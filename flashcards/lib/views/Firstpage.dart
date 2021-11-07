@@ -4,7 +4,7 @@ import 'dart:async';
 import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/google.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flashcards/list_view.dart';
+import 'package:flashcards/views/list_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import '../drawer.dart';
@@ -61,7 +61,7 @@ class _FirstpageState extends State<Firstpage> {
       drawer: drawer(context, widget.googleAccount),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: reviewpractice(),
+        child: list_view(),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),

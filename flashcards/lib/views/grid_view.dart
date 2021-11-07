@@ -1,13 +1,20 @@
-import 'package:flashcards/writeexample.dart';
+import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/database/database_helper.dart';
+import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-// class Grid_View extends StatelessWidget {
-//   const Grid_View({Key? key}) : super(key: key);
-
-// }
-class gridView extends StatelessWidget {
+class gridView extends StatefulWidget {
   const gridView({Key? key}) : super(key: key);
+
+  @override
+  State<gridView> createState() => _gridViewState();
+}
+
+class _gridViewState extends State<gridView> {
+  final DBManager2 dbManager2 = DBManager2();
+
+  List<nd_title>? titleList;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +32,25 @@ class gridView extends StatelessWidget {
       ]),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: StaggeredGridView.countBuilder(
-          crossAxisCount: 2,
-          itemCount: cardGridList.length,
-          itemBuilder: (context, index) => CardGrid(list: cardGridList[index]),
-          staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-          mainAxisSpacing: 2.0,
-          crossAxisSpacing: 2.0,
-          shrinkWrap: true,
-        ),
+        child: FutureBuilder(
+            future: dbManager2.getnd_TitleList(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                titleList = snapshot.data;
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  itemCount: titleList!.length, //!
+                  itemBuilder: (context, index) {
+                    return CardGrid(list: titleList![index]);
+                  },
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                  mainAxisSpacing: 2.0,
+                  crossAxisSpacing: 2.0,
+                  shrinkWrap: true,
+                );
+              }
+              return CircularProgressIndicator();
+            }),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
@@ -50,7 +67,7 @@ class gridView extends StatelessWidget {
 
 class CardGrid extends StatelessWidget {
   CardGrid({Key? key, required this.list}) : super(key: key);
-  ListXYZ list;
+  nd_title list;
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +79,7 @@ class CardGrid extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              list.word,
+              list.term,
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
@@ -93,12 +110,38 @@ class CardGrid extends StatelessWidget {
                       ],
                     )),
                     PopupMenuItem(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.delete, color: Colors.red),
-                        Text(' Remove')
-                      ],
+                        child: InkWell(
+                      onTap: () {
+                        bool? edi = true;
+                        // print(list.term);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => write(
+                                      editxyz: edi,
+                                      termxyz: list.term,
+                                      definationxyz: list.defination,
+                                      ttl: list,
+                                    )));
+
+                        // floatingdialog(context,
+                        //         title: ttl.name,
+                        //         description: ttl.description,
+                        //         edit: edi,
+                        //         ttl: ttl)
+                        //     .then((value) {
+                        //   setState(() {
+                        //     Navigator.pop(context);
+                        //   });
+                        // });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(Icons.delete, color: Colors.red),
+                          Text(' Remove')
+                        ],
+                      ),
                     ))
                   ];
                 }),
@@ -111,16 +154,16 @@ class CardGrid extends StatelessWidget {
   }
 }
 
-class ListXYZ {
-  String word;
-  String defination;
-  ListXYZ({required this.word, required this.defination});
-}
+// class ListXYZ {
+//   String word;
+//   String defination;
+//   ListXYZ({required this.word, required this.defination});
+// }
 
-var cardGridList = [
-  ListXYZ(word: 'vorrang', defination: 'priority'),
-  ListXYZ(word: 'rachen', defination: 'throat/jaw'),
-  ListXYZ(word: 'untergekommen', defination: 'find a job/accomodaton'),
-  ListXYZ(word: 'borgen', defination: 'borrow'),
-  ListXYZ(word: 'inhaltlich', defination: 'content'),
-];
+// var cardGridList = [
+//   ListXYZ(word: 'vorrang', defination: 'priority'),
+//   ListXYZ(word: 'rachen', defination: 'throat/jaw'),
+//   ListXYZ(word: 'untergekommen', defination: 'find a job/accomodaton'),
+//   ListXYZ(word: 'borgen', defination: 'borrow'),
+//   ListXYZ(word: 'inhaltlich', defination: 'content'),
+// ];
