@@ -52,14 +52,19 @@ class _writeState extends State<write> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: Navigator.push(
-          context, MaterialPageRoute(builder: (context) => gridView())),
+      onWillPop: () {
+        return Navigator.push(
+                context, MaterialPageRoute(builder: (context) => gridView()))
+            .then((value) {
+          return true;
+        });
+      },
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Firstpage()));
+                    MaterialPageRoute(builder: (context) => gridView()));
               },
               icon: Icon(Icons.clear_sharp)),
           actions: [

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flashcards/Profilepage.dart';
 import 'package:flashcards/views/google.dart';
 import 'package:flashcards/database/google_sign_in.dart';
+import 'package:flashcards/views/grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:firebase_core/firebase_core.dart';
