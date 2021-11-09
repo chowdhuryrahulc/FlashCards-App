@@ -17,7 +17,7 @@ class DBManager2 {
           join(await getDatabasesPath(), "Title3.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE nd_title (nd_id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT, defination TEXT, example TEXT, url TEXT, favorite BOOLEAN, archive BOOL, current_set TEXT)");
+            "CREATE TABLE nd_title (nd_id INTEGER PRIMARY KEY AUTOINCREMENT, term TEXT, defination TEXT, example TEXT, url TEXT, favorite BOOLEAN, archive BOOLEAN, current_set TEXT)");
       });
     }
   }
@@ -50,10 +50,10 @@ class DBManager2 {
         where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
   }
 
-  Future<int> updateFavoriteTitle(nd_title nd_title) async {
+  Future<int> updateFavoriteTitle(nd_title nd_title, int favorite) async {
     await nd_openDb();
-    print('favorite changed to True');
-    return await _database2!.update('nd_title', nd_title.toFavoriteMap(),
+    return await _database2!.update(
+        'nd_title', nd_title.toFavoriteMap(favorite),
         where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
   }
 
@@ -71,7 +71,7 @@ class nd_title {
   String? url;
   int? favorite;
   String? current_set;
-  bool? archive;
+  int? archive;
 
   nd_title(
       {this.nd_id,
@@ -95,10 +95,10 @@ class nd_title {
     };
   }
 
-  Map<String, dynamic> toFavoriteMap() {
+  Map<String, dynamic> toFavoriteMap(int favorite) {
     return {
       'nd_id': nd_id,
-      'favorite': 1,
+      'favorite': favorite,
     };
   }
 }

@@ -14,7 +14,7 @@ class DBManager {
       _database = await openDatabase(join(await getDatabasesPath(), "Title.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
-            "CREATE TABLE title (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT)");
+            "CREATE TABLE title (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, archive BOOLEAN)");
       });
     }
   }
@@ -30,16 +30,23 @@ class DBManager {
     return List.generate(
         maps.length,
         (i) => title(
-            id: maps[i]['id'],
-            name: maps[i]['name'],
-            description: maps[i]['description']));
+              id: maps[i]['id'],
+              name: maps[i]['name'],
+              description: maps[i]['description'],
+              archive: maps[i]['archive'],
+            ));
   }
 
   Future<int> updateTitle(title title) async {
     await openDb();
-    // print();
     return await _database!
         .update('title', title.toMap(), where: 'id=?', whereArgs: [title.id]);
+  }
+
+  Future<int> updateArchiveTitle(title title, int archive) async {
+    await openDb();
+    return await _database!.update('title', title.toArchiveMap(archive),
+        where: 'id=?', whereArgs: [title.id]);
   }
 
   Future<void> deleteTitle(int id) async {
@@ -52,9 +59,17 @@ class title {
   int? id;
   String name;
   String description;
+  int? archive;
 
-  title({this.id, required this.name, required this.description});
+  title({this.id, required this.name, required this.description, this.archive});
   Map<String, dynamic> toMap() {
     return {'id': id, 'name': name, 'description': description};
+  }
+
+  Map<String, dynamic> toArchiveMap(int archive) {
+    return {
+      'id': id,
+      'archive': archive,
+    };
   }
 }

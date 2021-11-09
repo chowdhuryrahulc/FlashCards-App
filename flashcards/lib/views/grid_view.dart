@@ -15,11 +15,22 @@ class _gridViewState extends State<gridView> {
   final DBManager2 dbManager2 = DBManager2();
 
   List<nd_title>? titleList;
-  @override
+
   CardGridX(BuildContext context, nd_title list) {
     final DBManager2 dbManager2 = DBManager2();
 
-    // Widget build(BuildContext context) {
+    updateFavoriteTitle(int favoriteToggle) {
+      if (favoriteToggle == 0) {
+        setState(() {
+          dbManager2.updateFavoriteTitle(list, 1);
+        });
+      } else if (favoriteToggle == 1) {
+        setState(() {
+          dbManager2.updateFavoriteTitle(list, 0);
+        });
+      }
+    }
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -38,25 +49,23 @@ class _gridViewState extends State<gridView> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 InkWell(
-                    onTap: () {
-                      // dbManager2.updateFavoriteTitle(widget.list);
-                      // updateFavoriteTitle();
-                    },
-                    // child: if(widget.list.favorite==true){icon: Icon(Icons.favorite_border)} else{icon: Icon(Icons.favorite_border)}
-                    // child: widget.list.favorite!
-                    //     ? Icon(Icons.favorite_border)
-                    //     : Icon(Icons.favorite_border)
-                    // child: Icon(() {
-                    //   if (widget.list.favorite == 1) {
-                    //     Icons.favorite;
-                    //   } else {
-                    //     Icons.favorite_border;
-                    //   }
-                    // }()),
-                    child: Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                    )), //TODO update favouite
+                  onTap: () {
+                    updateFavoriteTitle(list.favorite ?? 0);
+                  },
+                  child: Icon(() {
+                    //TODO Color Change
+                    if (list.favorite == 1) {
+                      // Colors.red;
+                      return Icons.favorite;
+                    }
+                    //  else if (list.favorite == 1) {
+                    //   return Colors.red;
+                    // }
+                    else {
+                      return Icons.favorite_border;
+                    }
+                  }()),
+                ),
                 PopupMenuButton(itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem(
@@ -171,7 +180,7 @@ class _gridViewState extends State<gridView> {
   }
 }
 
-@override
+// @override
 
 // class CardGrid extends StatefulWidget {
 //   CardGrid({Key? key, required this.list}) : super(key: key);
@@ -197,7 +206,3 @@ class _gridViewState extends State<gridView> {
 //   ListXYZ(word: 'borgen', defination: 'borrow'),
 //   ListXYZ(word: 'inhaltlich', defination: 'content'),
 // ];
-
-updateFavoriteTitle(bool favoriteToggle) {
-  favoriteToggle = !favoriteToggle;
-}

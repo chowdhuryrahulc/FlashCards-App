@@ -19,6 +19,18 @@ class _list_viewState extends State<list_view> {
   final DBManager dbManager = DBManager();
   List<title>? titleList;
 
+  updateArchiveTitle(int ArchiveToggle, title tList) {
+    if (ArchiveToggle == 0) {
+      setState(() {
+        dbManager.updateArchiveTitle(tList, 1);
+      });
+    } else if (ArchiveToggle == 1) {
+      setState(() {
+        dbManager.updateArchiveTitle(tList, 0);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -79,7 +91,6 @@ class _list_viewState extends State<list_view> {
                                               Navigator.pop(context);
                                             });
                                           });
-                                          // Navigator.pop(context);
                                         },
                                         child: Row(
                                           children: [
@@ -104,11 +115,17 @@ class _list_viewState extends State<list_view> {
                                       ],
                                     )),
                                     PopupMenuItem(
-                                        child: Row(
-                                      children: [
-                                        Icon(Icons.archive),
-                                        Text("Archive"),
-                                      ],
+                                        child: InkWell(
+                                      onTap: () {
+                                        // updateArchiveTitle(
+                                        //     ArchiveToggle, ttl);
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.archive),
+                                          Text("Archive"),
+                                        ],
+                                      ),
                                     )),
                                     PopupMenuItem(
                                         child: Row(
