@@ -155,7 +155,6 @@ class _gridViewState extends State<gridView> {
                   crossAxisCount: 2,
                   itemCount: titleList!.length, //!
                   itemBuilder: (context, index) {
-                    // print(titleList![index].nd_id);
                     return CardGridX(context, titleList![index]);
                   },
                   staggeredTileBuilder: (index) => StaggeredTile.fit(1),
@@ -179,30 +178,3 @@ class _gridViewState extends State<gridView> {
     );
   }
 }
-
-// @override
-
-// class CardGrid extends StatefulWidget {
-//   CardGrid({Key? key, required this.list}) : super(key: key);
-
-//   @override
-//   State<CardGrid> createState() => _CardGridState();
-// }
-
-// class _CardGridState extends State<CardGrid> {
-
-// }
-
-// class ListXYZ {
-//   String word;
-//   String defination;
-//   ListXYZ({required this.word, required this.defination});
-// }
-
-// var cardGridList = [
-//   ListXYZ(word: 'vorrang', defination: 'priority'),
-//   ListXYZ(word: 'rachen', defination: 'throat/jaw'),
-//   ListXYZ(word: 'untergekommen', defination: 'find a job/accomodaton'),
-//   ListXYZ(word: 'borgen', defination: 'borrow'),
-//   ListXYZ(word: 'inhaltlich', defination: 'content'),
-// ];
