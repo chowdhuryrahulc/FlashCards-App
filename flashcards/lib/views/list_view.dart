@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
-import 'package:flashcards/views/write.dart';
+// import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 
 import '../BasicReview.dart';
@@ -19,14 +19,18 @@ class _list_viewState extends State<list_view> {
   final DBManager dbManager = DBManager();
   List<title>? titleList;
 
-  updateArchiveTitle(int ArchiveToggle, title tList) {
-    if (ArchiveToggle == 0) {
+  updateArchiveTitle(title tList) {
+    if (tList == 0) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 1);
       });
-    } else if (ArchiveToggle == 1) {
+    } else if (tList == 1) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 0);
+      });
+    } else {
+      setState(() {
+        dbManager.updateArchiveTitle(tList, 1);
       });
     }
   }
@@ -117,8 +121,7 @@ class _list_viewState extends State<list_view> {
                                     PopupMenuItem(
                                         child: InkWell(
                                       onTap: () {
-                                        // updateArchiveTitle(
-                                        //     ArchiveToggle, ttl);
+                                        updateArchiveTitle(ttl);
                                       },
                                       child: Row(
                                         children: [
@@ -267,10 +270,6 @@ class _list_viewState extends State<list_view> {
                                                                       2,
                                                                   child: Text(
                                                                     "GENERATE SHARE LINK",
-                                                                    // style: TextStyle(
-                                                                    //     fontSize:
-                                                                    //         14
-                                                                    // ),
                                                                   ),
                                                                 )),
                                                         SizedBox(

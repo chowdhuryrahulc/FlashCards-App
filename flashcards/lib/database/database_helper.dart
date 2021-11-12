@@ -1,8 +1,7 @@
 // ignore_for_file: prefer_conditional_assignment
 
-import 'dart:io';
+// import 'dart:io';
 import 'package:path/path.dart';
-// import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DBManager {
@@ -11,7 +10,8 @@ class DBManager {
   Future openDb() async {
     if (_database == null) {
       //If Database doesnt exist, then only create the Database
-      _database = await openDatabase(join(await getDatabasesPath(), "Title.db"),
+      _database = await openDatabase(
+          join(await getDatabasesPath(), "TitleA.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
             "CREATE TABLE title (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, archive BOOLEAN)");
@@ -45,6 +45,7 @@ class DBManager {
 
   Future<int> updateArchiveTitle(title title, int archive) async {
     await openDb();
+    print('Archive Upated');
     return await _database!.update('title', title.toArchiveMap(archive),
         where: 'id=?', whereArgs: [title.id]);
   }

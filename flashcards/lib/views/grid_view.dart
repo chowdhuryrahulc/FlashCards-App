@@ -1,5 +1,5 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/database/database_helper.dart';
+// import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -57,11 +57,7 @@ class _gridViewState extends State<gridView> {
                     if (list.favorite == 1) {
                       // Colors.red;
                       return Icons.favorite;
-                    }
-                    //  else if (list.favorite == 1) {
-                    //   return Colors.red;
-                    // }
-                    else {
+                    } else {
                       return Icons.favorite_border;
                     }
                   }()),
