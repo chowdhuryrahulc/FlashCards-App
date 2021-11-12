@@ -62,12 +62,10 @@ class _list_viewState extends State<list_view> {
                               print('archive true||X true');
                               return true;
                             } else {
-                            print('archive true||X false');
-                            return false;
+                              print('archive true||X false');
+                              titleList!.removeAt(index);
+                              return false;
                             }
-                          } else if (ttl.archive == 0) {
-                            print('archive false');
-                            return true;
                           } else {
                             print('archive false');
                             return true;
