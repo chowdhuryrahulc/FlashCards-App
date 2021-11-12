@@ -1,8 +1,8 @@
 // ignore_for_file: must_be_immutable
 
-import 'dart:async';
+// import 'dart:async';
 import 'package:flashcards/database/database_helper.dart';
-import 'package:flashcards/views/google.dart';
+// import 'package:flashcards/views/google.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,8 +22,12 @@ class Firstpage extends StatefulWidget {
 }
 
 class _FirstpageState extends State<Firstpage> {
-  bool X = false;
-  List<String> litems = ["1", "2", "3"];
+  List<title>? titleList;
+  int? X;
+  List<bool> visibility = List.filled(titleList!.length, false);
+
+  //TODO  Make whole list innitially false
+  //TODO visibility.lenth = listView.length or titleView.length
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +51,14 @@ class _FirstpageState extends State<Firstpage> {
                 child: CheckboxListTile(
                     contentPadding: EdgeInsets.all(0),
                     title: Text("Display Archived"),
-                    value: this.X,
+                    value: visibility[1],
                     onChanged: (bool? value) {
                       if (value != null) {
-                        setState(() => this.X = value);
+                        setState(() {
+                          // visibility[] = false;
+
+                          this.visibility[1] = value;
+                        });
                       }
                     }),
               )
