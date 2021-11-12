@@ -1,8 +1,6 @@
 // ignore_for_file: must_be_immutable
 
-// import 'dart:async';
 import 'package:flashcards/database/database_helper.dart';
-// import 'package:flashcards/views/google.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -22,12 +20,7 @@ class Firstpage extends StatefulWidget {
 }
 
 class _FirstpageState extends State<Firstpage> {
-  List<title>? titleList;
-  int? X;
-  List<bool> visibility = List.filled(titleList!.length, false);
-
-  //TODO  Make whole list innitially false
-  //TODO visibility.lenth = listView.length or titleView.length
+  bool X = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,15 +44,14 @@ class _FirstpageState extends State<Firstpage> {
                 child: CheckboxListTile(
                     contentPadding: EdgeInsets.all(0),
                     title: Text("Display Archived"),
-                    value: visibility[1],
+                    value: X,
                     onChanged: (bool? value) {
                       if (value != null) {
                         setState(() {
-                          // visibility[] = false;
-
-                          this.visibility[1] = value;
+                          X = value;
                         });
                       }
+                      // Navigaton.
                     }),
               )
             ];
@@ -69,7 +61,7 @@ class _FirstpageState extends State<Firstpage> {
       drawer: drawer(context, widget.googleAccount),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: list_view(),
+        child: list_view(X: X),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
