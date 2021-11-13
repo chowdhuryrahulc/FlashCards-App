@@ -21,8 +21,6 @@ class write extends StatefulWidget {
   _writeState createState() => _writeState();
 }
 
-// String? editxyz = editxyz;
-
 class _writeState extends State<write> {
   void initState() {
     // termxy = widget.termxyz;
@@ -30,7 +28,6 @@ class _writeState extends State<write> {
       termController.text = widget.termxyz!;
       definationController.text = widget.definationxyz!;
     }
-    // print(widget.editxyz);
     super.initState();
   }
 
@@ -86,9 +83,6 @@ class _writeState extends State<write> {
                               ? null
                               : 'Term Should Not Be Empty',
                           controller: termController,
-                          // onChanged: (value) {
-                          // term = value;
-                          // },
                           decoration: InputDecoration(
                               hintText: "TERM",
                               border: OutlineInputBorder(
@@ -166,9 +160,6 @@ class _writeState extends State<write> {
                           ),
                           ListTile(
                               title: TextField(
-                                // onChanged: (value) {
-                                //   url = value;
-                                // },
                                 decoration: InputDecoration(
                                     hintText: "URL",
                                     border: OutlineInputBorder(

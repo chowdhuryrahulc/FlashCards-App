@@ -13,7 +13,8 @@ title? titl;
 
 class Firstpage extends StatefulWidget {
   GoogleSignInAccount? googleAccount;
-  Firstpage({this.googleAccount, Key? key}) : super(key: key);
+  bool? dark;
+  Firstpage({this.dark, this.googleAccount, Key? key}) : super(key: key);
 
   @override
   _FirstpageState createState() => _FirstpageState();
@@ -58,7 +59,7 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(context, widget.googleAccount),
+      drawer: drawer(widget.dark!),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: list_view(X: X),

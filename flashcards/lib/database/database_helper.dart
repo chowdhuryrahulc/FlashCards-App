@@ -44,7 +44,7 @@ class DBManager {
 
   Future<int> updateArchiveTitle(title title, int archive) async {
     await openDb();
-    print('Archive Upated');
+    print(archive);
     return await _database!.update('title', title.toArchiveMap(archive),
         where: 'id=?', whereArgs: [title.id]);
   }

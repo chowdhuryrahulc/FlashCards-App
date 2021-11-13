@@ -1,5 +1,4 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
-// import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -68,7 +67,6 @@ class _gridViewState extends State<gridView> {
                         child: InkWell(
                       onTap: () {
                         bool? edi = true;
-                        // print(list.term);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -159,7 +157,7 @@ class _gridViewState extends State<gridView> {
                   shrinkWrap: true,
                 );
               }
-              return CircularProgressIndicator();
+              return Container();
             }),
       ),
       floatingActionButton: FloatingActionButton.extended(

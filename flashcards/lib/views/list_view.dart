@@ -1,5 +1,6 @@
 import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
+import 'package:flashcards/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 import '../BasicReview.dart';
 import 'grid_view.dart';
@@ -17,11 +18,11 @@ class _list_viewState extends State<list_view> {
   List<title>? titleList;
 
   updateArchiveTitle(title tList) {
-    if (tList == 0) {
+    if (tList.archive == 0) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 1);
       });
-    } else if (tList == 1) {
+    } else if (tList.archive == 1) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 0);
       });
@@ -59,15 +60,14 @@ class _list_viewState extends State<list_view> {
                         visible: (() {
                           if (ttl.archive == 1) {
                             if (widget.X == true) {
-                              print('archive true||X true');
                               return true;
                             } else {
                               print('archive true||X false');
-                              titleList!.removeAt(index);
+                              // titleList!.removeAt(index);
+                              //TODO MAKE INVISIBLE FROM LISTVIEWBUILDER
                               return false;
                             }
                           } else {
-                            print('archive false');
                             return true;
                           }
                         }()),
@@ -329,7 +329,7 @@ class _list_viewState extends State<list_view> {
                   );
                 });
           }
-          return CircularProgressIndicator();
+          return Container();
         });
   }
 
@@ -377,10 +377,18 @@ class _list_viewState extends State<list_view> {
                       leading: CircleAvatar(),
                       title: Text('Audio Player'),
                       subtitle: Text('Review by listening to your cards')),
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Whiteboard review'),
-                      subtitle: Text('Practice by drawing the answer')),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WhiteBoardReview()));
+                    },
+                    child: ListTile(
+                        leading: CircleAvatar(),
+                        title: Text('Whiteboard review'),
+                        subtitle: Text('Practice by drawing the answer')),
+                  ),
                   ListTile(
                       leading: CircleAvatar(),
                       title: Text('Memory Game'),
