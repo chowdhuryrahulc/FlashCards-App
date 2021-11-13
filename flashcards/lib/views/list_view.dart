@@ -357,10 +357,18 @@ class _list_viewState extends State<list_view> {
                   ],
                 ),
                 body: ListView(children: [
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Basic Review'),
-                      subtitle: Text('Basic flashcards review')),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BasicReview()));
+                    },
+                    child: ListTile(
+                        leading: CircleAvatar(),
+                        title: Text('Basic Review'),
+                        subtitle: Text('Basic flashcards review')),
+                  ),
                   ListTile(
                       leading: CircleAvatar(),
                       title: Text('Select Definition'),

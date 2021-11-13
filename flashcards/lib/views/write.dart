@@ -102,9 +102,6 @@ class _writeState extends State<write> {
                               ? null
                               : 'Defination Should Not Be Empty',
                           controller: definationController,
-                          // onChanged: (value) {
-                          // definition = value;
-                          // },
                           decoration: InputDecoration(
                               hintText: "DEFINITION",
                               border: OutlineInputBorder(
@@ -199,9 +196,6 @@ class _writeState extends State<write> {
               ),
             ),
           ),
-          // HIDDEN=true? TextField();
-
-          // FloatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         ),
       ),
     );

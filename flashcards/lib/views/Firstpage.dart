@@ -59,7 +59,7 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(widget.dark!),
+      drawer: drawer(widget.dark ?? true),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: list_view(X: X),
@@ -161,8 +161,6 @@ floatingdialog(BuildContext context,
             key: _formKey,
             child: Dialog(
                 insetPadding: EdgeInsets.all(20),
-                //title,content
-                // contentPadding: EdgeInsets.all(10),
                 child: Scaffold(
                     appBar: AppBar(
                       elevation: 0.0,
@@ -241,7 +239,6 @@ floatingdialog(BuildContext context,
                             Row(
                               children: [
                                 DropdownButton<String>(
-                                  //!drop down
                                   value: Z,
                                   hint: Text('English'),
                                   onChanged: (String? N) {

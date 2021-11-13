@@ -26,16 +26,23 @@ class _BasicReviewState extends State<BasicReview> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        return Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Firstpage(dark: true)))
-            .then((value) {
+        return Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Firstpage();
+        })).then((value) {
           return true;
         });
       },
       child: Scaffold(
-        appBar: AppBar(actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.flip_to_front)),
-        ]),
+        appBar: AppBar(
+            leading: IconButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Firstpage()));
+                },
+                icon: Icon(Icons.clear_sharp)),
+            actions: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.flip_to_front)),
+            ]),
         body: Center(
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -80,7 +87,6 @@ class _BasicReviewState extends State<BasicReview> {
                                   Text(
                                     "${data.docs[N]['name']}",
                                     textAlign: TextAlign.center,
-                                    // style: TextStyle(color: Colors.amber),
                                   ),
                                   Positioned(
                                       bottom: 0,
@@ -102,8 +108,6 @@ class _BasicReviewState extends State<BasicReview> {
                                     bottom: 8,
                                     child: Align(
                                       alignment: Alignment.bottomCenter,
-                                      // right: MediaQuery.of(context).size.width * 0.5,
-                                      // bottom: 8,
                                       child: FloatingActionButton(
                                         backgroundColor: Colors.red,
                                         child: Icon(Icons.rotate_right),
@@ -145,9 +149,8 @@ class _BasicReviewState extends State<BasicReview> {
                                     bottom: 8,
                                     child: Align(
                                       alignment: Alignment.bottomCenter,
-                                      // right: MediaQuery.of(context).size.width * 0.5,
-                                      // bottom: 8,
                                       child: FloatingActionButton(
+                                        heroTag: 'true',
                                         backgroundColor: Colors.red,
                                         child: Icon(Icons.rotate_right),
                                         onPressed: () {},

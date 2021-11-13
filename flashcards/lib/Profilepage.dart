@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profilepage extends StatefulWidget {
-  bool dark;
-  Profilepage({Key? key, required this.dark}) : super(key: key);
+  bool? dark;
+  Profilepage({Key? key, this.dark}) : super(key: key);
 
   @override
   _ProfilepageState createState() => _ProfilepageState();
