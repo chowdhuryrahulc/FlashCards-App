@@ -7,14 +7,12 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import '../drawer.dart';
 
-bool LoggedIn = false;
 GoogleSignIn sign = GoogleSignIn();
 title? titl;
 
 class Firstpage extends StatefulWidget {
   GoogleSignInAccount? googleAccount;
-  bool? dark;
-  Firstpage({this.dark, this.googleAccount, Key? key}) : super(key: key);
+  Firstpage({this.googleAccount, Key? key}) : super(key: key);
 
   @override
   _FirstpageState createState() => _FirstpageState();
@@ -59,7 +57,7 @@ class _FirstpageState extends State<Firstpage> {
           })
         ],
       ),
-      drawer: drawer(widget.dark ?? true),
+      drawer: drawer(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: list_view(X: X),
@@ -96,9 +94,9 @@ class _FirstpageState extends State<Firstpage> {
                 onPressed: () {
                   sign.signIn().then((userdata) {
                     // setState(() {
-                    LoggedIn = true;
+                    // LoggedIn = true;
                     // A = userdata;
-                    print(LoggedIn);
+                    // print(LoggedIn);
                     // });
                     Navigator.pop(context);
                   });

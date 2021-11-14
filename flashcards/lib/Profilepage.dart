@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Profilepage extends StatefulWidget {
-  bool? dark;
-  Profilepage({Key? key, this.dark}) : super(key: key);
+  Profilepage({Key? key}) : super(key: key);
 
   @override
   _ProfilepageState createState() => _ProfilepageState();
@@ -29,7 +28,7 @@ class _ProfilepageState extends State<Profilepage> {
                   child: Text('Something is Wrong'),
                 );
               } else if (snapshot.hasData) {
-                return Firstpage(dark: widget.dark);
+                return Firstpage();
               } else {
                 return google();
               }

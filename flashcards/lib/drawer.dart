@@ -3,14 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
 class drawer extends StatefulWidget {
-  bool dark;
-  drawer(this.dark, {Key? key}) : super(key: key);
+  drawer({Key? key}) : super(key: key);
 
   @override
   _drawerState createState() => _drawerState();
@@ -32,9 +30,6 @@ class _drawerState extends State<drawer> {
               radius: 50,
             ),
           ),
-          ListTile(
-            trailing: Switch(value: false, onChanged: (changed) {}),
-          ),
           InkWell(
             child: ListTile(
               leading: Icon(Icons.list),
@@ -54,20 +49,23 @@ class _drawerState extends State<drawer> {
             title: Text("Needing Review"),
           ),
           InkWell(
-            //TODO color change btw normal and blue
-            //TODO cant change state of main.dart
             onTap: () {
-              setState(() {
-                widget.dark = !widget.dark;
-                print(widget.dark);
-              });
+              if (context.read<darktheme>().dark == true) {
+                context.read<darktheme>().change(false);
+              } else {
+                context.read<darktheme>().change(true);
+              }
             },
             child: ListTile(
               leading: Icon(Icons.highlight,
-                  color: !widget.dark ? Colors.grey : Colors.blue),
+                  color: !context.watch<darktheme>().dark
+                      ? Colors.grey
+                      : Colors.blue),
               title: Text("Toggle Night Theme",
                   style: TextStyle(
-                      color: !widget.dark ? Colors.black : Colors.blue)),
+                      color: !context.watch<darktheme>().dark
+                          ? Colors.black
+                          : Colors.blue)),
             ),
           ),
           InkWell(
@@ -160,8 +158,8 @@ class _drawerState extends State<drawer> {
   }
 }
 
-
 // Drawer drawer(context, AM) {
-  // final user = FirebaseAuth.instance.currentUser!;
-  // bool changeColor = false;
+// final user = FirebaseAuth.instance.currentUser!;
+// bool changeColor = false;
 //  }
+
