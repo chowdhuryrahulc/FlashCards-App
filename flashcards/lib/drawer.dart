@@ -158,8 +158,4 @@ class _drawerState extends State<drawer> {
   }
 }
 
-// Drawer drawer(context, AM) {
-// final user = FirebaseAuth.instance.currentUser!;
-// bool changeColor = false;
-//  }
 

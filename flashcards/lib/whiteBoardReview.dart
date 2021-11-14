@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 
 class WhiteBoardReview extends StatefulWidget {
@@ -9,6 +11,10 @@ class WhiteBoardReview extends StatefulWidget {
 
 class _WhiteBoardReviewState extends State<WhiteBoardReview> {
   bool vissible = true;
+  List<DrawingPoints>? points = [];
+  double strokeWidth = 3.0;
+  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +46,44 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
           ),
         ),
       ),
-      Expanded(child: Container()),
+      Expanded(
+          child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            RenderBox renderBox = context.findRenderObject() as RenderBox;
+            points!.add(DrawingPoints(
+                points: renderBox.globalToLocal(details.globalPosition),
+                paint: Paint()
+                  ..strokeCap = strokeCap
+                  ..isAntiAlias = true
+                  ..color = Colors.black
+                  ..strokeWidth = strokeWidth));
+          });
+        },
+        onPanStart: (details) {
+          setState(() {
+            RenderBox renderBox = context.findRenderObject() as RenderBox;
+            points!.add(DrawingPoints(
+                points: renderBox.globalToLocal(details.globalPosition),
+                paint: Paint()
+                  ..strokeCap = strokeCap
+                  ..isAntiAlias = true
+                  ..color = Colors.black
+                  ..strokeWidth = strokeWidth));
+          });
+        },
+        onPanEnd: (details) {
+          setState(() {
+            points!.add(DrawingPoints(points: null));
+          });
+        },
+        child: CustomPaint(
+          size: Size.infinite,
+          painter: DrawingPainter(
+            pointsList: points!,
+          ),
+        ),
+      )),
       Row(
         children: [
           Container(
@@ -48,20 +91,36 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             color: Colors.lightGreen,
             width: MediaQuery.of(context).size.width / 4,
             child: IconButton(
-                onPressed: () {}, icon: Icon(Icons.brightness_1, size: 7)),
+                onPressed: () {
+                  setState(() {
+                    strokeWidth = 3.0;
+                  });
+                },
+                icon: Icon(Icons.brightness_1, size: 7)),
           ),
           Container(
             height: 56,
             color: Colors.lightGreen,
             width: MediaQuery.of(context).size.width / 4,
             child: IconButton(
-                onPressed: () {}, icon: Icon(Icons.brightness_1, size: 15)),
+                onPressed: () {
+                  setState(() {
+                    strokeWidth = 7.0;
+                  });
+                },
+                icon: Icon(Icons.brightness_1, size: 15)),
           ),
           Container(
             color: Colors.lightGreen,
             height: 56,
             width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.undo)),
+            child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    points!.removeLast();
+                  });
+                },
+                icon: Icon(Icons.undo)),
           ),
           Container(
             color: Colors.lightGreen,
@@ -147,3 +206,37 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
     ]));
   }
 }
+
+class DrawingPainter extends CustomPainter {
+  DrawingPainter({this.pointsList});
+  List<DrawingPoints>? pointsList;
+  List<Offset> offsetPoints = [];
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < pointsList!.length - 1; i++) {
+      if (pointsList![i].points != null && pointsList![i + 1].points != null) {
+        canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!,
+            pointsList![i].paint!);
+      } else if (pointsList![i].points != null &&
+          pointsList![i + 1].points == null) {
+        offsetPoints.clear();
+        offsetPoints.add(pointsList![i].points!);
+        offsetPoints.add(Offset(
+            pointsList![i].points!.dx + 0.1, pointsList![i].points!.dy + 0.1));
+        canvas.drawPoints(
+            PointMode.points, offsetPoints, pointsList![i].paint!);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(DrawingPainter oldDelegate) => true;
+}
+
+class DrawingPoints {
+  Paint? paint;
+  Offset? points;
+  DrawingPoints({this.points, this.paint});
+}
+
+// enum SelectedMode { StrokeWidth, Opacity, Color }
