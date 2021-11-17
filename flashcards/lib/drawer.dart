@@ -4,6 +4,7 @@ import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
@@ -158,4 +159,33 @@ class _drawerState extends State<drawer> {
   }
 }
 
-
+@override
+progressCalender(BuildContext context) {
+  CalendarFormat format = CalendarFormat.month;
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              child: Scaffold(
+                appBar: AppBar(),
+                body: TableCalendar(
+                  focusedDay: DateTime.now(),
+                  firstDay: DateTime(1990), //Need update
+                  lastDay: DateTime(2990),
+                  calendarFormat: format, //Also dont need
+                  onFormatChanged: (CalendarFormat _format) {
+                    //Probably dont need
+                    setState(() {
+                      format = _format;
+                    });
+                  },
+                  startingDayOfWeek: StartingDayOfWeek.monday, //Dont need
+                ),
+              ),
+            );
+          },
+        );
+      });
+}
