@@ -1,4 +1,5 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -126,49 +127,58 @@ class _gridViewState extends State<gridView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-        IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),
-        PopupMenuButton(itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(child: Text("Manage cards   ")),
-            PopupMenuItem(child: Text('Manage tags')),
-            PopupMenuItem(child: Text("Sync")),
-          ];
-        })
-      ]),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FutureBuilder(
-            future: dbManager2.getnd_TitleList(),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                titleList = snapshot.data;
-                return StaggeredGridView.countBuilder(
-                  crossAxisCount: 2,
-                  itemCount: titleList!.length, //!
-                  itemBuilder: (context, index) {
-                    return CardGridX(context, titleList![index]);
-                  },
-                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                  mainAxisSpacing: 2.0,
-                  crossAxisSpacing: 2.0,
-                  shrinkWrap: true,
-                );
-              }
-              return Container();
-            }),
+    return WillPopScope(
+      onWillPop: () {
+        return Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Firstpage();
+        })).then((value) {
+          return true;
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),
+          PopupMenuButton(itemBuilder: (BuildContext context) {
+            return [
+              PopupMenuItem(child: Text("Manage cards   ")),
+              PopupMenuItem(child: Text('Manage tags')),
+              PopupMenuItem(child: Text("Sync")),
+            ];
+          })
+        ]),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: FutureBuilder(
+              future: dbManager2.getnd_TitleList(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  titleList = snapshot.data;
+                  return StaggeredGridView.countBuilder(
+                    crossAxisCount: 2,
+                    itemCount: titleList!.length, //!
+                    itemBuilder: (context, index) {
+                      return CardGridX(context, titleList![index]);
+                    },
+                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                    mainAxisSpacing: 2.0,
+                    crossAxisSpacing: 2.0,
+                    shrinkWrap: true,
+                  );
+                }
+                return Container();
+              }),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text("CREATE SET"),
+          icon: Icon(Icons.add),
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => write()));
+          },
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("CREATE SET"),
-        icon: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => write()));
-        },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

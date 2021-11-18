@@ -394,19 +394,31 @@ class _list_viewState extends State<list_view> {
                     },
                     child: ListTile(
                         leading: CircleAvatar(),
-                        title: Text('Whiteboard review'),
+                        title: Row(
+                          children: [Text('Whiteboard review  '), pro()],
+                        ),
                         subtitle: Text('Practice by drawing the answer')),
                   ),
                   ListTile(
                       leading: CircleAvatar(),
-                      title: Text('Memory Game'),
+                      title: Row(
+                        children: [Text('Memory Game '), pro()],
+                      ),
                       subtitle: Text('Reveal and match cards')),
                   ListTile(
                     leading: CircleAvatar(),
-                    title: Text('Combined Review (PRO)'),
+                    title: Row(
+                      children: [Text('Combined Review (PRO)  '), pro()],
+                    ),
                   )
                 ]),
               ));
         });
   }
+}
+
+pro() {
+  return Container(
+      child: Text('PRO', style: TextStyle(color: Colors.white)),
+      color: Colors.blue);
 }
