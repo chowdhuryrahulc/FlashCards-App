@@ -193,38 +193,41 @@ progressCalender(BuildContext context) {
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TableCalendar(
-                        focusedDay: selectedDay,
-                        firstDay: DateTime(1990), //Need update
-                        lastDay: DateTime(2990),
-                        startingDayOfWeek: StartingDayOfWeek.monday, //Dont need
-                        daysOfWeekVisible: true,
-                        // Day Changed
-                        onDaySelected: (DateTime selectDay, DateTime focusDay) {
-                          setState(() {
-                            selectedDay = selectDay;
-                            focusedDay = focusDay;
-                          });
-                        },
-                        selectedDayPredicate: (DateTime date) {
-                          return isSameDay(selectedDay, date);
-                        },
-                        // To style Calender
-                        calendarStyle: CalendarStyle(
-                            isTodayHighlighted: true,
-                            selectedDecoration: BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.rectangle,
-                            ),
-                            todayDecoration: BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.rectangle,
-                            )),
-                        headerStyle: HeaderStyle(
-                          formatButtonVisible: false,
-                          titleCentered: true,
-                        )),
-                    Expanded(child: Container()),
+                    Expanded(
+                      child: TableCalendar(
+                          focusedDay: selectedDay,
+                          firstDay: DateTime(1990), //Need update
+                          lastDay: DateTime(2990),
+                          startingDayOfWeek:
+                              StartingDayOfWeek.monday, //Dont need
+                          daysOfWeekVisible: true,
+                          // Day Changed
+                          onDaySelected:
+                              (DateTime selectDay, DateTime focusDay) {
+                            setState(() {
+                              selectedDay = selectDay;
+                              focusedDay = focusDay;
+                            });
+                          },
+                          selectedDayPredicate: (DateTime date) {
+                            return isSameDay(selectedDay, date);
+                          },
+                          // To style Calender
+                          calendarStyle: CalendarStyle(
+                              isTodayHighlighted: true,
+                              selectedDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.rectangle,
+                              ),
+                              todayDecoration: BoxDecoration(
+                                color: Colors.blue,
+                                shape: BoxShape.rectangle,
+                              )),
+                          headerStyle: HeaderStyle(
+                            formatButtonVisible: false,
+                            titleCentered: true,
+                          )),
+                    ),
                     Text('Daily goals compleated: 0'),
                     SizedBox(height: 14),
                     Opacity(

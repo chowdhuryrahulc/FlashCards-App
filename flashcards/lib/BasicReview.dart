@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +14,12 @@ class BasicReview extends StatefulWidget {
 }
 
 class _BasicReviewState extends State<BasicReview> {
-  final Stream<QuerySnapshot> users =
-      FirebaseFirestore.instance.collection("users").snapshots();
+  final DBManager2 dbManager2 = DBManager2();
+  List<nd_title>? list;
+  PageController pageController = PageController();
+
+  // final Stream<QuerySnapshot> users =
+  //     FirebaseFirestore.instance.collection("users").snapshots();
   // final TTS = FlutterTts();
 
   // Future S(X) async {
@@ -47,32 +52,25 @@ class _BasicReviewState extends State<BasicReview> {
             child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Expanded(
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: users,
-                  builder: (
-                    BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot,
-                  ) {
-                    if (snapshot.hasError) {
-                      return Text("Something went wrong");
-                    }
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Text("Loading");
-                    }
-                    final data = snapshot.requireData;
-                    {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: FlipCard(
-                          front: GestureDetector(
-                            onHorizontalDragStart:
-                                (DragStartDetails dragStartDetails) {
-                              setState(() {
-                                N = N - 1;
-                              });
-                            },
+              child: FutureBuilder(
+            future: dbManager2.getnd_TitleList(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                list = snapshot.data;
+                return PageView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: list!.length,
+                    itemBuilder: (context, index) {
+                      nd_title ttl = list![index];
+                      return PageView(
+                        controller: pageController,
+                        scrollDirection: Axis.vertical,
+                        physics: BouncingScrollPhysics(),
+                        onPageChanged: (number) {
+                          // print('Page number is ' + number.toString());
+                        },
+                        children: [
+                          Container(
                             child: Card(
                               color: Colors.blue,
                               child: Stack(
@@ -85,7 +83,8 @@ class _BasicReviewState extends State<BasicReview> {
                                           onPressed: () {},
                                           icon: Icon(Icons.favorite))),
                                   Text(
-                                    "${data.docs[N]['name']}",
+                                    '${ttl.term}',
+                                    style: TextStyle(fontSize: 50),
                                     textAlign: TextAlign.center,
                                   ),
                                   Positioned(
@@ -98,9 +97,7 @@ class _BasicReviewState extends State<BasicReview> {
                                     right: 0,
                                     bottom: 0,
                                     child: IconButton(
-                                      onPressed: () {
-                                        // S("${data.docs[N]['name']}");
-                                      },
+                                      onPressed: () {},
                                       icon: Icon(Icons.play_circle_outline),
                                     ),
                                   ),
@@ -119,29 +116,22 @@ class _BasicReviewState extends State<BasicReview> {
                               ),
                             ),
                           ),
-                          back: GestureDetector(
-                            onHorizontalDragStart:
-                                (DragStartDetails dragStartDetails) {
-                              setState(() {
-                                N = N - 1;
-                              });
-                            },
+                          Container(
                             child: Card(
                               color: Colors.green,
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
                                   Text(
-                                    "${data.docs[N]['Notes']}",
+                                    "${ttl.defination}",
+                                    style: TextStyle(fontSize: 50),
                                     textAlign: TextAlign.center,
                                   ),
                                   Positioned(
                                     right: 0,
                                     bottom: 0,
                                     child: IconButton(
-                                      onPressed: () {
-                                        // S("${data.docs[N]['Notes']}");
-                                      },
+                                      onPressed: () {},
                                       icon: Icon(Icons.play_circle_outline),
                                     ),
                                   ),
@@ -160,13 +150,136 @@ class _BasicReviewState extends State<BasicReview> {
                                 ],
                               ),
                             ),
-                          ),
-                        ),
+                          )
+                        ],
                       );
-                    }
-                  }),
-            ),
-          ),
+                    });
+              } else {
+                return Container();
+              }
+            },
+          )),
+
+          // SizedBox(
+          //     width: MediaQuery.of(context).size.width,
+          //     child: StreamBuilder<QuerySnapshot>(
+          //         stream: users,
+          //         builder: (
+          //           BuildContext context,
+          //           AsyncSnapshot<QuerySnapshot> snapshot,
+          //         ) {
+          //           if (snapshot.hasError) {
+          //             return Text("Something went wrong");
+          //           }
+          //           if (snapshot.connectionState == ConnectionState.waiting) {
+          //             return Text("Loading");
+          //           }
+          //           final data = snapshot.requireData;
+          //           {
+          //             return Padding(
+          //               padding: const EdgeInsets.all(8.0),
+          //               child: FlipCard(
+          //                 front: GestureDetector(
+          //                   onHorizontalDragStart:
+          //                       (DragStartDetails dragStartDetails) {
+          //                     setState(() {
+          //                       N = N - 1;
+          //                     });
+          //                   },
+          //                   child: Card(
+          //                     color: Colors.blue,
+          //                     child: Stack(
+          //                       alignment: Alignment.center,
+          //                       children: [
+          //                         Positioned(
+          //                             top: 0,
+          //                             left: 0,
+          //                             child: IconButton(
+          //                                 onPressed: () {},
+          //                                 icon: Icon(Icons.favorite))),
+          //                         Text(
+          //                           "${data.docs[N]['name']}",
+          //                           textAlign: TextAlign.center,
+          //                         ),
+          //                         Positioned(
+          //                             bottom: 0,
+          //                             left: 0,
+          //                             child: IconButton(
+          //                                 onPressed: () {},
+          //                                 icon: Icon(Icons.edit))),
+          //                         Positioned(
+          //                           right: 0,
+          //                           bottom: 0,
+          //                           child: IconButton(
+          //                             onPressed: () {
+          //                               // S("${data.docs[N]['name']}");
+          //                             },
+          //                             icon: Icon(Icons.play_circle_outline),
+          //                           ),
+          //                         ),
+          //                         Positioned(
+          //                           bottom: 8,
+          //                           child: Align(
+          //                             alignment: Alignment.bottomCenter,
+          //                             child: FloatingActionButton(
+          //                               backgroundColor: Colors.red,
+          //                               child: Icon(Icons.rotate_right),
+          //                               onPressed: () {},
+          //                             ),
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ),
+          //                 back: GestureDetector(
+          //                   onHorizontalDragStart:
+          //                       (DragStartDetails dragStartDetails) {
+          //                     setState(() {
+          //                       N = N - 1;
+          //                     });
+          //                   },
+          //                   child: Card(
+          //                     color: Colors.green,
+          //                     child: Stack(
+          //                       alignment: Alignment.center,
+          //                       children: [
+          //                         Text(
+          //                           "${data.docs[N]['Notes']}",
+          //                           textAlign: TextAlign.center,
+          //                         ),
+          //                         Positioned(
+          //                           right: 0,
+          //                           bottom: 0,
+          //                           child: IconButton(
+          //                             onPressed: () {
+          //                               // S("${data.docs[N]['Notes']}");
+          //                             },
+          //                             icon: Icon(Icons.play_circle_outline),
+          //                           ),
+          //                         ),
+          //                         Positioned(
+          //                           bottom: 8,
+          //                           child: Align(
+          //                             alignment: Alignment.bottomCenter,
+          //                             child: FloatingActionButton(
+          //                               heroTag: 'true',
+          //                               backgroundColor: Colors.red,
+          //                               child: Icon(Icons.rotate_right),
+          //                               onPressed: () {},
+          //                             ),
+          //                           ),
+          //                         ),
+          //                       ],
+          //                     ),
+          //                   ),
+          //                 ),
+          //               ),
+          //             );
+          //           }
+          //         }),
+          //   ),
+          // ),
           Container(
             height: 56,
             width: MediaQuery.of(context).size.width,
