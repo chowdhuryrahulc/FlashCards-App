@@ -6,6 +6,15 @@ import 'package:sqflite/sqflite.dart';
 class DBManager {
   Database? _database;
 
+  // Future openDb2() async {
+  //   print('Terminator ON');
+  //   _database = await openDatabase(join(await getDatabasesPath(), "TitleA.db"),
+  //       version: 1, onCreate: (Database db, int version) async {
+  //     await db.execute(
+  //         "CREATE TABLE titleTERMINATOR (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, archive BOOLEAN)");
+  //   });
+  // }
+
   Future openDb() async {
     if (_database == null) {
       //If Database doesnt exist, then only create the Database

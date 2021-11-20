@@ -71,83 +71,99 @@ class _BasicReviewState extends State<BasicReview> {
                         },
                         children: [
                           Container(
-                            child: Card(
-                              color: Colors.blue,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Positioned(
-                                      top: 0,
-                                      left: 0,
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.favorite))),
-                                  Text(
-                                    '${ttl.term}',
-                                    style: TextStyle(fontSize: 50),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Positioned(
-                                      bottom: 0,
-                                      left: 0,
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: Icon(Icons.edit))),
-                                  Positioned(
-                                    right: 0,
-                                    bottom: 0,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.play_circle_outline),
+                            child: InkWell(
+                              onTap: () {
+                                // pageController.jumpToPage(1);
+                                pageController.animateToPage(1,
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.ease);
+                              },
+                              child: Card(
+                                color: Colors.blue,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Positioned(
+                                        top: 0,
+                                        left: 0,
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(Icons.favorite))),
+                                    Text(
+                                      '${ttl.term}',
+                                      style: TextStyle(fontSize: 50),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: 8,
-                                    child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: FloatingActionButton(
-                                        backgroundColor: Colors.red,
-                                        child: Icon(Icons.rotate_right),
+                                    Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(Icons.edit))),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: IconButton(
                                         onPressed: () {},
+                                        icon: Icon(Icons.play_circle_outline),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Positioned(
+                                      bottom: 8,
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: FloatingActionButton(
+                                          backgroundColor: Colors.red,
+                                          child: Icon(Icons.rotate_right),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                           Container(
-                            child: Card(
-                              color: Colors.green,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Text(
-                                    "${ttl.defination}",
-                                    style: TextStyle(fontSize: 50),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    bottom: 0,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.play_circle_outline),
+                            child: InkWell(
+                              onTap: () {
+                                // pageController.jumpToPage(0);
+                                pageController.animateToPage(0,
+                                    duration: Duration(seconds: 1),
+                                    curve: Curves.ease);
+                              },
+                              child: Card(
+                                color: Colors.green,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Text(
+                                      "${ttl.defination}",
+                                      style: TextStyle(fontSize: 50),
+                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: 8,
-                                    child: Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: FloatingActionButton(
-                                        heroTag: 'true',
-                                        backgroundColor: Colors.red,
-                                        child: Icon(Icons.rotate_right),
+                                    Positioned(
+                                      right: 0,
+                                      bottom: 0,
+                                      child: IconButton(
                                         onPressed: () {},
+                                        icon: Icon(Icons.play_circle_outline),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    Positioned(
+                                      bottom: 8,
+                                      child: Align(
+                                        alignment: Alignment.bottomCenter,
+                                        child: FloatingActionButton(
+                                          heroTag: 'true',
+                                          backgroundColor: Colors.red,
+                                          child: Icon(Icons.rotate_right),
+                                          onPressed: () {},
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           )
@@ -159,6 +175,63 @@ class _BasicReviewState extends State<BasicReview> {
               }
             },
           )),
+          Container(
+            height: 56,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Container(
+                  height: 56,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        N = N + 1;
+                      });
+                    },
+                    child: Text("Hard"),
+                    color: Colors.red,
+                  ),
+                ),
+                Container(
+                  height: 56,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        N = N + 1;
+                      });
+                    },
+                    child: Text("Normal"),
+                    color: Colors.blue,
+                  ),
+                ),
+                Container(
+                  height: 56,
+                  width: MediaQuery.of(context).size.width / 3,
+                  child: MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        N = N + 1;
+                      });
+                    },
+                    child: Text("Easy"),
+                    color: Colors.green,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ])),
+      ),
+    );
+  }
+}
+
+
+
 
           // SizedBox(
           //     width: MediaQuery.of(context).size.width,
@@ -280,57 +353,3 @@ class _BasicReviewState extends State<BasicReview> {
           //         }),
           //   ),
           // ),
-          Container(
-            height: 56,
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  height: 56,
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        N = N + 1;
-                      });
-                    },
-                    child: Text("Hard"),
-                    color: Colors.red,
-                  ),
-                ),
-                Container(
-                  height: 56,
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        N = N + 1;
-                      });
-                    },
-                    child: Text("Normal"),
-                    color: Colors.blue,
-                  ),
-                ),
-                Container(
-                  height: 56,
-                  width: MediaQuery.of(context).size.width / 3,
-                  child: MaterialButton(
-                    onPressed: () {
-                      setState(() {
-                        N = N + 1;
-                      });
-                    },
-                    child: Text("Easy"),
-                    color: Colors.green,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ])),
-      ),
-    );
-  }
-}
