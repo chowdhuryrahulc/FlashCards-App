@@ -42,3 +42,7 @@ class darktheme extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class currentSetX extends ChangeNotifier {
+  String? currentSet;
+}

@@ -11,12 +11,14 @@ class write extends StatefulWidget {
   String? termxyz;
   String? definationxyz;
   nd_title? ttl;
+  String? currentSet; //TODO PROBABLY REQUIRED
 
   write({
     this.editxyz,
     this.termxyz,
     this.definationxyz,
     this.ttl,
+    this.currentSet,
     Key? key,
   }) : super(key: key);
 
@@ -31,10 +33,12 @@ class _writeState extends State<write> {
       termController.text = widget.termxyz!;
       definationController.text = widget.definationxyz!;
     }
+    // currentSet = widget.currentSet;
     super.initState();
   }
 
   // CollectionReference users = FirebaseFirestore.instance.collection('users');
+  // String? currentSet;
   bool HIDDEN = false;
   String? term;
   String? definition;
@@ -52,7 +56,9 @@ class _writeState extends State<write> {
     return WillPopScope(
       onWillPop: () {
         return Navigator.push(
-                context, MaterialPageRoute(builder: (context) => gridView()))
+                context,
+                MaterialPageRoute(
+                    builder: (context) => gridView(ttl: widget.currentSet)))
             .then((value) {
           return true;
         });
@@ -61,8 +67,11 @@ class _writeState extends State<write> {
         appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => gridView()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            gridView(ttl: widget.currentSet)));
               },
               icon: Icon(Icons.clear_sharp)),
           actions: [
@@ -175,12 +184,17 @@ class _writeState extends State<write> {
                     FloatingActionButton.extended(
                       label: Text('ADD NEXT CARD'),
                       onPressed: () async {
+                        // print(currentSet);
                         if (_formKey.currentState!.validate()) {
-                          _submitTitle(context, termController.text,
-                              definationController.text,
-                              exampleControl: exampleController.text,
-                              editxy: widget.editxyz,
-                              ttl: widget.ttl);
+                          _submitTitle(
+                            context,
+                            termController.text,
+                            definationController.text,
+                            widget.currentSet,
+                            exampleControl: exampleController.text,
+                            editxy: widget.editxyz,
+                            ttl: widget.ttl,
+                          );
                           setState(() {
                             termController.text = '';
                             definationController.text = '';
@@ -458,16 +472,19 @@ addDrawing(BuildContext context) {
       });
 }
 
-_submitTitle(BuildContext context, termControl, definationControl,
+_submitTitle(
+    BuildContext context, termControl, definationControl, currentSetControl,
     {exampleControl, bool? editxy, nd_title? ttl}) {
   final DBManager2 dbManager2 = DBManager2();
   // title? TTitle;
   // print(ttl!.nd_id);
   if (editxy == null) {
     nd_title ttl = nd_title(
-        term: termControl,
-        defination: definationControl,
-        example: exampleControl);
+      term: termControl,
+      defination: definationControl,
+      example: exampleControl,
+      current_set: currentSetControl,
+    ); //TODO enter to db
     dbManager2.insertTitle(ttl).then((value) => null);
   } else {
     // print('FloaTing EditOr ${ttl!.nd_id}');

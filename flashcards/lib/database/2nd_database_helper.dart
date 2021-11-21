@@ -8,6 +8,15 @@ import 'package:sqflite/sqflite.dart';
 class DBManager2 {
   Database? _database2;
 
+  // Future openDb2() async {
+  //   print('Terminator ON');
+  //   _database2 = await openDatabase(join(await getDatabasesPath(), "TitleA.db"),
+  //       version: 1, onCreate: (Database db, int version) async {
+  //     await db.execute(
+  //         "CREATE TABLE titleTERMINATOR (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, archive BOOLEAN)");
+  //   });
+  // }
+
   Future nd_openDb() async {
     if (_database2 == null) {
       //If Database doesnt exist, then only create the Database
@@ -25,9 +34,41 @@ class DBManager2 {
     return await _database2!.insert('nd_title', nd_title.toMap());
   }
 
+// where: 'nd_id=?', whereArgs: [nd_title.nd_id]
+
+  Future<List<nd_title>> getNEWtitleList(String currentSet) async {
+    await nd_openDb();
+    final List<Map<String, dynamic>> maps = await _database2!.query('nd_title',
+        where: 'current_set=?',
+        whereArgs: [
+          currentSet
+        ]); //TODO NEEDS UPDATEFROM FORIGNKEY.dart contact operation
+    // await db!.rawQuery('''
+    // SELECT * FROM contact
+    // WHERE contact.FK_contact_category = ${category.id}
+    // ''');
+    return List.generate(
+        maps.length,
+        (i) => nd_title(
+              nd_id: maps[i]['nd_id'],
+              term: maps[i]['term'],
+              defination: maps[i]['defination'],
+              example: maps[i]['example'],
+              url: maps[i]['url'],
+              favorite: maps[i]['favorite'],
+              current_set: maps[i]['current_set'],
+              archive: maps[i]['archive'],
+            ));
+  }
+
   Future<List<nd_title>> getnd_TitleList() async {
     await nd_openDb();
-    final List<Map<String, dynamic>> maps = await _database2!.query('nd_title');
+    final List<Map<String, dynamic>> maps = await _database2!.query(
+        'nd_title'); //TODO NEEDS UPDATEFROM FORIGNKEY.dart contact operation
+    // await db!.rawQuery('''
+    // SELECT * FROM contact
+    // WHERE contact.FK_contact_category = ${category.id}
+    // ''');
     return List.generate(
         maps.length,
         (i) => nd_title(

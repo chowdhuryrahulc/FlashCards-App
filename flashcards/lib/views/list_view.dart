@@ -45,32 +45,32 @@ class _list_viewState extends State<list_view> {
                 itemCount: titleList!.length,
                 itemBuilder: (BuildContext context, int index) {
                   title ttl = titleList![index];
-                  return SizedBox(
-                    height: 150,
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => gridView()));
-                      },
-                      child: Visibility(
-                        //? TRUE:- Can see
-                        //? FALSE:- Cant see
-                        visible: (() {
-                          if (ttl.archive == 1) {
-                            if (widget.X == true) {
-                              return true;
-                            } else {
-                              print('archive true||X false');
-                              // titleList!.removeAt(index);
-                              //TODO MAKE INVISIBLE FROM LISTVIEWBUILDER
-                              return false;
-                            }
-                          } else {
-                            return true;
-                          }
-                        }()),
+                  return Visibility(
+//? TRUE:- Can see
+                    //? FALSE:- Cant see
+                    visible: (() {
+                      if (ttl.archive == 1) {
+                        if (widget.X == true) {
+                          return true;
+                        } else {
+                          print('archive true||X false');
+                          return false;
+                        }
+                      } else {
+                        return true;
+                      }
+                    }()),
+                    child: SizedBox(
+                      height: 150,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      gridView(ttl: ttl.name)));
+                          //TODO GOES currentSet info $ttl.name
+                        },
                         child: Card(
                           child: Stack(
                             children: [
