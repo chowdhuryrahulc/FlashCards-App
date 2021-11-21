@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class gridView extends StatefulWidget {
-  const gridView({Key? key}) : super(key: key);
+  String? ttl;
+  gridView({Key? key, this.ttl}) : super(key: key); //! ttl entry
 
   @override
   State<gridView> createState() => _gridViewState();
@@ -76,6 +77,7 @@ class _gridViewState extends State<gridView> {
                                       termxyz: list.term,
                                       definationxyz: list.defination,
                                       ttl: list,
+                                      currentSet: widget.ttl,
                                     )));
                       },
                       child: Row(
@@ -150,13 +152,13 @@ class _gridViewState extends State<gridView> {
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: FutureBuilder(
-              future: dbManager2.getnd_TitleList(),
+              future: dbManager2.getNEWtitleList(widget.ttl!),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   titleList = snapshot.data;
                   return StaggeredGridView.countBuilder(
                     crossAxisCount: 2,
-                    itemCount: titleList!.length, //!
+                    itemCount: titleList!.length,
                     itemBuilder: (context, index) {
                       return CardGridX(context, titleList![index]);
                     },
@@ -173,8 +175,14 @@ class _gridViewState extends State<gridView> {
           label: Text("CREATE SET"),
           icon: Icon(Icons.add),
           onPressed: () {
+            // print(widget.ttl);
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => write()));
+                context,
+                MaterialPageRoute(
+                    builder: (context) => write(
+                          currentSet: widget.ttl,
+                        )));
+            //TODO currentSet send to write. before this store it in another variable. Origin of currentSet from listView
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
