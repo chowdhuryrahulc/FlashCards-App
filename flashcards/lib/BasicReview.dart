@@ -4,10 +4,11 @@ import 'package:flashcards/views/Firstpage.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-// import 'package:flutter_tts/flutter_tts.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class BasicReview extends StatefulWidget {
-  const BasicReview({Key? key}) : super(key: key);
+  String? ttl;
+  BasicReview({Key? key, this.ttl}) : super(key: key);
 
   @override
   _BasicReviewState createState() => _BasicReviewState();
@@ -18,13 +19,25 @@ class _BasicReviewState extends State<BasicReview> {
   List<nd_title>? list;
   PageController pageController = PageController();
 
+  updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
+    if (favoriteToggle == 0) {
+      setState(() {
+        dbManager2.updateFavoriteTitle(ttlmX, 1);
+      });
+    } else if (favoriteToggle == 1) {
+      setState(() {
+        dbManager2.updateFavoriteTitle(ttlmX, 0);
+      });
+    }
+  }
+
   // final Stream<QuerySnapshot> users =
   //     FirebaseFirestore.instance.collection("users").snapshots();
-  // final TTS = FlutterTts();
+  final TTS = FlutterTts();
 
-  // Future S(X) async {
-  //   await TTS.speak(X);
-  // }
+  Future S(X) async {
+    await TTS.speak(X);
+  }
 
   int N = 0;
   @override
@@ -53,7 +66,7 @@ class _BasicReviewState extends State<BasicReview> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Expanded(
               child: FutureBuilder(
-            future: dbManager2.getnd_TitleList(),
+            future: dbManager2.getNEWtitleList(widget.ttl!),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 list = snapshot.data;
@@ -61,7 +74,7 @@ class _BasicReviewState extends State<BasicReview> {
                     scrollDirection: Axis.horizontal,
                     itemCount: list!.length,
                     itemBuilder: (context, index) {
-                      nd_title ttl = list![index];
+                      nd_title ttlm = list![index];
                       return PageView(
                         controller: pageController,
                         scrollDirection: Axis.vertical,
@@ -87,10 +100,22 @@ class _BasicReviewState extends State<BasicReview> {
                                         top: 0,
                                         left: 0,
                                         child: IconButton(
-                                            onPressed: () {},
-                                            icon: Icon(Icons.favorite))),
+                                          onPressed: () {
+                                            updateFavoriteTitle(
+                                                ttlm.favorite ?? 0, ttlm);
+                                          },
+                                          icon: Icon(() {
+                                            //TODO Color Change
+                                            if (ttlm.favorite == 1) {
+                                              // Colors.red;
+                                              return Icons.favorite;
+                                            } else {
+                                              return Icons.favorite_border;
+                                            }
+                                          }()),
+                                        )),
                                     Text(
-                                      '${ttl.term}',
+                                      '${ttlm.term}',
                                       style: TextStyle(fontSize: 50),
                                       textAlign: TextAlign.center,
                                     ),
@@ -138,7 +163,7 @@ class _BasicReviewState extends State<BasicReview> {
                                   alignment: Alignment.center,
                                   children: [
                                     Text(
-                                      "${ttl.defination}",
+                                      "${ttlm.defination}",
                                       style: TextStyle(fontSize: 50),
                                       textAlign: TextAlign.center,
                                     ),

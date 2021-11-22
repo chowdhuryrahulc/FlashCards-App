@@ -106,8 +106,9 @@ class _writeState extends State<write> {
                               onPressed: () {
                                 showBottomSheet(false);
                               },
-                              icon: Icon(Icons.access_time_filled_rounded),
-                              iconSize: 15),
+                              icon: Icon(Icons.photo_rounded),
+                              color: Colors.black,
+                              iconSize: 35),
                         ),
                         TextFormField(
                           validator: (val) => val!.isNotEmpty
@@ -125,8 +126,9 @@ class _writeState extends State<write> {
                               onPressed: () {
                                 showBottomSheet(true);
                               },
-                              icon: Icon(Icons.access_time_filled_rounded),
-                              iconSize: 15),
+                              icon: Icon(Icons.photo_rounded),
+                              color: Colors.black,
+                              iconSize: 35),
                         ),
                         Text("Tag",
                             style: TextStyle(

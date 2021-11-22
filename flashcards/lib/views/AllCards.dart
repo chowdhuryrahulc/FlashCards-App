@@ -1,20 +1,18 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/views/Firstpage.dart';
+import 'package:flashcards/views/grid_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class gridView extends StatefulWidget {
-  String? ttl;
-  gridView({Key? key, this.ttl}) : super(key: key); //! ttl entry
+class AllSet extends StatefulWidget {
+  const AllSet({Key? key}) : super(key: key);
 
   @override
-  State<gridView> createState() => _gridViewState();
+  _AllSetState createState() => _AllSetState();
 }
 
-class _gridViewState extends State<gridView> {
+class _AllSetState extends State<AllSet> {
   final DBManager2 dbManager2 = DBManager2();
-
   List<nd_title>? titleList;
 
   CardGridX(BuildContext context, nd_title list) {
@@ -77,7 +75,7 @@ class _gridViewState extends State<gridView> {
                                       termxyz: list.term,
                                       definationxyz: list.defination,
                                       ttl: list,
-                                      currentSet: widget.ttl,
+                                      // currentSet: widget.ttl,
                                     )));
                       },
                       child: Row(
@@ -129,96 +127,35 @@ class _gridViewState extends State<gridView> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return Firstpage();
-        })).then((value) {
-          return true;
-        });
-      },
-      child: Scaffold(
-        appBar: AppBar(actions: [
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
           IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),
-          PopupMenuButton(itemBuilder: (BuildContext context) {
-            return [
-              PopupMenuItem(child: Text("Manage cards   ")),
-              PopupMenuItem(child: Text('Manage tags')),
-              PopupMenuItem(child: Text("Sync")),
-            ];
-          })
-        ]),
-        body: Column(
-          children: [
-            Memorized(),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder(
-                  future: dbManager2.getNEWtitleList(widget.ttl!),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      titleList = snapshot.data;
-                      return StaggeredGridView.countBuilder(
-                        crossAxisCount: 2,
-                        itemCount: titleList!.length,
-                        itemBuilder: (context, index) {
-                          return CardGridX(context, titleList![index]);
-                        },
-                        staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                        mainAxisSpacing: 2.0,
-                        crossAxisSpacing: 2.0,
-                        shrinkWrap: true,
-                      );
-                    }
-                    return Container();
-                  }),
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          label: Text("ADD CARDS"),
-          icon: Icon(Icons.add),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => write(
-                          currentSet: widget.ttl,
-                        )));
-          },
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+          IconButton(
+              onPressed: () {}, icon: Icon(Icons.photo_camera_back_outlined)),
+        ],
       ),
-    );
-  }
-
-  Memorized() {
-    // String length;
-    Future<int> j = dbManager2.getCount();
-    print(j);
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  // color: Colors.blue
-                  border: Border.all(color: Colors.blue)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'ALL:- $j',
-                  //${titleList!.length}',
-                  style: TextStyle(fontSize: 25, color: Colors.blue),
-                ),
-              ),
-            )
-          ],
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FutureBuilder(
+            future: dbManager2.getnd_TitleList(),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                titleList = snapshot.data;
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 2,
+                  itemCount: titleList!.length,
+                  itemBuilder: (context, index) {
+                    return CardGridX(context, titleList![index]);
+                  },
+                  staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                  mainAxisSpacing: 2.0,
+                  crossAxisSpacing: 2.0,
+                  shrinkWrap: true,
+                );
+              }
+              return Container();
+            }),
       ),
     );
   }

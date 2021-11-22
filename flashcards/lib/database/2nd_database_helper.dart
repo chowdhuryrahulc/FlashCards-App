@@ -8,15 +8,6 @@ import 'package:sqflite/sqflite.dart';
 class DBManager2 {
   Database? _database2;
 
-  // Future openDb2() async {
-  //   print('Terminator ON');
-  //   _database2 = await openDatabase(join(await getDatabasesPath(), "TitleA.db"),
-  //       version: 1, onCreate: (Database db, int version) async {
-  //     await db.execute(
-  //         "CREATE TABLE titleTERMINATOR (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, archive BOOLEAN)");
-  //   });
-  // }
-
   Future nd_openDb() async {
     if (_database2 == null) {
       //If Database doesnt exist, then only create the Database
@@ -35,6 +26,14 @@ class DBManager2 {
   }
 
 // where: 'nd_id=?', whereArgs: [nd_title.nd_id]
+
+  Future<int> getCount() async {
+    await nd_openDb();
+    List<Map<String, dynamic>> x = await _database2!
+        .rawQuery('SELECT COUNT (*) from ${nd_title}'); //TODO WHERE SYMBOL
+    int? result = Sqflite.firstIntValue(x);
+    return result!;
+  }
 
   Future<List<nd_title>> getNEWtitleList(String currentSet) async {
     await nd_openDb();
