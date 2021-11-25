@@ -88,6 +88,16 @@ class DBManager2 {
         where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
   }
 
+//TODO
+  Future<int> renameCurrent_setListView(
+      String currentSet, String newSet, nd_title nd_title) async {
+    await nd_openDb();
+    return await _database2!
+        .update('nd_title', nd_title.toRenameMap(newSet), // Needs change
+            where: 'current_set=?',
+            whereArgs: [currentSet]);
+  }
+
   Future<int> updateFavoriteTitle(nd_title nd_title, int favorite) async {
     await nd_openDb();
     return await _database2!.update(
@@ -130,6 +140,13 @@ class nd_title {
       'favorite': favorite,
       'current_set': current_set,
       'archive': archive
+    };
+  }
+
+  Map<String, String> toRenameMap(String newSet) {
+    return {
+      // 'nd_id': nd_id,
+      'current_set': newSet,
     };
   }
 

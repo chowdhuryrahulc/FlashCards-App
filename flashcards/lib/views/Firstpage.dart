@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/database/database_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/views/list_view.dart';
@@ -317,6 +318,7 @@ floatingdialog(BuildContext context,
 _submitTitle(BuildContext context, ttleControl, descripControl,
     {bool? editx, title? ttl}) {
   final DBManager dbManager = DBManager();
+  final DBManager2 dbManager2 = DBManager2();
   // title? TTitle;
 
   if (editx == null) {
@@ -328,5 +330,8 @@ _submitTitle(BuildContext context, ttleControl, descripControl,
     ttl.description = descripControl;
     // title ttl = title(name: ttleControl, description: descripControl);
     dbManager.updateTitle(ttl).then((value) => null);
+    dbManager2.renameCurrent_setListView(currentSet, ttleControl, nd_title)
+    //Store currentSet somewhere?
+    //nd.title should be ttl??
   }
 }
