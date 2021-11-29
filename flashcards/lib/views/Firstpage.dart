@@ -174,7 +174,7 @@ floatingdialog(BuildContext context,
                               if (_formKey.currentState!.validate()) {
                                 _submitTitle(context, titleController.text,
                                     descriptionController.text,
-                                    editx: edit, ttl: ttl);
+                                    editx: edit, ttl: ttl, titleM: title);
                                 setState(() {
                                   Navigator.pop(context);
                                 });
@@ -298,7 +298,8 @@ floatingdialog(BuildContext context,
                                           titleController.text,
                                           descriptionController.text,
                                           editx: edit,
-                                          ttl: ttl);
+                                          ttl: ttl,
+                                          titleM: title);
                                       setState(() {
                                         Navigator.pop(context);
                                       });
@@ -316,11 +317,13 @@ floatingdialog(BuildContext context,
 }
 
 _submitTitle(BuildContext context, ttleControl, descripControl,
-    {bool? editx, title? ttl}) {
+    {bool? editx, title? ttl, String? titleM}) async {
   final DBManager dbManager = DBManager();
   final DBManager2 dbManager2 = DBManager2();
   // title? TTitle;
+  List<nd_title> ist = await dbManager2.getnd_TitleList();
 
+  // nd_title? nd_title = [];
   if (editx == null) {
     title ttl = title(name: ttleControl, description: descripControl);
     dbManager.insertTitle(ttl).then((value) => null);
@@ -330,8 +333,9 @@ _submitTitle(BuildContext context, ttleControl, descripControl,
     ttl.description = descripControl;
     // title ttl = title(name: ttleControl, description: descripControl);
     dbManager.updateTitle(ttl).then((value) => null);
-    dbManager2.renameCurrent_setListView(currentSet, ttleControl, nd_title)
-    //Store currentSet somewhere?
-    //nd.title should be ttl??
+    for (int b = 0; b < ist.length - 1; b++) {
+      await dbManager2.renameCurrent_setListView(titleM!, ttleControl, ist[b]);
+    }
+    //! ERROR:- nd_title
   }
 }

@@ -198,8 +198,8 @@ class _writeState extends State<write> {
                             ttl: widget.ttl,
                           );
                           setState(() {
-                            termController.text = '';
                             definationController.text = '';
+                            termController.text = '';
                           });
                         }
 

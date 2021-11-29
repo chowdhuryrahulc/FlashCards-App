@@ -60,6 +60,12 @@ class DBManager2 {
             ));
   }
 
+  //  FirstPagr() async {
+  //   await nd_openDb();
+  //   final List<Map<String, dynamic>> maps = await _database2!.query('nd_title');
+  //   return maps;
+  // }
+
   Future<List<nd_title>> getnd_TitleList() async {
     await nd_openDb();
     final List<Map<String, dynamic>> maps = await _database2!.query(

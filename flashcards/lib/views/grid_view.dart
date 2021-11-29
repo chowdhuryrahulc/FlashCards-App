@@ -200,24 +200,26 @@ class _gridViewState extends State<gridView> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
-        child: Row(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  // color: Colors.blue
-                  border: Border.all(color: Colors.blue)),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'ALL:- $j',
-                  //${titleList!.length}',
-                  style: TextStyle(fontSize: 25, color: Colors.blue),
+      child: SingleChildScrollView(
+        child: Container(
+          child: Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    // color: Colors.blue
+                    border: Border.all(color: Colors.blue)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'ALL:- $j',
+                    //${titleList!.length}',
+                    style: TextStyle(fontSize: 25, color: Colors.blue),
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
