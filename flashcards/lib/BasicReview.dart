@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
-import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -18,6 +16,7 @@ class _BasicReviewState extends State<BasicReview> {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
   PageController pageController = PageController();
+  PageController pageController2 = PageController();
 
   updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
     if (favoriteToggle == 0) {
@@ -71,6 +70,7 @@ class _BasicReviewState extends State<BasicReview> {
               if (snapshot.hasData) {
                 list = snapshot.data;
                 return PageView.builder(
+                    controller: pageController2,
                     scrollDirection: Axis.horizontal,
                     itemCount: list!.length,
                     itemBuilder: (context, index) {
@@ -212,6 +212,7 @@ class _BasicReviewState extends State<BasicReview> {
                   width: MediaQuery.of(context).size.width / 3,
                   child: MaterialButton(
                     onPressed: () {
+                      nextPage(pageController2);
                       setState(() {
                         N = N + 1;
                       });
@@ -226,6 +227,8 @@ class _BasicReviewState extends State<BasicReview> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
+                        nextPage(pageController2);
+
                         N = N + 1;
                       });
                     },
@@ -239,6 +242,8 @@ class _BasicReviewState extends State<BasicReview> {
                   child: MaterialButton(
                     onPressed: () {
                       setState(() {
+                        nextPage(pageController2);
+
                         N = N + 1;
                       });
                     },
@@ -255,6 +260,11 @@ class _BasicReviewState extends State<BasicReview> {
   }
 }
 
+nextPage(PageController pageController2) {
+  // var pageController2;
+  pageController2.animateToPage(pageController2.page!.toInt() + 1,
+      duration: Duration(seconds: 1), curve: Curves.ease);
+}
 
 
 

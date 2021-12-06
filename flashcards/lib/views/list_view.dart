@@ -70,7 +70,11 @@ class _list_viewState extends State<list_view> {
                                   builder: (context) =>
                                       gridView(ttl: ttl.name)));
                         },
-                        child: Card(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              border: Border(
+                                  left: BorderSide(
+                                      width: 16, color: Colors.black))),
                           child: Stack(
                             children: [
                               Positioned(
