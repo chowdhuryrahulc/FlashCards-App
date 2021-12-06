@@ -22,13 +22,50 @@ class _googleState extends State<google> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.black,
         body: Center(
-      child: ElevatedButton(
-          onPressed: () async {
-            Provider.of<GoogleSignInProvider>(context, listen: false)
-                .googleLogin();
-          },
-          child: Text("Sign In via Google")),
-    ));
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Sign In'),
+              Text('Sign In'),
+              ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Icon(Icons.email_outlined),
+                      Text('Sign in with email')
+                    ],
+                  )),
+              ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Icon(Icons.email_outlined),
+                      Text('Sign in with email')
+                    ],
+                  )),
+              ElevatedButton(
+                  onPressed: () {},
+                  child: Row(
+                    children: [
+                      Icon(Icons.email_outlined),
+                      Text('Sign in with email')
+                    ],
+                  )),
+              ElevatedButton(
+                  onPressed: () async {
+                    Provider.of<GoogleSignInProvider>(context, listen: false)
+                        .googleLogin();
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.email_outlined),
+                      Text('Sign in with Google')
+                    ],
+                  )),
+            ],
+          ),
+        ));
   }
 }
