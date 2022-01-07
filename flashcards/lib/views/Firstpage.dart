@@ -25,7 +25,9 @@ class _FirstpageState extends State<Firstpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[300],
       appBar: AppBar(
+        elevation: 0,
         actions: [
           IconButton(
               onPressed: () {
