@@ -5,8 +5,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class BasicReview extends StatefulWidget {
-  final String currentSetUsedForDatabaseSearch;
-  const BasicReview({Key? key, required this.currentSetUsedForDatabaseSearch})
+  String? currentSetUsedForDatabaseSearch;
+  BasicReview({Key? key, this.currentSetUsedForDatabaseSearch})
       : super(key: key);
 
   @override
@@ -56,8 +56,10 @@ class _BasicReviewState extends State<BasicReview> {
       body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Expanded(
             child: FutureBuilder(
-          future: dbManager2
-              .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
+          future: widget.currentSetUsedForDatabaseSearch == null
+              ? dbManager2.getnd_TitleList()
+              : dbManager2
+                  .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               list = snapshot.data;

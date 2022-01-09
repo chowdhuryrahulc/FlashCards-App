@@ -1,4 +1,6 @@
 import 'package:flashcards/database/database_helper.dart';
+import 'package:flashcards/modals/Practice.dart';
+import 'package:flashcards/modals/createSet.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/views/select_definition.dart';
 import 'package:flashcards/whiteBoardReview.dart';
@@ -67,15 +69,12 @@ class _list_viewState extends State<list_view> {
                       margin: EdgeInsets.symmetric(vertical: 4),
                       height: 150,
                       decoration: BoxDecoration(
-                          color: Colors.white,
-                          // borderRadius:
-                          //     BorderRadius.only(topRight: Radius.circular(5)),
-                          border: Border(
-                              left: BorderSide(
-                                  width: 8,
-                                  color: cardBorderColor
-                                      ? Colors.white
-                                      : Colors.black))),
+                          //? use cardBorder...
+                          gradient: LinearGradient(
+                              stops: [0.02, 0.02],
+                              colors: [Colors.red, Colors.white]),
+                          borderRadius:
+                              BorderRadius.all(const Radius.circular(6.0))),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
@@ -113,7 +112,7 @@ class _list_viewState extends State<list_view> {
                                       child: InkWell(
                                         onTap: () {
                                           bool? edi = true;
-                                          floatingdialog(context,
+                                          createSet(context,
                                                   title: ttl.name,
                                                   description: ttl.description,
                                                   edit: edi,
@@ -252,7 +251,7 @@ class _list_viewState extends State<list_view> {
                                       height: 35,
                                       child: OutlinedButton(
                                         onPressed: () {
-                                          Practice(context, ttl.name);
+                                          Practice(context, cardName: ttl.name);
                                         },
                                         child: Text("PRACTICE"),
                                         style: ButtonStyle(
@@ -341,104 +340,4 @@ class _list_viewState extends State<list_view> {
               ),
             ));
   }
-
-  Future<dynamic> Practice(BuildContext context, cardName) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-              insetPadding: EdgeInsets.all(20),
-              child: Scaffold(
-                appBar: AppBar(
-                  elevation: 0.0,
-                  leading: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.close)),
-                  actions: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.settings)),
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(Icons.check))
-                  ],
-                ),
-                body: ListView(children: [
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BasicReview(
-                                  currentSetUsedForDatabaseSearch: cardName)));
-                    },
-                    child: ListTile(
-                        leading: CircleAvatar(),
-                        title: Text('Basic Review'),
-                        subtitle: Text('Basic flashcards review')),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => select_definition(
-                                    currentSetUsedForDatabaseSearch: cardName,
-                                  )));
-                    },
-                    child: ListTile(
-                        leading: CircleAvatar(),
-                        title: Text('Select Definition'),
-                        subtitle: Text('Select the correct definition')),
-                  ),
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Match Cards'),
-                      subtitle: Text('Match between two lists')),
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Writing Review'),
-                      subtitle: Text('Review by writing')),
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Audio Player'),
-                      subtitle: Text('Review by listening to your cards')),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WhiteBoardReview()));
-                    },
-                    child: ListTile(
-                        leading: CircleAvatar(),
-                        title: Row(
-                          children: [Text('Whiteboard review  '), pro()],
-                        ),
-                        subtitle: Text('Practice by drawing the answer')),
-                  ),
-                  ListTile(
-                      leading: CircleAvatar(),
-                      title: Row(
-                        children: [Text('Memory Game '), pro()],
-                      ),
-                      subtitle: Text('Reveal and match cards')),
-                  ListTile(
-                    leading: CircleAvatar(),
-                    title: Row(
-                      children: [Text('Combined Review (PRO)  '), pro()],
-                    ),
-                  )
-                ]),
-              ));
-        });
-  }
-}
-
-pro() {
-  return Container(
-      child: Text('PRO', style: TextStyle(color: Colors.white)),
-      color: Colors.blue);
 }

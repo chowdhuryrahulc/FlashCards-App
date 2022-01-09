@@ -1,9 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class WhiteBoardReview extends StatefulWidget {
-  const WhiteBoardReview({Key? key}) : super(key: key);
+  String? currentSetUsedForDatabaseSearch;
+  WhiteBoardReview({
+    Key? key,
+    this.currentSetUsedForDatabaseSearch,
+  }) : super(key: key);
 
   @override
   _WhiteBoardReviewState createState() => _WhiteBoardReviewState();

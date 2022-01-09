@@ -35,7 +35,7 @@ class DBManager2 {
     return result!;
   }
 
-  Future<List<nd_title>> getNEWtitleList(String currentSet) async {
+  Future<List<nd_title>> getNEWtitleList(String? currentSet) async {
     await nd_openDb();
     final List<Map<String, dynamic>> maps = await _database2!.query('nd_title',
         where: 'current_set=?',

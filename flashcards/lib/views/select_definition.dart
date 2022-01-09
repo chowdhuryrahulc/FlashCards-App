@@ -5,10 +5,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class select_definition extends StatefulWidget {
-  final String currentSetUsedForDatabaseSearch;
-  const select_definition({
+  String? currentSetUsedForDatabaseSearch;
+  select_definition({
     Key? key,
-    required this.currentSetUsedForDatabaseSearch,
+    this.currentSetUsedForDatabaseSearch,
   }) : super(key: key);
 
   @override
