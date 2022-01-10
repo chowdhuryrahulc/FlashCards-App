@@ -28,7 +28,6 @@ class _FirstpageState extends State<Firstpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(180),
         child: Column(
@@ -51,16 +50,22 @@ class _FirstpageState extends State<Firstpage> {
                     PopupMenuItem(child: Text("Review Settings")),
                     PopupMenuItem(
                       child: CheckboxListTile(
+                          activeColor: Colors.blueGrey,
+                          checkColor: Colors.amber,
                           contentPadding: EdgeInsets.all(0),
-                          title: Text("Display Archived"),
+                          title: Text(
+                            "Display Archived",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
                           value: X,
                           onChanged: (bool? value) {
                             if (value != null) {
                               setState(() {
                                 X = value;
+                                Navigator.pop(context);
                               });
                             }
-                            // Navigaton.
                           }),
                     )
                   ];
@@ -70,7 +75,7 @@ class _FirstpageState extends State<Firstpage> {
             Expanded(
                 child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 18),
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.secondary,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
@@ -104,7 +109,8 @@ class _FirstpageState extends State<Firstpage> {
                                             builder: (context) =>
                                                 BasicReview()));
                                   },
-                                  child: Text("REVIEW ALL"),
+                                  child: Text("REVIEW ALL",
+                                      style: TextStyle(color: Colors.blue)),
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(
                                           RoundedRectangleBorder(
@@ -122,7 +128,8 @@ class _FirstpageState extends State<Firstpage> {
                                 onPressed: () {
                                   Practice(context);
                                 },
-                                child: Text("PRACTICE ALL"),
+                                child: Text("PRACTICE ALL",
+                                    style: TextStyle(color: Colors.blue)),
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
                                         RoundedRectangleBorder(
@@ -145,6 +152,7 @@ class _FirstpageState extends State<Firstpage> {
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
         icon: Icon(Icons.add),
+        backgroundColor: Colors.blue,
         onPressed: () {
           createSet(context).then((val) {
             setState(() {});

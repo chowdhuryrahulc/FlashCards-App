@@ -1,6 +1,8 @@
 import 'package:flashcards/BasicReview.dart';
 import 'package:flashcards/views/audio_player.dart';
+import 'package:flashcards/views/match_cards.dart';
 import 'package:flashcards/views/select_definition.dart';
+import 'package:flashcards/views/writing_review.dart';
 import 'package:flashcards/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 
@@ -28,71 +30,36 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
                 ],
               ),
               body: ListView(children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => BasicReview(
-                                currentSetUsedForDatabaseSearch: cardName)));
-                  },
-                  child: ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Basic Review'),
-                      subtitle: Text('Basic flashcards review')),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => select_definition(
-                                  currentSetUsedForDatabaseSearch: cardName,
-                                )));
-                  },
-                  child: ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Select Definition'),
-                      subtitle: Text('Select the correct definition')),
-                ),
-                ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('Match Cards'),
-                    subtitle: Text('Match between two lists')),
-                ListTile(
-                    leading: CircleAvatar(),
-                    title: Text('Writing Review'),
-                    subtitle: Text('Review by writing')),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => audioPlayer(
-                                  currentSetUsedForDatabaseSearch: cardName,
-                                )));
-                  },
-                  child: ListTile(
-                      leading: CircleAvatar(),
-                      title: Text('Audio Player'),
-                      subtitle: Text('Review by listening to your cards')),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => WhiteBoardReview(
-                                  currentSetUsedForDatabaseSearch: cardName,
-                                )));
-                  },
-                  child: ListTile(
-                      leading: CircleAvatar(),
-                      title: Row(
-                        children: [Text('Whiteboard review  '), pro()],
-                      ),
-                      subtitle: Text('Practice by drawing the answer')),
-                ),
+                practiceListTile(
+                    context,
+                    'Basic Review',
+                    'Basic flashcards review',
+                    BasicReview(currentSetUsedForDatabaseSearch: cardName)),
+                practiceListTile(
+                    context,
+                    'Select Definition',
+                    'Select the correct definition',
+                    select_definition(
+                      currentSetUsedForDatabaseSearch: cardName,
+                    )),
+                practiceListTile(context, 'Match Cards',
+                    'Match between two lists', matchCards()),
+                practiceListTile(context, 'Writing Review', 'Review by writing',
+                    writingReview()),
+                practiceListTile(
+                    context,
+                    'Audio Player',
+                    'Review by listening to your cards',
+                    audioPlayer(
+                      currentSetUsedForDatabaseSearch: cardName,
+                    )),
+                practiceListTile(
+                    context,
+                    'Whiteboard review  ',
+                    'Practice by drawing the answer',
+                    WhiteBoardReview(
+                      currentSetUsedForDatabaseSearch: cardName,
+                    )),
                 ListTile(
                     leading: CircleAvatar(),
                     title: Row(
@@ -108,6 +75,25 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
               ]),
             ));
       });
+}
+
+InkWell practiceListTile(
+    BuildContext context, String title, String subtitle, dynamic dynamic) {
+  return InkWell(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => dynamic));
+    },
+    child: ListTile(
+        leading: CircleAvatar(),
+        title: Row(
+          children: [
+            Text(title,
+                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
+            pro()
+          ],
+        ),
+        subtitle: Text(subtitle)),
+  );
 }
 
 pro() {

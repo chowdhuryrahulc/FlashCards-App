@@ -54,44 +54,47 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
       ),
       Expanded(
           key: stickeyKey,
-          child: GestureDetector(
-            onPanUpdate: (details) {
-              setState(() {
-                final keyContext = stickeyKey.currentContext;
-                RenderBox renderBox =
-                    keyContext!.findRenderObject() as RenderBox;
-                points!.add(DrawingPoints(
-                    points: renderBox.globalToLocal(details.globalPosition),
-                    paint: Paint()
-                      ..strokeCap = strokeCap
-                      ..isAntiAlias = true
-                      ..color = Colors.black
-                      ..strokeWidth = strokeWidth));
-              });
-            },
-            onPanStart: (details) {
-              setState(() {
-                final keyContext = stickeyKey.currentContext;
-                RenderBox renderBox =
-                    keyContext!.findRenderObject() as RenderBox;
-                points!.add(DrawingPoints(
-                    points: renderBox.globalToLocal(details.globalPosition),
-                    paint: Paint()
-                      ..strokeCap = strokeCap
-                      ..isAntiAlias = true
-                      ..color = Colors.black
-                      ..strokeWidth = strokeWidth));
-              });
-            },
-            onPanEnd: (details) {
-              setState(() {
-                points!.add(DrawingPoints(points: null));
-              });
-            },
-            child: CustomPaint(
-              size: Size.infinite,
-              painter: DrawingPainter(
-                pointsList: points!,
+          child: Container(
+            color: Colors.white,
+            child: GestureDetector(
+              onPanUpdate: (details) {
+                setState(() {
+                  final keyContext = stickeyKey.currentContext;
+                  RenderBox renderBox =
+                      keyContext!.findRenderObject() as RenderBox;
+                  points!.add(DrawingPoints(
+                      points: renderBox.globalToLocal(details.globalPosition),
+                      paint: Paint()
+                        ..strokeCap = strokeCap
+                        ..isAntiAlias = true
+                        ..color = Colors.black
+                        ..strokeWidth = strokeWidth));
+                });
+              },
+              onPanStart: (details) {
+                setState(() {
+                  final keyContext = stickeyKey.currentContext;
+                  RenderBox renderBox =
+                      keyContext!.findRenderObject() as RenderBox;
+                  points!.add(DrawingPoints(
+                      points: renderBox.globalToLocal(details.globalPosition),
+                      paint: Paint()
+                        ..strokeCap = strokeCap
+                        ..isAntiAlias = true
+                        ..color = Colors.black
+                        ..strokeWidth = strokeWidth));
+                });
+              },
+              onPanEnd: (details) {
+                setState(() {
+                  points!.add(DrawingPoints(points: null));
+                });
+              },
+              child: CustomPaint(
+                size: Size.infinite,
+                painter: DrawingPainter(
+                  pointsList: points!,
+                ),
               ),
             ),
           )),

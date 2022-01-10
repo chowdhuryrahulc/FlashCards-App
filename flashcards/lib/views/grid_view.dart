@@ -1,5 +1,6 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/views/Firstpage.dart';
+import 'package:flashcards/views/list_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -32,95 +33,88 @@ class _gridViewState extends State<gridView> {
       }
     }
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              list.term,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text(list.defination, style: TextStyle(fontSize: 15)),
-            SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                InkWell(
-                  onTap: () {
-                    updateFavoriteTitle(list.favorite ?? 0);
-                  },
-                  child: Icon(() {
-                    //TODO Color Change
-                    if (list.favorite == 1) {
-                      // Colors.red;
-                      return Icons.favorite;
-                    } else {
-                      return Icons.favorite_border;
-                    }
-                  }()),
-                ),
-                PopupMenuButton(itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem(
-                        child: InkWell(
-                      onTap: () {
-                        bool? edi = true;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => write(
-                                      editxyz: edi,
-                                      termxyz: list.term,
-                                      definationxyz: list.defination,
-                                      ttl: list,
-                                      currentSet: widget.ttl,
-                                    )));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [Icon(Icons.edit), Text(' Edit')],
-                      ),
-                    )),
-                    PopupMenuItem(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [Icon(Icons.show_chart), Text(' Progress')],
-                    )),
-                    PopupMenuItem(
-                        child: Row(
+    return Container(
+      color: Theme.of(context).colorScheme.secondary,
+      margin: EdgeInsets.all(4.0),
+      padding: EdgeInsets.only(top: 8.0, left: 8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            list.term,
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary),
+          ),
+          SizedBox(height: 10),
+          Text(list.defination,
+              style: TextStyle(
+                  fontSize: 15, color: Theme.of(context).colorScheme.primary)),
+          SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () {
+                  updateFavoriteTitle(list.favorite ?? 0);
+                },
+                child: Icon(() {
+                  //TODO Color Change
+                  if (list.favorite == 1) {
+                    // Colors.red;
+                    return Icons.favorite;
+                  } else {
+                    return Icons.favorite_border;
+                  }
+                }()),
+              ),
+              PopupMenuButton(itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(
+                      child: InkWell(
+                          onTap: () {
+                            bool? edi = true;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => write(
+                                          editxyz: edi,
+                                          termxyz: list.term,
+                                          definationxyz: list.defination,
+                                          ttl: list,
+                                          currentSet: widget.ttl,
+                                        )));
+                          },
+                          child: popUpTitle(Icons.edit, 'Edit'))),
+                  PopupMenuItem(
+                      child: popUpTitle(Icons.show_chart, 'Progress')),
+                  PopupMenuItem(
+                      child: popUpTitle(
+                          Icons.add_circle_outline, 'Add to ignored')),
+                  PopupMenuItem(
+                      child: InkWell(
+                    onTap: () {
+                      dbManager2
+                          .deleteTitle(list.nd_id!)
+                          .then((value) => setState(() {
+                                Navigator.pop(context);
+                              }));
+                    },
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Icons.add_circle_outline),
-                        Text(' Add to ignored')
+                        Icon(Icons.delete, color: Colors.red),
+                        Text(' Remove')
                       ],
-                    )),
-                    PopupMenuItem(
-                        child: InkWell(
-                      onTap: () {
-                        dbManager2
-                            .deleteTitle(list.nd_id!)
-                            .then((value) => setState(() {
-                                  Navigator.pop(context);
-                                }));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(Icons.delete, color: Colors.red),
-                          Text(' Remove')
-                        ],
-                      ),
-                    ))
-                  ];
-                }),
-              ],
-            )
-          ],
-        ),
+                    ),
+                  ))
+                ];
+              }),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -128,7 +122,6 @@ class _gridViewState extends State<gridView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
       appBar: AppBar(elevation: 0, actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.search)),
         IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),

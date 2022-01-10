@@ -42,7 +42,6 @@ class _select_definitionState extends State<select_definition>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
           actions: [
             IconButton(
                 onPressed: () {
@@ -83,7 +82,6 @@ class _select_definitionState extends State<select_definition>
                 icon: Icon(Icons.settings))
           ],
         ),
-        backgroundColor: Colors.blue,
         body: SingleChildScrollView(
           child: SlideTransition(
             position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
@@ -92,7 +90,7 @@ class _select_definitionState extends State<select_definition>
               children: [
                 Container(
                   height: 350,
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.secondary,
                   margin: EdgeInsets.all(7.0),
                   child: Center(
                     child: Text('Terminator'),
@@ -137,7 +135,6 @@ class _OptionWidgetState extends State<OptionWidget>
     with SingleTickerProviderStateMixin {
   AnimationController? controller;
   bool visible = false;
-  Color containerColor = Colors.white;
 
   @override
   void initState() {
@@ -154,6 +151,7 @@ class _OptionWidgetState extends State<OptionWidget>
 
   @override
   Widget build(BuildContext context) {
+    Color containerColor = Theme.of(context).colorScheme.secondary;
     final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 7.0)
         .chain(CurveTween(curve: Curves.elasticIn))
         .animate(controller!)
@@ -180,7 +178,8 @@ class _OptionWidgetState extends State<OptionWidget>
                         onTap: () {
                           controller!.forward(from: 0.0);
                           visible = true;
-                          containerColor = Colors.red;
+                          containerColor =
+                              Colors.red; //! blackish red in dark theme.
                         },
                         child: Text(widget.textInput)),
                   ),

@@ -82,7 +82,9 @@ class _BasicReviewState extends State<BasicReview> {
                             children: [
                               Container(
                                 margin: EdgeInsets.all(8),
-                                color: Colors.blue,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .primaryVariant,
                                 child: InkWell(
                                   onTap: () {
                                     // pageController.jumpToPage(1);
@@ -147,7 +149,9 @@ class _BasicReviewState extends State<BasicReview> {
                               ),
                               Container(
                                 margin: EdgeInsets.all(8),
-                                color: Colors.green,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryVariant,
                                 child: InkWell(
                                   onTap: () {
                                     // pageController.jumpToPage(0);

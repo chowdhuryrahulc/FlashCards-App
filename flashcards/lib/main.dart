@@ -26,12 +26,63 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         theme: context.watch<darktheme>().dark
-            ? ThemeData.dark()
-            : ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+            ? darkThemeData()
+            : lightThemeData(),
+        darkTheme: darkThemeData(),
         debugShowCheckedModeBanner: false,
         home: Profilepage());
   }
+
+  ThemeData lightThemeData() => ThemeData(
+      appBarTheme:
+          Theme.of(context).appBarTheme.copyWith(backgroundColor: Colors.blue),
+      scaffoldBackgroundColor: Colors.grey[300],
+      backgroundColor: Colors.blue,
+      colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.black,
+          secondary: Colors.white,
+          primaryVariant: Colors.green,
+          secondaryVariant: Colors.blue),
+      textTheme: Theme.of(context).textTheme.copyWith(
+            bodyText1: Theme.of(context)
+                .textTheme
+                .bodyText1!
+                .apply(color: Colors.black),
+          ),
+      primaryColor: Colors.amber,
+      popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
+          color: Colors.white, textStyle: TextStyle(color: Colors.black)),
+      iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.black));
+
+  ThemeData darkThemeData() => ThemeData(
+        // FAB from Red to Blue
+        appBarTheme: Theme.of(context)
+            .appBarTheme
+            .copyWith(backgroundColor: Colors.grey[900]),
+        scaffoldBackgroundColor: Colors.black,
+        backgroundColor: Colors.black,
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
+        // drawerTheme: DrawerTheme.of(context).copyWith(
+
+        // ),
+        //! colorSceme.copywith. try different combos.
+        primaryColor: Colors.amber,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.white, // for ListView headline and subtitle
+          secondary: Colors.grey[900], // for Container in ListView
+          primaryVariant: Colors.blueGrey[700], // BasicReview container color
+          secondaryVariant: Colors.blueGrey[300], // BasicReview container color
+        ),
+        popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
+            color: Colors.black, textStyle: TextStyle(color: Colors.white)),
+        //! THIS IS TEXTTHEME. NOT COLOR
+        // NOT USED
+        textTheme: Theme.of(context).textTheme.copyWith(
+            headline1: Theme.of(context).textTheme.headline1!.apply(
+                  color: Colors.white,
+                  // fontSizeDelta:
+                )),
+      );
 }
 
 class darktheme extends ChangeNotifier {

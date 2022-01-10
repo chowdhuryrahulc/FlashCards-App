@@ -39,6 +39,7 @@ class _list_viewState extends State<list_view> {
 
   @override
   Widget build(BuildContext context) {
+    final textThemeControl = Theme.of(context).colorScheme.primary;
     return FutureBuilder(
         future: dbManager.getTitleList(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -70,9 +71,13 @@ class _list_viewState extends State<list_view> {
                       height: 150,
                       decoration: BoxDecoration(
                           //? use cardBorder...
-                          gradient: LinearGradient(
-                              stops: [0.02, 0.02],
-                              colors: [Colors.red, Colors.white]),
+                          gradient: LinearGradient(stops: [
+                            0.02,
+                            0.02
+                          ], colors: [
+                            Colors.red,
+                            Theme.of(context).colorScheme.secondary
+                          ]),
                           borderRadius:
                               BorderRadius.all(const Radius.circular(6.0))),
                       child: InkWell(
@@ -93,11 +98,13 @@ class _list_viewState extends State<list_view> {
                                 children: [
                                   Text(
                                     "${ttl.name}",
-                                    style: TextStyle(fontSize: 35),
+                                    style: TextStyle(
+                                        fontSize: 35, color: textThemeControl),
                                   ),
                                   Text(
                                     "N cards menorized",
-                                    style: TextStyle(fontSize: 12),
+                                    style: TextStyle(
+                                        fontSize: 12, color: textThemeControl),
                                   ),
                                 ],
                               ),
@@ -123,76 +130,44 @@ class _list_viewState extends State<list_view> {
                                             });
                                           });
                                         },
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.edit),
-                                            Text("Edit"),
-                                          ],
-                                        ),
+                                        child: popUpTitle(Icons.edit, "Edit"),
                                       ),
                                     ),
                                     PopupMenuItem(
                                         child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                          return gridView(ttl: ttl.name);
-                                        }));
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.add),
-                                          Text("Add cards"),
-                                        ],
-                                      ),
-                                    )),
+                                            onTap: () {
+                                              Navigator.push(context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) {
+                                                return gridView(ttl: ttl.name);
+                                              }));
+                                            },
+                                            child: popUpTitle(
+                                                Icons.add, "Add cards"))),
                                     PopupMenuItem(
                                         child: InkWell(
-                                      onTap: () {
-                                        share();
-                                        Navigator.pop(context);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.share),
-                                          Text("Share"),
-                                        ],
-                                      ),
-                                    )),
+                                            onTap: () {
+                                              share();
+                                              Navigator.pop(context);
+                                            },
+                                            child: popUpTitle(
+                                                Icons.share, "Share"))),
                                     PopupMenuItem(
                                         child: InkWell(
-                                      onTap: () {
-                                        updateArchiveTitle(ttl);
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.archive),
-                                          Text("Archive"),
-                                        ],
-                                      ),
-                                    )),
+                                            onTap: () {
+                                              updateArchiveTitle(ttl);
+                                            },
+                                            child: popUpTitle(
+                                                Icons.archive, "Archive"))),
                                     PopupMenuItem(
-                                        child: Row(
-                                      children: [
-                                        Icon(Icons.import_export),
-                                        Text("Export Cards"),
-                                      ],
-                                    )),
+                                        child: popUpTitle(Icons.import_export,
+                                            "Export Cards")),
                                     PopupMenuItem(
-                                        child: Row(
-                                      children: [
-                                        Icon(Icons.style),
-                                        Text("Merge sets"),
-                                      ],
-                                    )),
+                                        child: popUpTitle(
+                                            Icons.style, "Merge sets")),
                                     PopupMenuItem(
-                                        child: Row(
-                                      children: [
-                                        Icon(Icons.move_to_inbox),
-                                        Text("Move Cards"),
-                                      ],
-                                    )),
+                                        child: popUpTitle(
+                                            Icons.move_to_inbox, "Move Cards")),
                                     PopupMenuItem(
                                         child: InkWell(
                                       onTap: () {
@@ -203,12 +178,14 @@ class _list_viewState extends State<list_view> {
                                         });
                                       },
                                       child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: [
                                           Icon(
                                             Icons.delete_forever,
                                             color: Colors.red,
                                           ),
-                                          Text("Remove"),
+                                          Text(" Remove"),
                                         ],
                                       ),
                                     )),
@@ -235,7 +212,9 @@ class _list_viewState extends State<list_view> {
                                                             currentSetUsedForDatabaseSearch:
                                                                 ttl.name)));
                                           },
-                                          child: Text("REVIEW"),
+                                          child: Text("REVIEW",
+                                              style: TextStyle(
+                                                  color: Colors.blue)),
                                           style: ButtonStyle(
                                               shape: MaterialStateProperty.all(
                                                   RoundedRectangleBorder(
@@ -253,7 +232,9 @@ class _list_viewState extends State<list_view> {
                                         onPressed: () {
                                           Practice(context, cardName: ttl.name);
                                         },
-                                        child: Text("PRACTICE"),
+                                        child: Text("PRACTICE",
+                                            style:
+                                                TextStyle(color: Colors.blue)),
                                         style: ButtonStyle(
                                             shape: MaterialStateProperty.all(
                                                 RoundedRectangleBorder(
@@ -340,4 +321,16 @@ class _list_viewState extends State<list_view> {
               ),
             ));
   }
+}
+
+Row popUpTitle(IconData icon, String tileName, {Color? iconColor}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      Icon(icon),
+      Text(
+        " $tileName",
+      ),
+    ],
+  );
 }
