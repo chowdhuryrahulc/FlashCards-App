@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
-
 import 'package:flashcards/database/2nd_database_helper.dart';
 
 class audioPlayer extends StatefulWidget {
@@ -18,10 +17,10 @@ class audioPlayer extends StatefulWidget {
 class _audioPlayerState extends State<audioPlayer> {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
+  bool togglePlay = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(6, 25, 6, 20),
         child: Column(
@@ -46,11 +45,15 @@ class _audioPlayerState extends State<audioPlayer> {
                               Icon(Icons.favorite_border, color: Colors.red),
                         ),
                         SizedBox(
-                          height: 300,
+                          height: 200,
                         ),
                         Text('term',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 30)),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 50)
+                            // style:
+                            //     TextStyle(color: Colors.white, fontSize: 30)
+                            ),
                       ],
                     );
                   } else {
@@ -62,16 +65,19 @@ class _audioPlayerState extends State<audioPlayer> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
-                    onTap: () {},
-                    child: Icon(Icons.skip_previous,
-                        size: 50, color: Colors.white)),
+                    onTap: () {}, child: Icon(Icons.skip_previous, size: 50)),
                 InkWell(
-                    onTap: () {},
-                    child: Icon(Icons.play_circle_outline,
-                        size: 50, color: Colors.white)),
-                InkWell(
-                    onTap: () {},
-                    child: Icon(Icons.skip_next, size: 50, color: Colors.white))
+                    onTap: () {
+                      setState(() {
+                        togglePlay = !togglePlay;
+                      });
+                    },
+                    child: Icon(
+                        togglePlay
+                            ? Icons.playlist_play_rounded
+                            : Icons.play_circle_outline,
+                        size: 50)),
+                InkWell(onTap: () {}, child: Icon(Icons.skip_next, size: 50))
               ],
             )
           ],

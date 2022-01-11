@@ -195,18 +195,26 @@ class _gridViewState extends State<gridView> {
     );
   }
 
-  Container horizontalViewContainer(String name, int number) {
+  horizontalViewContainer(String name, int number) {
+    bool horizontalButtonTheme = true;
     return Container(
       decoration: BoxDecoration(
+          color: horizontalButtonTheme ? Colors.transparent : Colors.blue,
           borderRadius: BorderRadius.all(Radius.circular(20)),
-          // color: Colors.blue
           border: Border.all(color: Colors.blue)),
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Text(
-          '${name}:- ${number}',
-          //${titleList!.length}',
-          style: TextStyle(fontSize: 20, color: Colors.blue),
+      child: InkWell(
+        onTap: () {
+          horizontalButtonTheme = !horizontalButtonTheme;
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Text(
+            '${name}:- ${number}',
+            //${titleList!.length}',
+            style: TextStyle(
+                fontSize: 20,
+                color: horizontalButtonTheme ? Colors.blue : Colors.white),
+          ),
         ),
       ),
     );

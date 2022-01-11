@@ -93,7 +93,10 @@ class _select_definitionState extends State<select_definition>
                   color: Theme.of(context).colorScheme.secondary,
                   margin: EdgeInsets.all(7.0),
                   child: Center(
-                    child: Text('Terminator'),
+                    child: Text('Terminator',
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontSize: 50)),
                   ),
                 ),
                 OptionWidget('Option 1'),
@@ -108,7 +111,8 @@ class _select_definitionState extends State<select_definition>
 
   ListTile dialogListTile(String title, bool switchValue) {
     return ListTile(
-      leading: Text(title),
+      leading: Text(title,
+          style: TextStyle(color: Theme.of(context).colorScheme.primary)),
       trailing: Switch(
           value: switchValue,
           onChanged: (switchValue) {
@@ -181,7 +185,9 @@ class _OptionWidgetState extends State<OptionWidget>
                           containerColor =
                               Colors.red; //! blackish red in dark theme.
                         },
-                        child: Text(widget.textInput)),
+                        child: Text(widget.textInput,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary))),
                   ),
                 ),
                 Visibility(

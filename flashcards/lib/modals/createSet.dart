@@ -7,6 +7,7 @@ createSet(BuildContext context,
     {String? title, String? description, bool? edit, title? ttl}) {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  Color textColor = Theme.of(context).colorScheme.primary;
   if (title != null) {
     titleController.text = title;
     // descriptionController.text= description;
@@ -71,12 +72,14 @@ createSet(BuildContext context,
                         child: Column(
                           children: [
                             TextFormField(
+                              style: TextStyle(color: textColor),
                               validator: (val) => val!.isNotEmpty
                                   ? null
                                   : 'Name Should Not Be Empty',
                               controller: titleController,
                               decoration: InputDecoration(
                                   labelText: "Name",
+                                  labelStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)))),
@@ -85,9 +88,11 @@ createSet(BuildContext context,
                               height: 5,
                             ),
                             TextField(
+                              style: TextStyle(color: textColor),
                               controller: descriptionController,
                               decoration: InputDecoration(
                                   labelText: "Description-optional",
+                                  labelStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)))),
@@ -97,7 +102,8 @@ createSet(BuildContext context,
                             ),
                             Row(
                               children: [
-                                Text("Category"),
+                                Text("Category",
+                                    style: TextStyle(color: textColor)),
                                 IconButton(
                                   onPressed: () {},
                                   icon: Icon(Icons.access_alarm),
@@ -109,9 +115,8 @@ createSet(BuildContext context,
                             ),
                             Row(
                               children: [
-                                Text(
-                                  "Term language",
-                                ),
+                                Text("Term language",
+                                    style: TextStyle(color: textColor)),
                               ],
                             ),
                             SizedBox(
@@ -121,7 +126,8 @@ createSet(BuildContext context,
                               children: [
                                 DropdownButton<String>(
                                   value: Z,
-                                  hint: Text('English'),
+                                  hint: Text('English',
+                                      style: TextStyle(color: textColor)),
                                   onChanged: (String? N) {
                                     if (N != null) {
                                       Z = N;
@@ -136,7 +142,8 @@ createSet(BuildContext context,
                             ),
                             Row(
                               children: [
-                                Text("Definition language"),
+                                Text("Definition language",
+                                    style: TextStyle(color: textColor)),
                               ],
                             ),
                             SizedBox(
@@ -146,7 +153,8 @@ createSet(BuildContext context,
                               children: [
                                 DropdownButton<String>(
                                   value: M,
-                                  hint: Text('English'),
+                                  hint: Text('English',
+                                      style: TextStyle(color: textColor)),
                                   onChanged: (String? N1) {
                                     if (N1 != null) {
                                       M = N1;
@@ -161,11 +169,13 @@ createSet(BuildContext context,
                             ),
                             Center(
                               child: Text(
-                                  "In case of missing languages, or if audio does not work you need to install the language."),
+                                  "In case of missing languages, or if audio does not work you need to install the language.",
+                                  style: TextStyle(color: textColor)),
                             ),
                             TextButton(
                                 onPressed: () {},
-                                child: Text("INSTALL LANGUAGES")),
+                                child: Text("INSTALL LANGUAGES",
+                                    style: TextStyle(color: Colors.blue))),
                             SizedBox(
                               height: 20,
                             ),
@@ -173,6 +183,7 @@ createSet(BuildContext context,
                               width:
                                   (MediaQuery.of(context).size.width / 2) + 10,
                               child: FloatingActionButton.extended(
+                                  backgroundColor: Colors.blue,
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
                                       _submitTitle(

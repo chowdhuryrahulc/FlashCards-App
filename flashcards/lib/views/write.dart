@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/modals/addDrawing.dart';
 import 'package:flashcards/views/grid_view.dart';
-import 'package:flashcards/whiteBoardReview.dart';
+import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 // import 'package:firebase_core/firebase_core.dart';
 
@@ -53,6 +54,8 @@ class _writeState extends State<write> {
 
   @override
   Widget build(BuildContext context) {
+    Color textColor = Theme.of(context).colorScheme.primary;
+    Color iconColor = Theme.of(context).iconTheme.color!;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -77,11 +80,13 @@ class _writeState extends State<write> {
                   Column(
                     children: [
                       TextFormField(
+                        style: TextStyle(color: textColor),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Term Should Not Be Empty',
                         controller: termController,
                         decoration: InputDecoration(
                             hintText: "TERM",
+                            hintStyle: TextStyle(color: textColor),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)))),
@@ -92,16 +97,18 @@ class _writeState extends State<write> {
                               showBottomSheet(false);
                             },
                             icon: Icon(Icons.photo_rounded),
-                            color: Colors.black,
+                            color: iconColor,
                             iconSize: 35),
                       ),
                       TextFormField(
+                        style: TextStyle(color: textColor),
                         validator: (val) => val!.isNotEmpty
                             ? null
                             : 'Defination Should Not Be Empty',
                         controller: definationController,
                         decoration: InputDecoration(
                             hintText: "DEFINITION",
+                            hintStyle: TextStyle(color: textColor),
                             border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10.0)))),
@@ -111,19 +118,23 @@ class _writeState extends State<write> {
                             onPressed: () {
                               showBottomSheet(true);
                             },
-                            icon: Icon(Icons.photo_rounded),
-                            color: Colors.black,
+                            icon: Icon(Icons.photo_rounded, color: iconColor),
                             iconSize: 35),
                       ),
                       Text("Tag",
                           style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: textColor,
+                          )),
                       ListTile(
                         title: Row(
                           children: [
                             Text("Advanced",
                                 style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold)),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor)),
                             Switch(
                                 value: HIDDEN,
                                 onChanged: (changed) {
@@ -142,12 +153,14 @@ class _writeState extends State<write> {
                       children: [
                         ListTile(
                           title: TextFormField(
+                            style: TextStyle(color: textColor),
                             controller: exampleController,
                             onChanged: (value) {
                               // example = value;
                             },
                             decoration: InputDecoration(
                                 hintText: "Examples",
+                                hintStyle: TextStyle(color: textColor),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                         Radius.circular(10.0)))),
@@ -155,15 +168,18 @@ class _writeState extends State<write> {
                         ),
                         ListTile(
                             title: TextField(
+                              style: TextStyle(color: textColor),
                               decoration: InputDecoration(
                                   hintText: "URL",
+                                  hintStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)))),
                             ),
                             trailing: IconButton(
                                 onPressed: () {},
-                                icon: Icon(Icons.account_balance_rounded))),
+                                icon: Icon(Icons.account_balance_rounded,
+                                    color: iconColor))),
                       ],
                     ),
                   ),
@@ -204,260 +220,55 @@ class _writeState extends State<write> {
   }
 
   void showBottomSheet(visible) {
+    Color textColor = Theme.of(context).colorScheme.primary;
+    Color iconColor = Theme.of(context).iconTheme.color!;
+
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return Column(mainAxisSize: MainAxisSize.min, children: [
             ListTile(
-                leading: Icon(Icons.share),
-                title: Text('Add drawing'),
+                leading: Icon(Icons.share, color: iconColor),
+                title: Text(
+                  'Add drawing',
+                  style: TextStyle(color: textColor),
+                ),
                 onTap: () {
                   addDrawing(context);
                 }),
             ListTile(
-                leading: Icon(Icons.photo),
-                title: Text('Select from gallery'),
+                leading: Icon(
+                  Icons.photo,
+                  color: iconColor,
+                ),
+                title: Text(
+                  'Select from gallery',
+                  style: TextStyle(color: textColor),
+                ),
                 onTap: () {}),
             ListTile(
-                leading: Icon(Icons.camera_alt),
-                title: Text('Take photo'),
+                leading: Icon(
+                  Icons.camera_alt,
+                  color: iconColor,
+                ),
+                title: Text(
+                  'Take photo',
+                  style: TextStyle(color: textColor),
+                ),
                 onTap: () {}),
             Visibility(
               visible: visible,
               child: ListTile(
-                  leading: Icon(Icons.delete),
-                  title: Text('Clear image'),
+                  leading: Icon(Icons.delete, color: iconColor),
+                  title: Text(
+                    'Clear image',
+                    style: TextStyle(color: textColor),
+                  ),
                   onTap: () {}),
             ),
           ]);
         });
   }
-}
-
-addDrawing(BuildContext context) {
-  List<DrawingPoints>? points = [];
-  double strokeWidth = 3.0;
-  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
-  Color color = Colors.black;
-  GlobalKey stickeyKeyX = GlobalKey();
-
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Dialog(
-            insetPadding: EdgeInsets.all(20),
-            child: Scaffold(
-              appBar: AppBar(
-                  leading: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.close)),
-                  actions: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.check)),
-                  ]),
-              body: Column(
-                children: [
-                  Expanded(
-                      key: stickeyKeyX,
-                      child: Container(
-                        color: Colors.white,
-                        child: GestureDetector(
-                          onPanUpdate: (details) {
-                            setState(() {
-                              final keyContext = stickeyKeyX.currentContext;
-                              RenderBox renderBox =
-                                  keyContext!.findRenderObject() as RenderBox;
-                              points.add(DrawingPoints(
-                                  points: renderBox
-                                      .globalToLocal(details.globalPosition),
-                                  paint: Paint()
-                                    ..strokeCap = strokeCap
-                                    ..isAntiAlias = true
-                                    ..color = color
-                                    ..strokeWidth = strokeWidth));
-                            });
-                          },
-                          onPanStart: (details) {
-                            setState(() {
-                              final keyContext = stickeyKeyX.currentContext;
-                              RenderBox renderBox =
-                                  keyContext!.findRenderObject() as RenderBox;
-                              points.add(DrawingPoints(
-                                  points: renderBox
-                                      .globalToLocal(details.globalPosition),
-                                  paint: Paint()
-                                    ..strokeCap = strokeCap
-                                    ..isAntiAlias = true
-                                    ..color = Colors.black
-                                    ..strokeWidth = strokeWidth));
-                            });
-                          },
-                          onPanEnd: (details) {
-                            setState(() {
-                              points.add(DrawingPoints(points: null));
-                            });
-                          },
-                          child: CustomPaint(
-                            size: Size.infinite,
-                            painter: DrawingPainter(
-                              pointsList: points,
-                            ),
-                          ),
-                        ),
-                      )),
-                  Row(
-                    children: [
-                      Container(
-                        height: 56,
-                        width: (MediaQuery.of(context).size.width - 40) / 4,
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                strokeWidth = 3.0;
-                              });
-                            },
-                            icon: Icon(Icons.brightness_1, size: 7)),
-                      ),
-                      Container(
-                        height: 56,
-                        width: (MediaQuery.of(context).size.width - 40) / 4,
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                strokeWidth = 7.0;
-                              });
-                            },
-                            icon: Icon(Icons.brightness_1, size: 15)),
-                      ),
-                      Container(
-                        height: 56,
-                        width: (MediaQuery.of(context).size.width - 40) / 4,
-                        child: IconButton(
-                            onPressed: () {
-                              setState(() {});
-                            },
-                            icon: Icon(Icons.undo)),
-                      ),
-                      Container(
-                        height: 56,
-                        width: (MediaQuery.of(context).size.width - 40) / 4,
-                        child: IconButton(
-                            onPressed: () {}, icon: Icon(Icons.redo)),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.purple;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.purple,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.green;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.green,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.red;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.red,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.yellow;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.yellow,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.blue;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.blue,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.lightGreen;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.lightGreen,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.red;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.red,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.black;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.black,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-      });
 }
 
 _submitTitle(

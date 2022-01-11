@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/material.dart';
-import '../BasicReview.dart';
+import 'BasicReview.dart';
 import '../drawer.dart';
 
 GoogleSignIn sign = GoogleSignIn();
@@ -23,7 +23,7 @@ class Firstpage extends StatefulWidget {
 }
 
 class _FirstpageState extends State<Firstpage> {
-  bool X = true;
+  bool checkBoxToggle = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +58,11 @@ class _FirstpageState extends State<Firstpage> {
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary),
                           ),
-                          value: X,
+                          value: checkBoxToggle,
                           onChanged: (bool? value) {
                             if (value != null) {
                               setState(() {
-                                X = value;
+                                checkBoxToggle = value;
                                 Navigator.pop(context);
                               });
                             }
@@ -92,7 +92,10 @@ class _FirstpageState extends State<Firstpage> {
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600),
                             ),
-                            trailing: Icon(Icons.arrow_drop_down),
+                            trailing: Icon(
+                              Icons.arrow_drop_down,
+                              color: Theme.of(context).iconTheme.color,
+                            ),
                           ),
                         ),
                         Row(
@@ -147,12 +150,11 @@ class _FirstpageState extends State<Firstpage> {
       drawer: drawer(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: list_view(X: X),
+        child: list_view(X: checkBoxToggle),
       ),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
         icon: Icon(Icons.add),
-        backgroundColor: Colors.blue,
         onPressed: () {
           createSet(context).then((val) {
             setState(() {});

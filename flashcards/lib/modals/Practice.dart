@@ -1,9 +1,11 @@
-import 'package:flashcards/BasicReview.dart';
+import 'package:flashcards/views/BasicReview.dart';
 import 'package:flashcards/views/audio_player.dart';
+import 'package:flashcards/views/combined_review.dart';
 import 'package:flashcards/views/match_cards.dart';
+import 'package:flashcards/views/memory_game.dart';
 import 'package:flashcards/views/select_definition.dart';
 import 'package:flashcards/views/writing_review.dart';
-import 'package:flashcards/whiteBoardReview.dart';
+import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 
 Future<dynamic> Practice(BuildContext context, {cardName}) {
@@ -59,26 +61,22 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
                     'Practice by drawing the answer',
                     WhiteBoardReview(
                       currentSetUsedForDatabaseSearch: cardName,
-                    )),
-                ListTile(
-                    leading: CircleAvatar(),
-                    title: Row(
-                      children: [Text('Memory Game '), pro()],
                     ),
-                    subtitle: Text('Reveal and match cards')),
-                ListTile(
-                  leading: CircleAvatar(),
-                  title: Row(
-                    children: [Text('Combined Review (PRO)  '), pro()],
-                  ),
-                )
+                    vissible: true),
+                practiceListTile(context, 'Memory Game ',
+                    'Reveal and match cards', MemoryGame(),
+                    vissible: true),
+                practiceListTile(
+                    context, 'Combined Review (PRO)  ', '', CombinedReview(),
+                    vissible: true)
               ]),
             ));
       });
 }
 
 InkWell practiceListTile(
-    BuildContext context, String title, String subtitle, dynamic dynamic) {
+    BuildContext context, String title, String subtitle, dynamic dynamic,
+    {bool vissible = false}) {
   return InkWell(
     onTap: () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => dynamic));
@@ -89,10 +87,11 @@ InkWell practiceListTile(
           children: [
             Text(title,
                 style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            pro()
+            Visibility(visible: vissible, child: pro())
           ],
         ),
-        subtitle: Text(subtitle)),
+        subtitle: Text(subtitle,
+            style: TextStyle(color: Theme.of(context).colorScheme.primary))),
   );
 }
 
