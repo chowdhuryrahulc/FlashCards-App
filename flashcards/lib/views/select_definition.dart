@@ -4,6 +4,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
+
+import '../main.dart';
 
 class select_definition extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
@@ -25,7 +28,7 @@ class _select_definitionState extends State<select_definition>
     with SingleTickerProviderStateMixin {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
-  int i = 0;
+  // int i = 0;
   AnimationController? slideAnimationController;
 
   @override
@@ -44,6 +47,8 @@ class _select_definitionState extends State<select_definition>
 
   @override
   Widget build(BuildContext context) {
+    int i = context.watch<iSelectDefinationControl>().i;
+    print(i); //NOT WORKING
     return Scaffold(
         appBar: AppBar(
           actions: [
@@ -188,6 +193,7 @@ class _OptionWidgetState extends State<OptionWidget>
     return InkWell(
       onTap: () {
         if (widget.textInput.defination == widget.answer) {
+          context.read<iSelectDefinationControl>().increment;
           controller!.forward(from: 0.0);
           containerColor = Colors.green;
           print(containerColor);

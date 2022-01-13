@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flashcards/Profilepage.dart';
+import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flashcards/database/database_helper.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,8 @@ Future<void> main() async {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
     ChangeNotifierProvider(create: (_) => darktheme()),
+    ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
+    ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),
   ], child: MyApp()));
 }
 
@@ -116,6 +119,32 @@ class darktheme extends ChangeNotifier {
   bool get dark => _dark;
   change(value) {
     _dark = value;
+    notifyListeners();
+  }
+}
+
+class iSelectDefinationControl extends ChangeNotifier {
+  int i = 0;
+  increment() {
+    i++;
+    print(i);
+    notifyListeners();
+  }
+}
+
+class iAudioPlayerControl extends ChangeNotifier {
+  int i = 0;
+  decrement() {
+    if (i != 0) {
+      i--;
+    }
+    notifyListeners();
+  }
+
+  increment(List<nd_title>? list) {
+    if (i < list!.length - 1) {
+      i++;
+    }
     notifyListeners();
   }
 }

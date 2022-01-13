@@ -1,7 +1,9 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:provider/src/provider.dart';
 
 class audioPlayer extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
@@ -18,7 +20,7 @@ class _audioPlayerState extends State<audioPlayer> {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
   bool togglePlay = false;
-  int i = 0;
+  // int i = 0;
 
   updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
     if (favoriteToggle == 0) {
@@ -34,6 +36,8 @@ class _audioPlayerState extends State<audioPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    int i = context.watch<iAudioPlayerControl>().i;
+    print(i); // WORKING
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.fromLTRB(6, 25, 6, 20),
@@ -89,11 +93,7 @@ class _audioPlayerState extends State<audioPlayer> {
               children: [
                 InkWell(
                     onTap: () {
-                      if (i != 0) {
-                        setState(() {
-                          i--;
-                        });
-                      }
+                      context.read<iAudioPlayerControl>().decrement();
                     },
                     child: Icon(Icons.skip_previous, size: 50)),
                 InkWell(
@@ -114,11 +114,7 @@ class _audioPlayerState extends State<audioPlayer> {
                         size: 50)),
                 InkWell(
                     onTap: () {
-                      setState(() {
-                        if (i < list!.length - 1) {
-                          i++;
-                        }
-                      });
+                      context.read<iAudioPlayerControl>().increment(list);
                     },
                     child: Icon(Icons.skip_next, size: 50))
               ],
