@@ -18,6 +18,20 @@ class _audioPlayerState extends State<audioPlayer> {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
   bool togglePlay = false;
+  int i = 0;
+
+  updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
+    if (favoriteToggle == 0) {
+      setState(() {
+        dbManager2.updateFavoriteTitle(ttlmX, 1);
+      });
+    } else if (favoriteToggle == 1) {
+      setState(() {
+        dbManager2.updateFavoriteTitle(ttlmX, 0);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,26 +48,35 @@ class _audioPlayerState extends State<audioPlayer> {
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     list = snapshot.data;
-                    // for (var i = 0; i < list!.length; i++) {
-                    //   nd_title ttlm = list![i];
-                    //   // Text(ttlm.term);
-                    // }
                     return Column(
                       children: [
                         ListTile(
-                          leading:
-                              Icon(Icons.favorite_border, color: Colors.red),
+                          leading: IconButton(
+                            color: Colors.red,
+                            onPressed: () {
+                              updateFavoriteTitle(
+                                  list![i].favorite ?? 0, list![i]);
+                            },
+                            icon: Icon(() {
+                              if (list![i].favorite == 1) {
+                                return Icons.favorite;
+                              } else {
+                                return Icons.favorite_border;
+                              }
+                            }()),
+                          ),
                         ),
                         SizedBox(
                           height: 200,
                         ),
-                        Text('term',
+                        Text(list![i].term,
                             style: TextStyle(
                                 color: Theme.of(context).colorScheme.primary,
-                                fontSize: 50)
-                            // style:
-                            //     TextStyle(color: Colors.white, fontSize: 30)
-                            ),
+                                fontSize: 50)),
+                        Text(list![i].defination,
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontSize: 25)),
                       ],
                     );
                   } else {
@@ -65,19 +88,39 @@ class _audioPlayerState extends State<audioPlayer> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 InkWell(
-                    onTap: () {}, child: Icon(Icons.skip_previous, size: 50)),
-                InkWell(
                     onTap: () {
+                      if (i != 0) {
+                        setState(() {
+                          i--;
+                        });
+                      }
+                    },
+                    child: Icon(Icons.skip_previous, size: 50)),
+                InkWell(
+                    onTap: () async {
                       setState(() {
                         togglePlay = !togglePlay;
                       });
+                      //
+                      for (i; i < list!.length - 1 && togglePlay == true; i++) {
+                        await Future.delayed(Duration(seconds: 2));
+                        setState(() {});
+                      }
                     },
                     child: Icon(
                         togglePlay
                             ? Icons.playlist_play_rounded
                             : Icons.play_circle_outline,
                         size: 50)),
-                InkWell(onTap: () {}, child: Icon(Icons.skip_next, size: 50))
+                InkWell(
+                    onTap: () {
+                      setState(() {
+                        if (i < list!.length - 1) {
+                          i++;
+                        }
+                      });
+                    },
+                    child: Icon(Icons.skip_next, size: 50))
               ],
             )
           ],

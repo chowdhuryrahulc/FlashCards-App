@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'dart:async';
-
+import 'dart:math';
+import 'package:flashcards/database/2nd_database_helper.dart';
 import 'package:flutter/material.dart';
 
 class select_definition extends StatefulWidget {
@@ -22,6 +23,9 @@ bool switchValue4 = false;
 
 class _select_definitionState extends State<select_definition>
     with SingleTickerProviderStateMixin {
+  final DBManager2 dbManager2 = DBManager2();
+  List<nd_title>? list;
+  int i = 0;
   AnimationController? slideAnimationController;
 
   @override
@@ -86,25 +90,39 @@ class _select_definitionState extends State<select_definition>
           child: SlideTransition(
             position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
                 .animate(slideAnimationController!),
-            child: Column(
-              children: [
-                Container(
-                  height: 350,
-                  color: Theme.of(context).colorScheme.secondary,
-                  margin: EdgeInsets.all(7.0),
-                  child: Center(
-                    child: Text('Terminator',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 50)),
-                  ),
-                ),
-                OptionWidget('Option 1'),
-                OptionWidget('Option 2'),
-                OptionWidget('Option 3'),
-                OptionWidget('Option 4'),
-              ],
-            ),
+            child: FutureBuilder(
+                future: widget.currentSetUsedForDatabaseSearch == null
+                    ? dbManager2.getnd_TitleList()
+                    : dbManager2.getNEWtitleList(
+                        widget.currentSetUsedForDatabaseSearch),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    list = snapshot.data;
+                    var listABC = generateRandomOptions(list!, i);
+                    return Column(
+                      children: [
+                        Container(
+                          height: 350,
+                          color: Theme.of(context).colorScheme.secondary,
+                          margin: EdgeInsets.all(7.0),
+                          child: Center(
+                            child: Text(list![i].term,
+                                style: TextStyle(
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    fontSize: 50)),
+                          ),
+                        ),
+                        OptionWidget(listABC[0], list![i].defination),
+                        OptionWidget(listABC[1], list![i].defination),
+                        OptionWidget(listABC[2], list![i].defination),
+                        OptionWidget(listABC[3], list![i].defination),
+                      ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }),
           ),
         ));
   }
@@ -125,9 +143,12 @@ class _select_definitionState extends State<select_definition>
 }
 
 class OptionWidget extends StatefulWidget {
-  final String textInput;
+  final nd_title textInput;
+  final String answer;
+
   const OptionWidget(
-    this.textInput, {
+    this.textInput,
+    this.answer, {
     Key? key,
   }) : super(key: key);
 
@@ -164,41 +185,68 @@ class _OptionWidgetState extends State<OptionWidget>
           controller!.reverse();
         }
       });
-    return AnimatedBuilder(
-        animation: offsetAnimation,
-        builder: (buildContext, child) {
-          return Container(
-            margin: EdgeInsets.only(
-                left: offsetAnimation.value + 7.0,
-                right: 7.0 - offsetAnimation.value,
-                bottom: 7.0),
-            child: Column(
-              children: [
-                Container(
-                  height: 50,
-                  color: containerColor,
-                  child: Center(
-                    child: GestureDetector(
-                        onTap: () {
-                          controller!.forward(from: 0.0);
-                          visible = true;
-                          containerColor =
-                              Colors.red; //! blackish red in dark theme.
-                        },
-                        child: Text(widget.textInput,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.primary))),
+    return InkWell(
+      onTap: () {
+        if (widget.textInput.defination == widget.answer) {
+          controller!.forward(from: 0.0);
+          containerColor = Colors.green;
+          print(containerColor);
+        } else {
+          controller!.forward(from: 0.0);
+          visible = true;
+          containerColor = Colors.red; //! blackish red in dark theme.
+        }
+      },
+      child: AnimatedBuilder(
+          animation: offsetAnimation,
+          builder: (buildContext, child) {
+            return Container(
+              margin: EdgeInsets.only(
+                  left: offsetAnimation.value + 7.0,
+                  right: 7.0 - offsetAnimation.value,
+                  bottom: 7.0),
+              child: Column(
+                children: [
+                  Container(
+                    height: 50,
+                    color: containerColor,
+                    child: Center(
+                      child: Text(widget.textInput.defination,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary)),
+                    ),
                   ),
-                ),
-                Visibility(
-                    visible: visible,
-                    child: Container(
-                      color: containerColor,
-                      height: 50,
-                    ))
-              ],
-            ),
-          );
-        });
+                  Visibility(
+                      visible: visible,
+                      child: Container(
+                        color: containerColor,
+                        height: 50,
+                        child: Center(
+                          child: Text(widget.textInput.term,
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.primary)),
+                        ),
+                      ))
+                ],
+              ),
+            );
+          }),
+    );
   }
+}
+
+generateRandomOptions(List<nd_title> list, int i) {
+  var r = Random();
+  // var X = r.nextInt(list.length);
+  // generating 3 options
+  nd_title A = list[r.nextInt(list.length)];
+  nd_title B = list[r.nextInt(list.length)];
+  nd_title C = list[r.nextInt(list.length)];
+  nd_title ANS = list[i];
+
+// suffling 3 optioins
+  List<nd_title> listABCandANS = [A, B, C, ANS];
+  listABCandANS.shuffle();
+  return listABCandANS;
 }
