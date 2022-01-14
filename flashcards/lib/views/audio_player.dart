@@ -37,8 +37,8 @@ class _audioPlayerState extends State<audioPlayer> {
   @override
   Widget build(BuildContext context) {
     int i = context.watch<iAudioPlayerControl>().i;
-    print(i); // WORKING
     return Scaffold(
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(6, 25, 6, 20),
         child: Column(

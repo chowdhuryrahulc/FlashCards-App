@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, must_be_immutable
 
 import 'dart:async';
 import 'dart:math';
@@ -28,7 +28,6 @@ class _select_definitionState extends State<select_definition>
     with SingleTickerProviderStateMixin {
   final DBManager2 dbManager2 = DBManager2();
   List<nd_title>? list;
-  // int i = 0;
   AnimationController? slideAnimationController;
 
   @override
@@ -48,8 +47,8 @@ class _select_definitionState extends State<select_definition>
   @override
   Widget build(BuildContext context) {
     int i = context.watch<iSelectDefinationControl>().i;
-    print(i); //NOT WORKING
     return Scaffold(
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         appBar: AppBar(
           actions: [
             IconButton(
@@ -191,12 +190,12 @@ class _OptionWidgetState extends State<OptionWidget>
         }
       });
     return InkWell(
-      onTap: () {
+      onTap: () async {
         if (widget.textInput.defination == widget.answer) {
-          context.read<iSelectDefinationControl>().increment;
           controller!.forward(from: 0.0);
           containerColor = Colors.green;
-          print(containerColor);
+          await Future.delayed(Duration(seconds: 2));
+          context.read<iSelectDefinationControl>().increment();
         } else {
           controller!.forward(from: 0.0);
           visible = true;
