@@ -195,6 +195,7 @@ class _OptionWidgetState extends State<OptionWidget>
           controller!.forward(from: 0.0);
           containerColor = Colors.green;
           await Future.delayed(Duration(seconds: 2));
+          // visible = false;
           context.read<iSelectDefinationControl>().increment();
         } else {
           controller!.forward(from: 0.0);

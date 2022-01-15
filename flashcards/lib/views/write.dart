@@ -40,6 +40,7 @@ class _writeState extends State<write> {
 
   // CollectionReference users = FirebaseFirestore.instance.collection('users');
   // String? currentSet;
+  final node1 = FocusNode();
   bool HIDDEN = false;
   String? term;
   String? definition;
@@ -80,11 +81,13 @@ class _writeState extends State<write> {
                   Column(
                     children: [
                       TextFormField(
+                        focusNode: node1,
                         style: TextStyle(color: textColor),
                         validator: (val) =>
                             val!.isNotEmpty ? null : 'Term Should Not Be Empty',
                         controller: termController,
                         decoration: InputDecoration(
+                            labelText: "TERM",
                             hintText: "TERM",
                             hintStyle: TextStyle(color: textColor),
                             border: OutlineInputBorder(
@@ -107,6 +110,7 @@ class _writeState extends State<write> {
                             : 'Defination Should Not Be Empty',
                         controller: definationController,
                         decoration: InputDecoration(
+                            labelText: "DEFINITION",
                             hintText: "DEFINITION",
                             hintStyle: TextStyle(color: textColor),
                             border: OutlineInputBorder(
@@ -159,6 +163,7 @@ class _writeState extends State<write> {
                               // example = value;
                             },
                             decoration: InputDecoration(
+                                labelText: "Examples",
                                 hintText: "Examples",
                                 hintStyle: TextStyle(color: textColor),
                                 border: OutlineInputBorder(
@@ -170,6 +175,7 @@ class _writeState extends State<write> {
                             title: TextField(
                               style: TextStyle(color: textColor),
                               decoration: InputDecoration(
+                                  labelText: "URL",
                                   hintText: "URL",
                                   hintStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
@@ -186,7 +192,6 @@ class _writeState extends State<write> {
                   FloatingActionButton.extended(
                     label: Text('ADD NEXT CARD'),
                     onPressed: () async {
-                      // print(currentSet);
                       if (_formKey.currentState!.validate()) {
                         _submitTitle(
                           context,
@@ -197,10 +202,9 @@ class _writeState extends State<write> {
                           editxy: widget.editxyz,
                           ttl: widget.ttl,
                         );
-                        setState(() {
-                          definationController.text = '';
-                          termController.text = '';
-                        });
+                        FocusScope.of(context).requestFocus(node1);
+                        termController.clear();
+                        definationController.clear();
                       }
 
                       // await users.add({

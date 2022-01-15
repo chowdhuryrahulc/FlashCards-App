@@ -46,175 +46,204 @@ class _list_viewState extends State<list_view> {
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             titleList = snapshot.data;
-            return ListView.builder(
-                // physics:,
-                shrinkWrap: true,
-                itemCount: titleList!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  title ttl = titleList![index];
-                  return Visibility(
-                    //? TRUE:- Can see
-                    //? FALSE:- Cant see
-                    visible: (() {
-                      if (ttl.archive == 1) {
-                        if (widget.X == true) {
-                          return true;
+            return Scrollbar(
+              child: ListView.builder(
+                  physics: ScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: titleList!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    title ttl = titleList![index];
+                    return Visibility(
+                      //? TRUE:- Can see
+                      //? FALSE:- Cant see
+                      visible: (() {
+                        if (ttl.archive == 1) {
+                          if (widget.X == true) {
+                            return true;
+                          } else {
+                            print('archive true||X false');
+                            return false;
+                          }
                         } else {
-                          print('archive true||X false');
-                          return false;
+                          return true;
                         }
-                      } else {
-                        return true;
-                      }
-                    }()),
-                    child: Container(
-                      margin: EdgeInsets.symmetric(vertical: 4),
-                      height: 150,
-                      decoration: BoxDecoration(
-                          //? use cardBorder...
-                          gradient: LinearGradient(stops: [
-                            0.02,
-                            0.02
-                          ], colors: [
-                            Colors.red,
-                            Theme.of(context).colorScheme.secondary
-                          ]),
-                          borderRadius:
-                              BorderRadius.all(const Radius.circular(6.0))),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      gridView(ttl: ttl.name)));
-                        },
-                        child: Stack(
-                          children: [
-                            Positioned(
-                                child: Padding(
-                              padding: const EdgeInsets.all(14.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${ttl.name}",
-                                    style: TextStyle(
-                                        fontSize: 35, color: textThemeControl),
-                                  ),
-                                  Text(
-                                    "N cards menorized",
-                                    style: TextStyle(
-                                        fontSize: 12, color: textThemeControl),
-                                  ),
-                                ],
-                              ),
-                            )),
-                            Positioned(
-                                top: 0,
-                                right: 0,
-                                child: PopupMenuButton(
-                                    itemBuilder: (BuildContext context) {
-                                  return [
-                                    PopupMenuItem(
-                                      child: InkWell(
-                                        onTap: () {
-                                          bool? edi = true;
-                                          createSet(context,
-                                                  title: ttl.name,
-                                                  description: ttl.description,
-                                                  edit: edi,
-                                                  ttl: ttl)
-                                              .then((value) {
-                                            setState(() {
-                                              Navigator.pop(context);
+                      }()),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(vertical: 4),
+                        height: 150,
+                        decoration: BoxDecoration(
+                            //? use cardBorder...
+                            gradient: LinearGradient(stops: [
+                              0.02,
+                              0.02
+                            ], colors: [
+                              Colors.red,
+                              Theme.of(context).colorScheme.secondary
+                            ]),
+                            borderRadius:
+                                BorderRadius.all(const Radius.circular(6.0))),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => gridView(
+                                        currentSetUsedForDatabaseSearch:
+                                            ttl.name)));
+                          },
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(14.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${ttl.name}",
+                                      style: TextStyle(
+                                          fontSize: 35,
+                                          color: textThemeControl),
+                                    ),
+                                    Text(
+                                      "N cards menorized",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: textThemeControl),
+                                    ),
+                                  ],
+                                ),
+                              )),
+                              Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: PopupMenuButton(
+                                      itemBuilder: (BuildContext context) {
+                                    return [
+                                      PopupMenuItem(
+                                        child: InkWell(
+                                          onTap: () {
+                                            bool? edi = true;
+                                            createSet(context,
+                                                    title: ttl.name,
+                                                    description:
+                                                        ttl.description,
+                                                    edit: edi,
+                                                    ttl: ttl)
+                                                .then((value) {
+                                              setState(() {
+                                                Navigator.pop(context);
+                                              });
                                             });
+                                          },
+                                          child: popUpTitle(Icons.edit, "Edit"),
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                          child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) {
+                                                  return gridView(
+                                                      currentSetUsedForDatabaseSearch:
+                                                          ttl.name);
+                                                }));
+                                              },
+                                              child: popUpTitle(
+                                                  Icons.add, "Add cards"))),
+                                      PopupMenuItem(
+                                          child: InkWell(
+                                              onTap: () {
+                                                share(context);
+                                                Navigator.pop(context);
+                                              },
+                                              child: popUpTitle(
+                                                  Icons.share, "Share"))),
+                                      PopupMenuItem(
+                                          child: InkWell(
+                                              onTap: () {
+                                                updateArchiveTitle(ttl);
+                                              },
+                                              child: popUpTitle(
+                                                  Icons.archive, "Archive"))),
+                                      PopupMenuItem(
+                                          child: popUpTitle(Icons.import_export,
+                                              "Export Cards")),
+                                      PopupMenuItem(
+                                          child: popUpTitle(
+                                              Icons.style, "Merge sets")),
+                                      PopupMenuItem(
+                                          child: popUpTitle(Icons.move_to_inbox,
+                                              "Move Cards")),
+                                      PopupMenuItem(
+                                          child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            dbManager.deleteTitle(ttl.id!);
+                                            titleList!.removeAt(index);
+                                            Navigator.pop(context);
                                           });
                                         },
-                                        child: popUpTitle(Icons.edit, "Edit"),
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                        child: InkWell(
-                                            onTap: () {
-                                              Navigator.push(context,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.delete_forever,
+                                              color: Colors.red,
+                                            ),
+                                            Text(" Remove"),
+                                          ],
+                                        ),
+                                      )),
+                                    ];
+                                  })),
+                              Positioned(
+                                bottom: 0,
+                                left: 0,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(14.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                          width: 100,
+                                          height: 35,
+                                          child: OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
                                                   MaterialPageRoute(
-                                                      builder: (context) {
-                                                return gridView(ttl: ttl.name);
-                                              }));
+                                                      builder: (context) =>
+                                                          BasicReview(
+                                                              currentSetUsedForDatabaseSearch:
+                                                                  ttl.name)));
                                             },
-                                            child: popUpTitle(
-                                                Icons.add, "Add cards"))),
-                                    PopupMenuItem(
-                                        child: InkWell(
-                                            onTap: () {
-                                              share(context);
-                                              Navigator.pop(context);
-                                            },
-                                            child: popUpTitle(
-                                                Icons.share, "Share"))),
-                                    PopupMenuItem(
-                                        child: InkWell(
-                                            onTap: () {
-                                              updateArchiveTitle(ttl);
-                                            },
-                                            child: popUpTitle(
-                                                Icons.archive, "Archive"))),
-                                    PopupMenuItem(
-                                        child: popUpTitle(Icons.import_export,
-                                            "Export Cards")),
-                                    PopupMenuItem(
-                                        child: popUpTitle(
-                                            Icons.style, "Merge sets")),
-                                    PopupMenuItem(
-                                        child: popUpTitle(
-                                            Icons.move_to_inbox, "Move Cards")),
-                                    PopupMenuItem(
-                                        child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          dbManager.deleteTitle(ttl.id!);
-                                          titleList!.removeAt(index);
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Icon(
-                                            Icons.delete_forever,
-                                            color: Colors.red,
-                                          ),
-                                          Text(" Remove"),
-                                        ],
+                                            child: Text("REVIEW",
+                                                style: TextStyle(
+                                                    color: Colors.blue)),
+                                            style: ButtonStyle(
+                                                shape: MaterialStateProperty
+                                                    .all(RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    40.0)))),
+                                          )),
+                                      SizedBox(
+                                        width: 10,
                                       ),
-                                    )),
-                                  ];
-                                })),
-                            Positioned(
-                              bottom: 0,
-                              left: 0,
-                              child: Padding(
-                                padding: const EdgeInsets.all(14.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
+                                      SizedBox(
                                         width: 100,
                                         height: 35,
                                         child: OutlinedButton(
                                           onPressed: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BasicReview(
-                                                            currentSetUsedForDatabaseSearch:
-                                                                ttl.name)));
+                                            Practice(context,
+                                                cardName: ttl.name);
                                           },
-                                          child: Text("REVIEW",
+                                          child: Text("PRACTICE",
                                               style: TextStyle(
                                                   color: Colors.blue)),
                                           style: ButtonStyle(
@@ -223,46 +252,27 @@ class _list_viewState extends State<list_view> {
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               40.0)))),
-                                        )),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    SizedBox(
-                                      width: 100,
-                                      height: 35,
-                                      child: OutlinedButton(
-                                        onPressed: () {
-                                          Practice(context, cardName: ttl.name);
-                                        },
-                                        child: Text("PRACTICE",
-                                            style:
-                                                TextStyle(color: Colors.blue)),
-                                        style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            40.0)))),
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: IconButton(
-                                    onPressed: () {
-                                      share(context);
-                                    },
-                                    icon: Icon(Icons.share)))
-                          ],
+                              Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        share(context);
+                                      },
+                                      icon: Icon(Icons.share)))
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                });
+                    );
+                  }),
+            );
           }
           return Container();
         });

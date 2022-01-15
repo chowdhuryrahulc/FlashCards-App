@@ -16,6 +16,7 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (_) => darktheme()),
     ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
     ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),
+    ChangeNotifierProvider(create: (_) => gridViewVisibleControl()),
   ], child: MyApp()));
 }
 
@@ -37,43 +38,50 @@ class _MyAppState extends State<MyApp> {
   }
 
   ThemeData lightThemeData() => ThemeData(
-      appBarTheme:
-          Theme.of(context).appBarTheme.copyWith(backgroundColor: Colors.blue),
-      scaffoldBackgroundColor: Colors.grey[300],
-      backgroundColor: Colors.blue,
-      colorScheme: ColorScheme.fromSwatch().copyWith(
-        primary: Colors.black,
-        secondary: Colors.white,
-        primaryVariant: Colors.green,
-        secondaryVariant: Colors.white,
-      ),
-      textTheme: Theme.of(context).textTheme.copyWith(
-            bodyText1: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .apply(color: Colors.black),
-          ),
-      drawerTheme:
-          Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.white),
-      primaryColor: Colors.amber,
-      dividerColor: Colors.black,
-      textSelectionTheme: Theme.of(context)
-          .textSelectionTheme
-          .copyWith(selectionColor: Colors.black),
-      dialogBackgroundColor: Colors.black,
-      bottomSheetTheme: Theme.of(context)
-          .bottomSheetTheme
-          .copyWith(backgroundColor: Colors.white),
-      floatingActionButtonTheme: Theme.of(context)
-          .floatingActionButtonTheme
-          .copyWith(backgroundColor: Colors.blue),
-      popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
-          color: Colors.white, textStyle: TextStyle(color: Colors.black)),
-      iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.black));
+        appBarTheme: Theme.of(context)
+            .appBarTheme
+            .copyWith(backgroundColor: Colors.blue),
+        scaffoldBackgroundColor: Colors.grey[300],
+        backgroundColor: Colors.blue,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: Colors.black,
+          secondary: Colors.white,
+          primaryVariant: Colors.green,
+          secondaryVariant: Colors.white,
+        ),
+        textTheme: Theme.of(context).textTheme.copyWith(
+              bodyText1: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .apply(color: Colors.black),
+            ),
+        drawerTheme: Theme.of(context)
+            .drawerTheme
+            .copyWith(backgroundColor: Colors.white),
+        primaryColor: Colors.amber,
+        dividerColor: Colors.black,
+        textSelectionTheme: Theme.of(context)
+            .textSelectionTheme
+            .copyWith(selectionColor: Colors.black),
+        dialogBackgroundColor: Colors.black,
+        bottomSheetTheme: Theme.of(context)
+            .bottomSheetTheme
+            .copyWith(backgroundColor: Colors.white),
+        floatingActionButtonTheme: Theme.of(context)
+            .floatingActionButtonTheme
+            .copyWith(backgroundColor: Colors.blue),
+        popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
+            color: Colors.white, textStyle: TextStyle(color: Colors.black)),
+        iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.black),
+        scrollbarTheme: Theme.of(context).scrollbarTheme.copyWith(
+            thumbColor: MaterialStateProperty.all(Colors.blue),
+            trackColor: MaterialStateProperty.all(Colors.lightBlue),
+            trackBorderColor: MaterialStateProperty.all(Colors.lightBlue),
+            showTrackOnHover: true),
+      );
 
   ThemeData darkThemeData() => ThemeData(
       // FAB from Red to Blue
-      // dividerColor
       appBarTheme: Theme.of(context)
           .appBarTheme
           .copyWith(backgroundColor: Colors.grey[900]),
@@ -102,6 +110,11 @@ class _MyAppState extends State<MyApp> {
       dividerColor: Colors.white,
       popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
           color: Colors.black, textStyle: TextStyle(color: Colors.white)),
+      scrollbarTheme: Theme.of(context).scrollbarTheme.copyWith(
+          thumbColor: MaterialStateProperty.all(Colors.blue),
+          trackColor: MaterialStateProperty.all(Colors.lightBlue),
+          trackBorderColor: MaterialStateProperty.all(Colors.lightBlue),
+          showTrackOnHover: true),
       //! THIS IS TEXTTHEME. NOT COLOR
       // NOT USED
       textTheme: Theme.of(context).textTheme.copyWith(
@@ -127,6 +140,15 @@ class iMatchControl extends ChangeNotifier {
   int i = 0;
   increment() {
     i++;
+    notifyListeners();
+  }
+}
+
+class gridViewVisibleControl extends ChangeNotifier {
+  bool visibleTernaryFAB = true;
+
+  updateVisibleTernaryFAB(bool visible) {
+    visibleTernaryFAB = visible;
     notifyListeners();
   }
 }

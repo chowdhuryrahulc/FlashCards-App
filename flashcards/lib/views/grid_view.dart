@@ -1,13 +1,17 @@
 import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/main.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:provider/src/provider.dart';
 
 class gridView extends StatefulWidget {
-  String? ttl;
-  gridView({Key? key, this.ttl}) : super(key: key); //! ttl entry
+  String? currentSetUsedForDatabaseSearch;
+  gridView({Key? key, this.currentSetUsedForDatabaseSearch})
+      : super(key: key); //! ttl entry
 
   @override
   State<gridView> createState() => _gridViewState();
@@ -84,7 +88,8 @@ class _gridViewState extends State<gridView> {
                                           termxyz: list.term,
                                           definationxyz: list.defination,
                                           ttl: list,
-                                          currentSet: widget.ttl,
+                                          currentSet: widget
+                                              .currentSetUsedForDatabaseSearch,
                                         )));
                           },
                           child: popUpTitle(Icons.edit, 'Edit'))),
@@ -121,54 +126,91 @@ class _gridViewState extends State<gridView> {
 
   @override
   Widget build(BuildContext context) {
+    bool visibleTernaryFAB =
+        context.watch<gridViewVisibleControl>().visibleTernaryFAB;
+    if (widget.currentSetUsedForDatabaseSearch == null) {
+      context.read<gridViewVisibleControl>().updateVisibleTernaryFAB(false);
+    }
     return Scaffold(
-      appBar: AppBar(elevation: 0, actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-        IconButton(onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),
-        PopupMenuButton(itemBuilder: (BuildContext context) {
-          return [
-            PopupMenuItem(child: Text("Manage cards   ")),
-            PopupMenuItem(child: Text('Manage tags')),
-            PopupMenuItem(child: Text("Sync")),
-          ];
-        })
-      ]),
-      body: Column(
-        children: [
-          Memorized(),
-          FutureBuilder(
-              future: dbManager2.getNEWtitleList(widget.ttl!),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  titleList = snapshot.data;
-                  return StaggeredGridView.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: titleList!.length,
-                    itemBuilder: (context, index) {
-                      return CardGridX(context, titleList![index]);
-                    },
-                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                    mainAxisSpacing: 2.0,
-                    crossAxisSpacing: 2.0,
-                    shrinkWrap: true,
-                  );
-                }
-                return Container();
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(105),
+        child: Column(
+          children: [
+            AppBar(elevation: 0, actions: [
+              IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+              IconButton(
+                  onPressed: () {}, icon: Icon(Icons.filter_alt_outlined)),
+              PopupMenuButton(itemBuilder: (BuildContext context) {
+                return [
+                  PopupMenuItem(child: Text("Manage cards   ")),
+                  PopupMenuItem(child: Text('Manage tags')),
+                  PopupMenuItem(child: Text("Sync")),
+                ];
               }),
-        ],
+            ]),
+            Memorized(),
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        label: Text("ADD CARDS"),
-        icon: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => write(
-                        currentSet: widget.ttl,
-                      )));
-        },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: FutureBuilder(
+            future: widget.currentSetUsedForDatabaseSearch == null
+                ? dbManager2.getnd_TitleList()
+                : dbManager2
+                    .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
+            // dbManager2.getNEWtitleList(widget.ttl!),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                titleList = snapshot.data;
+                return Scrollbar(
+                  thickness: 10,
+                  child: NotificationListener<UserScrollNotification>(
+                    onNotification: (notification) {
+                      if (notification.direction == ScrollDirection.forward ||
+                          notification.direction == ScrollDirection.reverse) {
+                        context
+                            .read<gridViewVisibleControl>()
+                            .updateVisibleTernaryFAB(false);
+                      } else {
+                        context
+                            .read<gridViewVisibleControl>()
+                            .updateVisibleTernaryFAB(true);
+                      }
+                      return true;
+                    },
+                    child: StaggeredGridView.countBuilder(
+                      crossAxisCount: 2,
+                      itemCount: titleList!.length,
+                      itemBuilder: (context, index) {
+                        return CardGridX(context, titleList![index]);
+                      },
+                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                      mainAxisSpacing: 2.0,
+                      crossAxisSpacing: 2.0,
+                      shrinkWrap: true,
+                    ),
+                  ),
+                );
+              }
+              return Container();
+            }),
       ),
+      floatingActionButton: visibleTernaryFAB
+          ? FloatingActionButton.extended(
+              label: Text("ADD CARDS"),
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => write(
+                              currentSet:
+                                  widget.currentSetUsedForDatabaseSearch,
+                            )));
+              },
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
