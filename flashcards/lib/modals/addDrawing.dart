@@ -39,7 +39,7 @@ addDrawing(BuildContext context) {
                               RenderBox renderBox =
                                   keyContext!.findRenderObject() as RenderBox;
                               points.add(DrawingPoints(
-                                  points: renderBox
+                                  offsetDrawingPoints: renderBox
                                       .globalToLocal(details.globalPosition),
                                   paint: Paint()
                                     ..strokeCap = strokeCap
@@ -54,7 +54,7 @@ addDrawing(BuildContext context) {
                               RenderBox renderBox =
                                   keyContext!.findRenderObject() as RenderBox;
                               points.add(DrawingPoints(
-                                  points: renderBox
+                                  offsetDrawingPoints: renderBox
                                       .globalToLocal(details.globalPosition),
                                   paint: Paint()
                                     ..strokeCap = strokeCap
@@ -65,13 +65,14 @@ addDrawing(BuildContext context) {
                           },
                           onPanEnd: (details) {
                             setState(() {
-                              points.add(DrawingPoints(points: null));
+                              points.add(
+                                  DrawingPoints(offsetDrawingPoints: null));
                             });
                           },
                           child: CustomPaint(
                             size: Size.infinite,
                             painter: DrawingPainter(
-                              pointsList: points,
+                              listOfDrawingPoints: points,
                             ),
                           ),
                         ),

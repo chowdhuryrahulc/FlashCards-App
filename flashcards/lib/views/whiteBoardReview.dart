@@ -18,8 +18,11 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
   bool vissible = true;
   List<DrawingPoints>? points = [];
   double strokeWidth = 3.0;
+  BlendMode blendMode = BlendMode.darken;
   StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
   GlobalKey stickeyKey = GlobalKey();
+  int X1 = 0;
+  int X2 = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -57,43 +60,45 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
           child: Container(
             color: Colors.white,
             child: GestureDetector(
+              onPanStart: (details) {
+                X1 = X2;
+                print('Starting X1 value: ${X1}');
+              },
               onPanUpdate: (details) {
                 setState(() {
+                  X2++;
                   final keyContext = stickeyKey.currentContext;
                   RenderBox renderBox =
                       keyContext!.findRenderObject() as RenderBox;
                   points!.add(DrawingPoints(
-                      points: renderBox.globalToLocal(details.globalPosition),
+                      offsetDrawingPoints:
+                          renderBox.globalToLocal(details.globalPosition),
                       paint: Paint()
                         ..strokeCap = strokeCap
                         ..isAntiAlias = true
-                        ..color = Colors.black
-                        ..strokeWidth = strokeWidth));
-                });
-              },
-              onPanStart: (details) {
-                setState(() {
-                  final keyContext = stickeyKey.currentContext;
-                  RenderBox renderBox =
-                      keyContext!.findRenderObject() as RenderBox;
-                  points!.add(DrawingPoints(
-                      points: renderBox.globalToLocal(details.globalPosition),
-                      paint: Paint()
-                        ..strokeCap = strokeCap
-                        ..isAntiAlias = true
-                        ..color = Colors.black
+                        ..color = Colors.blue
+                        ..blendMode = blendMode
                         ..strokeWidth = strokeWidth));
                 });
               },
               onPanEnd: (details) {
                 setState(() {
-                  points!.add(DrawingPoints(points: null));
+                  print('Ending X2 value: ${X2}');
+                  points!.add(DrawingPoints(offsetDrawingPoints: null));
                 });
               },
               child: CustomPaint(
+                // can put a child with length and breth. (Container)
+                // Size.infinite is the reson why it paints above the TextField.
+                // delete Size.infinite
+                // color the Container white and remove topMost container.
+
+                // painter paints below child widget.
+                // forgroundPainter paints on top of child widget.
+
                 size: Size.infinite,
                 painter: DrawingPainter(
-                  pointsList: points!,
+                  listOfDrawingPoints: points!,
                 ),
               ),
             ),
@@ -108,6 +113,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
                 onPressed: () {
                   setState(() {
                     strokeWidth = 3.0;
+                    blendMode = BlendMode.darken;
                   });
                 },
                 icon: Icon(Icons.brightness_1, size: 7)),
@@ -120,6 +126,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
                 onPressed: () {
                   setState(() {
                     strokeWidth = 7.0;
+                    blendMode = BlendMode.darken;
                   });
                 },
                 icon: Icon(Icons.brightness_1, size: 15)),
@@ -131,7 +138,17 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             child: IconButton(
                 onPressed: () {
                   setState(() {
-                    points!.removeLast();
+                    // blendMode = BlendMode.clear;
+
+                    // points!.removeWhere((element) => true);
+                    // if (points!.length > 0) {
+                    // if (X != null) {
+                    print('Delete between ${X1} and ${X2}');
+                    points!.removeRange(X1, X2);
+                    X2 = X1;
+                    // X1 = X1 - (X2 - X1);
+                    // print(points!.removeLast());
+                    // }
                   });
                 },
                 icon: Icon(Icons.undo)),
@@ -222,25 +239,53 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
 }
 
 class DrawingPainter extends CustomPainter {
-  DrawingPainter({this.pointsList});
-  List<DrawingPoints>? pointsList;
+  DrawingPainter({this.listOfDrawingPoints});
+  List<DrawingPoints>? listOfDrawingPoints;
   List<Offset> offsetPoints = [];
+  // Path path = Path();
   @override
   void paint(Canvas canvas, Size size) {
-    for (int i = 0; i < pointsList!.length - 1; i++) {
-      if (pointsList![i].points != null && pointsList![i + 1].points != null) {
-        canvas.drawLine(pointsList![i].points!, pointsList![i + 1].points!,
-            pointsList![i].paint!);
-      } else if (pointsList![i].points != null &&
-          pointsList![i + 1].points == null) {
+    canvas.saveLayer(Rect.largest, Paint());
+    // double x, y;
+    for (int i = 0; i < listOfDrawingPoints!.length - 1; i++) {
+      if (listOfDrawingPoints![i].offsetDrawingPoints != null &&
+          listOfDrawingPoints![i + 1].offsetDrawingPoints != null) {
+        canvas.drawLine(
+            listOfDrawingPoints![i].offsetDrawingPoints!,
+            listOfDrawingPoints![i + 1].offsetDrawingPoints!,
+            listOfDrawingPoints![i].paint!);
+        canvas.drawCircle(
+            listOfDrawingPoints![i].offsetDrawingPoints!,
+            listOfDrawingPoints![i].paint!.strokeWidth / 2,
+            listOfDrawingPoints![i].paint!);
+
+        // x = pointsList![i].points!.dx;
+        // y = pointsList![i].points!.dy;
+        // path.lineTo(x, y);
+        // canvas.drawPath(path, pointsList![i].paint!);
+
+        // print(pointsList![i].points!.dx);
+        // Offset? startPoints[x , y] = pointsList![i].points:
+// from here you get double value
+
+        // canvas.drawLine(p1, p2, paint)
+        // canvas.drawPath(path, paint)
+        // path.lineTo(x, y)
+        // path.lineTo(x, y);
+      }
+      // for drawing single points
+      else if (listOfDrawingPoints![i].offsetDrawingPoints != null &&
+          listOfDrawingPoints![i + 1].offsetDrawingPoints == null) {
         offsetPoints.clear();
-        offsetPoints.add(pointsList![i].points!);
+        offsetPoints.add(listOfDrawingPoints![i].offsetDrawingPoints!);
         offsetPoints.add(Offset(
-            pointsList![i].points!.dx + 0.1, pointsList![i].points!.dy + 0.1));
+            listOfDrawingPoints![i].offsetDrawingPoints!.dx + 0.1,
+            listOfDrawingPoints![i].offsetDrawingPoints!.dy + 0.1));
         canvas.drawPoints(
-            PointMode.points, offsetPoints, pointsList![i].paint!);
+            PointMode.points, offsetPoints, listOfDrawingPoints![i].paint!);
       }
     }
+    canvas.restore();
   }
 
   @override
@@ -249,6 +294,6 @@ class DrawingPainter extends CustomPainter {
 
 class DrawingPoints {
   Paint? paint;
-  Offset? points;
-  DrawingPoints({this.points, this.paint});
+  Offset? offsetDrawingPoints;
+  DrawingPoints({this.offsetDrawingPoints, this.paint});
 }
