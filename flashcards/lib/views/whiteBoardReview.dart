@@ -3,6 +3,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+enum CanvasBackground { dots, vlines, hlines, grid, none }
+
 class WhiteBoardReview extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
   WhiteBoardReview({
@@ -16,13 +18,14 @@ class WhiteBoardReview extends StatefulWidget {
 
 class _WhiteBoardReviewState extends State<WhiteBoardReview> {
   bool vissible = true;
-  List<DrawingPoints>? points = [];
-  double strokeWidth = 3.0;
-  BlendMode blendMode = BlendMode.darken;
-  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
-  GlobalKey stickeyKey = GlobalKey();
-  int X1 = 0;
-  int X2 = 0;
+  late CanvasController canvasController;
+
+  @override
+  void initState() {
+    super.initState();
+    canvasController = CanvasController();
+    canvasController.strokeWidthh = 3.0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,53 +59,12 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
         ),
       ),
       Expanded(
-          key: stickeyKey,
+          // key: stickeyKey,
           child: Container(
-            color: Colors.white,
-            child: GestureDetector(
-              onPanStart: (details) {
-                X1 = X2;
-                print('Starting X1 value: ${X1}');
-              },
-              onPanUpdate: (details) {
-                setState(() {
-                  X2++;
-                  final keyContext = stickeyKey.currentContext;
-                  RenderBox renderBox =
-                      keyContext!.findRenderObject() as RenderBox;
-                  points!.add(DrawingPoints(
-                      offsetDrawingPoints:
-                          renderBox.globalToLocal(details.globalPosition),
-                      paint: Paint()
-                        ..strokeCap = strokeCap
-                        ..isAntiAlias = true
-                        ..color = Colors.blue
-                        ..blendMode = blendMode
-                        ..strokeWidth = strokeWidth));
-                });
-              },
-              onPanEnd: (details) {
-                setState(() {
-                  print('Ending X2 value: ${X2}');
-                  points!.add(DrawingPoints(offsetDrawingPoints: null));
-                });
-              },
-              child: CustomPaint(
-                // can put a child with length and breth. (Container)
-                // Size.infinite is the reson why it paints above the TextField.
-                // delete Size.infinite
-                // color the Container white and remove topMost container.
-
-                // painter paints below child widget.
-                // forgroundPainter paints on top of child widget.
-
-                size: Size.infinite,
-                painter: DrawingPainter(
-                  listOfDrawingPoints: points!,
-                ),
-              ),
-            ),
-          )),
+              color: Colors.white,
+              child: canvasWidget(
+                canvasController: canvasController,
+              ))),
       Row(
         children: [
           Container(
@@ -111,10 +73,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             width: MediaQuery.of(context).size.width / 4,
             child: IconButton(
                 onPressed: () {
-                  setState(() {
-                    strokeWidth = 3.0;
-                    blendMode = BlendMode.darken;
-                  });
+                  canvasController.strokeWidthh = 3.0;
                 },
                 icon: Icon(Icons.brightness_1, size: 7)),
           ),
@@ -124,10 +83,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             width: MediaQuery.of(context).size.width / 4,
             child: IconButton(
                 onPressed: () {
-                  setState(() {
-                    strokeWidth = 7.0;
-                    blendMode = BlendMode.darken;
-                  });
+                  canvasController.strokeWidthh = 7.0;
                 },
                 icon: Icon(Icons.brightness_1, size: 15)),
           ),
@@ -137,19 +93,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             width: MediaQuery.of(context).size.width / 4,
             child: IconButton(
                 onPressed: () {
-                  setState(() {
-                    // blendMode = BlendMode.clear;
-
-                    // points!.removeWhere((element) => true);
-                    // if (points!.length > 0) {
-                    // if (X != null) {
-                    print('Delete between ${X1} and ${X2}');
-                    points!.removeRange(X1, X2);
-                    X2 = X1;
-                    // X1 = X1 - (X2 - X1);
-                    // print(points!.removeLast());
-                    // }
-                  });
+                  canvasController.undo();
                 },
                 icon: Icon(Icons.undo)),
           ),
@@ -157,7 +101,11 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
             color: Colors.lightGreen,
             height: 56,
             width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(onPressed: () {}, icon: Icon(Icons.redo)),
+            child: IconButton(
+                onPressed: () {
+                  canvasController.redo();
+                },
+                icon: Icon(Icons.redo)),
           ),
         ],
       ),
@@ -238,62 +186,263 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
   }
 }
 
-class DrawingPainter extends CustomPainter {
-  DrawingPainter({this.listOfDrawingPoints});
-  List<DrawingPoints>? listOfDrawingPoints;
-  List<Offset> offsetPoints = [];
-  // Path path = Path();
+class canvasWidget extends StatefulWidget {
+  final CanvasController? canvasController;
+  const canvasWidget({Key? key, this.canvasController}) : super(key: key);
+
   @override
-  void paint(Canvas canvas, Size size) {
-    canvas.saveLayer(Rect.largest, Paint());
-    // double x, y;
-    for (int i = 0; i < listOfDrawingPoints!.length - 1; i++) {
-      if (listOfDrawingPoints![i].offsetDrawingPoints != null &&
-          listOfDrawingPoints![i + 1].offsetDrawingPoints != null) {
-        canvas.drawLine(
-            listOfDrawingPoints![i].offsetDrawingPoints!,
-            listOfDrawingPoints![i + 1].offsetDrawingPoints!,
-            listOfDrawingPoints![i].paint!);
-        canvas.drawCircle(
-            listOfDrawingPoints![i].offsetDrawingPoints!,
-            listOfDrawingPoints![i].paint!.strokeWidth / 2,
-            listOfDrawingPoints![i].paint!);
+  _canvasWidgetState createState() => _canvasWidgetState();
+}
 
-        // x = pointsList![i].points!.dx;
-        // y = pointsList![i].points!.dy;
-        // path.lineTo(x, y);
-        // canvas.drawPath(path, pointsList![i].paint!);
-
-        // print(pointsList![i].points!.dx);
-        // Offset? startPoints[x , y] = pointsList![i].points:
-// from here you get double value
-
-        // canvas.drawLine(p1, p2, paint)
-        // canvas.drawPath(path, paint)
-        // path.lineTo(x, y)
-        // path.lineTo(x, y);
-      }
-      // for drawing single points
-      else if (listOfDrawingPoints![i].offsetDrawingPoints != null &&
-          listOfDrawingPoints![i + 1].offsetDrawingPoints == null) {
-        offsetPoints.clear();
-        offsetPoints.add(listOfDrawingPoints![i].offsetDrawingPoints!);
-        offsetPoints.add(Offset(
-            listOfDrawingPoints![i].offsetDrawingPoints!.dx + 0.1,
-            listOfDrawingPoints![i].offsetDrawingPoints!.dy + 0.1));
-        canvas.drawPoints(
-            PointMode.points, offsetPoints, listOfDrawingPoints![i].paint!);
-      }
+class _canvasWidgetState extends State<canvasWidget> {
+  void initState() {
+    super.initState();
+    if (widget.canvasController == null) {
+      // Probable for 1st time. When app starts.
+      canvasController = CanvasController();
+      canvasController.strokeWidthh = 5.0;
+      canvasController.brushColor = Colors.black;
+      canvasController.backgroundColor = Colors.grey[100]!;
+    } else {
+      canvasController = widget.canvasController!;
     }
-    canvas.restore();
+  }
+
+  late CanvasController canvasController;
+
+  void onStart(DragStartDetails startDetails) {
+    final renderBox = context.findRenderObject() as RenderBox;
+    final localPosition = renderBox.globalToLocal(startDetails.globalPosition);
+    canvasController._pathHistory.add(localPosition);
+    canvasController._notifyListeners();
+  }
+
+  void onUpdateDetails(DragUpdateDetails updateDetails) {
+    final renderBox = context.findRenderObject() as RenderBox;
+    final localPosition = renderBox.globalToLocal(updateDetails.globalPosition);
+    canvasController._pathHistory.updateCurrent(localPosition);
+    canvasController._notifyListeners();
+  }
+
+  void onEnd(DragEndDetails downDetails) {
+    canvasController._notifyListeners();
   }
 
   @override
-  bool shouldRepaint(DrawingPainter oldDelegate) => true;
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onPanStart: (startDetails) => onStart(startDetails),
+        onPanUpdate: (updateDetails) => onUpdateDetails(updateDetails),
+        onPanEnd: (downDetails) => onEnd(downDetails),
+        child: CustomPaint(
+          willChange: true,
+          painter: CanvasPainter(canvasController._pathHistory,
+              painterModel: canvasController),
+          child: Container(),
+        ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 }
 
-class DrawingPoints {
-  Paint? paint;
-  Offset? offsetDrawingPoints;
-  DrawingPoints({this.offsetDrawingPoints, this.paint});
+class CanvasController extends ChangeNotifier {
+  Color _color = Colors.black;
+  Color _backgroundColor = Colors.white;
+  double _strokeWidth = 4.0;
+  bool _isEraseMode = false;
+
+  final _PathHistory _pathHistory = _PathHistory();
+
+  bool get isEmpty => _pathHistory.isPathsEmpty;
+
+  List<MapEntry<Path, Paint>> get paths => _pathHistory.paths;
+
+  Color get brushColor => _color;
+
+  bool get isEraseMode => _isEraseMode;
+
+  bool get isUndoEmpty => _pathHistory.isUndoEmpty;
+
+  CanvasBackground _background = CanvasBackground.none;
+
+  CanvasBackground get background => _background;
+
+  set background(CanvasBackground value) {
+    _background = value;
+    _updatePaint();
+    notifyListeners();
+  }
+
+  set isEraseMode(bool value) {
+    _isEraseMode = value;
+    _updatePaint();
+    notifyListeners();
+  }
+
+  set brushColor(Color color) {
+    _color = color;
+    _updatePaint();
+  }
+
+  Color get backgroundColor => _backgroundColor;
+
+  set backgroundColor(Color color) {
+    _backgroundColor = color;
+    _updatePaint();
+  }
+
+  double get strokeWidthh => _strokeWidth;
+
+  set strokeWidthh(double thickness) {
+    print(thickness);
+    _strokeWidth = thickness;
+    _updatePaint();
+  }
+
+  void _updatePaint() {
+    Paint paint = Paint();
+    if (_isEraseMode) {
+      paint.blendMode = BlendMode.clear;
+    } else {
+      paint.blendMode = BlendMode.srcOver;
+    }
+    paint.color = brushColor;
+    paint.style = PaintingStyle.stroke;
+    paint.strokeWidth = strokeWidthh;
+
+    Paint backGroundPaint = Paint();
+    backGroundPaint.blendMode = BlendMode.dstOver;
+    backGroundPaint.color = backgroundColor;
+
+    _pathHistory._paint = paint;
+    _pathHistory._backgroundPaint = backGroundPaint;
+    _pathHistory.background = background;
+    notifyListeners();
+  }
+
+  void undo() {
+    if (isEmpty) return;
+    _pathHistory.undo();
+    notifyListeners();
+  }
+
+  void redo() {
+    if (isUndoEmpty) return;
+    _pathHistory.redo();
+    notifyListeners();
+  }
+
+  void _notifyListeners() {
+    // UseLess
+    notifyListeners();
+  }
+
+  void clear() {
+    _pathHistory.clear();
+    notifyListeners();
+  }
+}
+
+class CanvasPainter extends CustomPainter {
+  final _PathHistory _path;
+
+  /// if the model updates paint will repaint
+  CanvasPainter(this._path, {Listenable? painterModel})
+      : super(repaint: painterModel);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    _path.draw(canvas, size);
+  }
+
+  @override
+  bool shouldRepaint(CanvasPainter oldDelegate) => false;
+}
+
+class _PathHistory {
+  final List<MapEntry<Path, Paint>> _paths;
+  final List<MapEntry<Path, Paint>> _undoHistory;
+  bool _isUndo = false;
+  Paint _paint;
+  Paint _backgroundPaint;
+
+// enum CanvasBackground { dots, vlines, hlines, grid, none }
+  CanvasBackground _background = CanvasBackground.none;
+
+  CanvasBackground get background => _background;
+
+  set background(CanvasBackground value) {
+    _background = value;
+  }
+
+  bool get isPathsEmpty => _paths.isEmpty;
+
+  bool get isUndo => _isUndo;
+
+  bool get isUndoEmpty => _undoHistory.isEmpty;
+
+  set isUndo(bool value) {
+    _isUndo = value;
+  }
+
+  List<MapEntry<Path, Paint>> get paths => _paths;
+
+  _PathHistory()
+      : _paths = <MapEntry<Path, Paint>>[],
+        _undoHistory = <MapEntry<Path, Paint>>[],
+        _backgroundPaint = Paint()
+          ..blendMode = BlendMode.dstOver
+          ..color = Colors.white,
+        _paint = Paint()
+          ..color = Colors.black
+          ..strokeWidth = 1.0
+          ..style = PaintingStyle.fill;
+
+  void setBackgroundColor(Color backgroundColor) {
+    _backgroundPaint.color = backgroundColor;
+  }
+
+  void undo() {
+    final removed = _paths.removeLast();
+    _undoHistory.add(removed);
+    isUndo = true;
+  }
+
+  void redo() {
+    _paths.add(_undoHistory.removeLast());
+  }
+
+  void clear() {
+    _paths.clear();
+  }
+
+// onPanStart
+  void add(Offset startPoint) {
+    Path path = Path();
+    path.moveTo(startPoint.dx, startPoint.dy);
+    _paths.add(MapEntry<Path, Paint>(path, _paint));
+    if (isUndo) {
+      isUndo = false;
+      _undoHistory.clear();
+    }
+  }
+
+// onPanUpdate
+  void updateCurrent(Offset nextPoint) {
+    Path path = _paths.last.key;
+    path.lineTo(nextPoint.dx, nextPoint.dy);
+  }
+
+// Called from CustomPainter (void paint {void shouldRepaint})
+  void draw(Canvas canvas, Size size) {
+    canvas.saveLayer(Offset.zero & size, Paint());
+    for (MapEntry<Path, Paint> path in _paths) {
+      Paint p = path.value;
+      canvas.drawPath(path.key, p);
+    }
+    canvas.restore();
+  }
 }

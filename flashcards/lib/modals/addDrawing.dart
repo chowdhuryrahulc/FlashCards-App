@@ -4,11 +4,9 @@ import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 
 addDrawing(BuildContext context) {
-  List<DrawingPoints>? points = [];
-  double strokeWidth = 3.0;
-  StrokeCap strokeCap = (Platform.isAndroid) ? StrokeCap.butt : StrokeCap.round;
-  Color color = Colors.black;
-  GlobalKey stickeyKeyX = GlobalKey();
+  late CanvasController canvasController;
+  canvasController = CanvasController();
+  canvasController.strokeWidthh = 3.0;
 
   return showDialog(
       context: context,
@@ -29,54 +27,11 @@ addDrawing(BuildContext context) {
               body: Column(
                 children: [
                   Expanded(
-                      key: stickeyKeyX,
                       child: Container(
-                        color: Colors.white,
-                        child: GestureDetector(
-                          onPanUpdate: (details) {
-                            setState(() {
-                              final keyContext = stickeyKeyX.currentContext;
-                              RenderBox renderBox =
-                                  keyContext!.findRenderObject() as RenderBox;
-                              points.add(DrawingPoints(
-                                  offsetDrawingPoints: renderBox
-                                      .globalToLocal(details.globalPosition),
-                                  paint: Paint()
-                                    ..strokeCap = strokeCap
-                                    ..isAntiAlias = true
-                                    ..color = color
-                                    ..strokeWidth = strokeWidth));
-                            });
-                          },
-                          onPanStart: (details) {
-                            setState(() {
-                              final keyContext = stickeyKeyX.currentContext;
-                              RenderBox renderBox =
-                                  keyContext!.findRenderObject() as RenderBox;
-                              points.add(DrawingPoints(
-                                  offsetDrawingPoints: renderBox
-                                      .globalToLocal(details.globalPosition),
-                                  paint: Paint()
-                                    ..strokeCap = strokeCap
-                                    ..isAntiAlias = true
-                                    ..color = Colors.black
-                                    ..strokeWidth = strokeWidth));
-                            });
-                          },
-                          onPanEnd: (details) {
-                            setState(() {
-                              points.add(
-                                  DrawingPoints(offsetDrawingPoints: null));
-                            });
-                          },
-                          child: CustomPaint(
-                            size: Size.infinite,
-                            painter: DrawingPainter(
-                              listOfDrawingPoints: points,
-                            ),
-                          ),
-                        ),
-                      )),
+                          color: Colors.white,
+                          child: canvasWidget(
+                            canvasController: canvasController,
+                          ))),
                   Row(
                     children: [
                       Container(
@@ -84,9 +39,7 @@ addDrawing(BuildContext context) {
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
                             onPressed: () {
-                              setState(() {
-                                strokeWidth = 3.0;
-                              });
+                              canvasController.strokeWidthh = 3.0;
                             },
                             icon: Icon(Icons.brightness_1, size: 7)),
                       ),
@@ -95,9 +48,7 @@ addDrawing(BuildContext context) {
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
                             onPressed: () {
-                              setState(() {
-                                strokeWidth = 7.0;
-                              });
+                              canvasController.strokeWidthh = 7.0;
                             },
                             icon: Icon(Icons.brightness_1, size: 15)),
                       ),
@@ -106,7 +57,7 @@ addDrawing(BuildContext context) {
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
                             onPressed: () {
-                              setState(() {});
+                              canvasController.undo();
                             },
                             icon: Icon(Icons.undo)),
                       ),
@@ -114,112 +65,35 @@ addDrawing(BuildContext context) {
                         height: 56,
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
-                            onPressed: () {}, icon: Icon(Icons.redo)),
+                            onPressed: () {
+                              canvasController.redo();
+                            },
+                            icon: Icon(Icons.redo)),
                       ),
                     ],
                   ),
                   Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.purple;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.purple,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.green;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.green,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.red;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.red,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.yellow;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.yellow,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
+                      addDrawingColorControls(
+                          canvasController, Colors.purple, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.green, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.red, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.yellow, context)
                     ],
                   ),
                   Row(
                     children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.blue;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.blue,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.lightGreen;
-                          });
-                        },
-                        child: Container(
-                          height: 56,
-                          color: Colors.lightGreen,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.red;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.red,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            color = Colors.black;
-                          });
-                        },
-                        child: Container(
-                          color: Colors.black,
-                          height: 56,
-                          width: (MediaQuery.of(context).size.width - 40) / 4,
-                        ),
-                      ),
+                      addDrawingColorControls(
+                          canvasController, Colors.blue, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.lightGreen, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.red, context),
+                      addDrawingColorControls(
+                          canvasController, Colors.black, context)
                     ],
                   ),
                 ],
@@ -228,4 +102,18 @@ addDrawing(BuildContext context) {
           );
         });
       });
+}
+
+InkWell addDrawingColorControls(
+    CanvasController canvasController, Color color, BuildContext context) {
+  return InkWell(
+    onTap: () {
+      canvasController.brushColor = color;
+    },
+    child: Container(
+      height: 56,
+      color: color,
+      width: (MediaQuery.of(context).size.width - 40) / 4,
+    ),
+  );
 }
