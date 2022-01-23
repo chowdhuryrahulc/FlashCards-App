@@ -2,7 +2,8 @@
 
 import 'dart:async';
 import 'dart:math';
-import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
@@ -26,8 +27,8 @@ bool switchValue4 = false;
 
 class _select_definitionState extends State<select_definition>
     with SingleTickerProviderStateMixin {
-  final DBManager2 dbManager2 = DBManager2();
-  List<nd_title>? list;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? list;
   AnimationController? slideAnimationController;
 
   @override
@@ -96,8 +97,8 @@ class _select_definitionState extends State<select_definition>
                 .animate(slideAnimationController!),
             child: FutureBuilder(
                 future: widget.currentSetUsedForDatabaseSearch == null
-                    ? dbManager2.getnd_TitleList()
-                    : dbManager2.getNEWtitleList(
+                    ? dbManager2.getAllVocabCards()
+                    : dbManager2.getVocabCardsusingCurrentSet(
                         widget.currentSetUsedForDatabaseSearch),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
@@ -147,7 +148,7 @@ class _select_definitionState extends State<select_definition>
 }
 
 class OptionWidget extends StatefulWidget {
-  final nd_title textInput;
+  final VocabCardModal textInput;
   final String answer;
 
   const OptionWidget(
@@ -242,17 +243,17 @@ class _OptionWidgetState extends State<OptionWidget>
   }
 }
 
-generateRandomOptions(List<nd_title> list, int i) {
+generateRandomOptions(List<VocabCardModal> list, int i) {
   var r = Random();
   // var X = r.nextInt(list.length);
   // generating 3 options
-  nd_title A = list[r.nextInt(list.length)];
-  nd_title B = list[r.nextInt(list.length)];
-  nd_title C = list[r.nextInt(list.length)];
-  nd_title ANS = list[i];
+  VocabCardModal A = list[r.nextInt(list.length)];
+  VocabCardModal B = list[r.nextInt(list.length)];
+  VocabCardModal C = list[r.nextInt(list.length)];
+  VocabCardModal ANS = list[i];
 
 // suffling 3 optioins
-  List<nd_title> listABCandANS = [A, B, C, ANS];
+  List<VocabCardModal> listABCandANS = [A, B, C, ANS];
   listABCandANS.shuffle();
   return listABCandANS;
 }

@@ -1,24 +1,29 @@
-import 'dart:io';
+// ignore_for_file: unused_local_variable
 
-import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/modals/addDrawing.dart';
-import 'package:flashcards/views/grid_view.dart';
-import 'package:flashcards/views/whiteBoardReview.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:provider/provider.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/Widgets/addDrawing.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
+import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
 
 class write extends StatefulWidget {
   bool? editxyz;
   String? termxyz;
   String? definationxyz;
-  nd_title? ttl;
+  VocabCardModal? vocabCard;
   String? currentSet; //TODO PROBABLY REQUIRED
 
   write({
     this.editxyz,
     this.termxyz,
     this.definationxyz,
-    this.ttl,
+    this.vocabCard,
     this.currentSet,
     Key? key,
   }) : super(key: key);
@@ -200,7 +205,7 @@ class _writeState extends State<write> {
                           widget.currentSet,
                           exampleControl: exampleController.text,
                           editxy: widget.editxyz,
-                          ttl: widget.ttl,
+                          ttl: widget.vocabCard,
                         );
                         FocusScope.of(context).requestFocus(node1);
                         termController.clear();
@@ -227,6 +232,26 @@ class _writeState extends State<write> {
     Color textColor = Theme.of(context).colorScheme.primary;
     Color iconColor = Theme.of(context).iconTheme.color!;
 
+    pickImageFromGallery(ImageSource imageSource) {
+      ImagePicker()
+          .pickImage(source: imageSource)
+          .then((XFilefromImagepicker) async {
+        // File? croppedFile = await ImageCropper.cropImage(
+        //     sourcePath: XFilefromImagepicker!.path,
+        //     aspectRatio: CropAspectRatio(ratioX: 829, ratioY: 985),
+        //     maxWidth: 512,
+        //     maxHeight: 512,
+        //     compressQuality: 50 // Working
+        //     );
+
+        Uint8List uint8list = await XFilefromImagepicker!.readAsBytes();
+        context.read<pictureBLOBControl>().sendPictureUint8List(uint8list);
+        // Picture picture = Picture(0, uint8list);
+        // databaseHelper!.savePicture(picture);
+        // refreshImages();
+      });
+    }
+
     showModalBottomSheet(
         context: context,
         builder: (context) {
@@ -249,7 +274,9 @@ class _writeState extends State<write> {
                   'Select from gallery',
                   style: TextStyle(color: textColor),
                 ),
-                onTap: () {}),
+                onTap: () {
+                  pickImageFromGallery(ImageSource.gallery);
+                }),
             ListTile(
                 leading: Icon(
                   Icons.camera_alt,
@@ -259,7 +286,9 @@ class _writeState extends State<write> {
                   'Take photo',
                   style: TextStyle(color: textColor),
                 ),
-                onTap: () {}),
+                onTap: () {
+                  pickImageFromGallery(ImageSource.camera);
+                }),
             Visibility(
               visible: visible,
               child: ListTile(
@@ -275,20 +304,20 @@ class _writeState extends State<write> {
   }
 }
 
-_submitTitle(
-    BuildContext context, termControl, definationControl, currentSetControl,
-    {exampleControl, bool? editxy, nd_title? ttl}) {
-  final DBManager2 dbManager2 = DBManager2();
+_submitTitle(context, termControl, definationControl, currentSetControl,
+    {exampleControl, bool? editxy, VocabCardModal? ttl}) {
+  final VocabDatabase dbManager2 = VocabDatabase();
   // title? TTitle;
   // print(ttl!.nd_id);
   if (editxy == null) {
-    nd_title ttl = nd_title(
-      term: termControl,
-      defination: definationControl,
-      example: exampleControl,
-      current_set: currentSetControl,
-    ); //TODO enter to db
-    dbManager2.insertTitle(ttl).then((value) => null);
+    Uint8List pic = context.watch<pictureBLOBControl>().uint8list;
+    VocabCardModal ttl = VocabCardModal(
+        term: termControl,
+        defination: definationControl,
+        example: exampleControl,
+        current_set: currentSetControl,
+        picture: pic); //TODO enter to db
+    dbManager2.insertVocabCards(ttl).then((value) => null);
   } else {
     // print('FloaTing EditOr ${ttl!.nd_id}');
     ttl!.term = termControl;

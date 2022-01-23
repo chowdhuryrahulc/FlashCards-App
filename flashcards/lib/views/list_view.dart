@@ -1,10 +1,8 @@
-import 'package:flashcards/database/database_helper.dart';
-import 'package:flashcards/modals/Practice.dart';
-import 'package:flashcards/modals/createSet.dart';
-import 'package:flashcards/modals/share.dart';
-import 'package:flashcards/views/Firstpage.dart';
-import 'package:flashcards/views/select_definition.dart';
-import 'package:flashcards/views/whiteBoardReview.dart';
+import 'package:flashcards/Modals/headlineModal.dart';
+import 'package:flashcards/Widgets/Practice.dart';
+import 'package:flashcards/Widgets/createSet.dart';
+import 'package:flashcards/Widgets/share.dart';
+import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:flutter/material.dart';
 import 'BasicReview.dart';
 import 'grid_view.dart';
@@ -18,11 +16,11 @@ class list_view extends StatefulWidget {
 }
 
 class _list_viewState extends State<list_view> {
-  final DBManager dbManager = DBManager();
-  List<title>? titleList;
+  final HeadlineDatabase dbManager = HeadlineDatabase();
+  List<Headlines>? titleList;
   bool cardBorderColor = false;
 
-  updateArchiveTitle(title tList) {
+  updateArchiveTitle(Headlines tList) {
     if (tList.archive == 0) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 1);
@@ -52,7 +50,7 @@ class _list_viewState extends State<list_view> {
                   shrinkWrap: true,
                   itemCount: titleList!.length,
                   itemBuilder: (BuildContext context, int index) {
-                    title ttl = titleList![index];
+                    Headlines ttl = titleList![index];
                     return Visibility(
                       //? TRUE:- Can see
                       //? FALSE:- Cant see

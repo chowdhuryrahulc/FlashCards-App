@@ -1,4 +1,5 @@
-import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/views/grid_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,11 @@ class AllSet extends StatefulWidget {
 }
 
 class _AllSetState extends State<AllSet> {
-  final DBManager2 dbManager2 = DBManager2();
-  List<nd_title>? titleList;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? titleList;
 
-  CardGridX(BuildContext context, nd_title list) {
-    final DBManager2 dbManager2 = DBManager2();
+  CardGridX(BuildContext context, VocabCardModal list) {
+    final VocabDatabase dbManager2 = VocabDatabase();
 
     updateFavoriteTitle(int favoriteToggle) {
       if (favoriteToggle == 0) {
@@ -74,7 +75,7 @@ class _AllSetState extends State<AllSet> {
                                       editxyz: edi,
                                       termxyz: list.term,
                                       definationxyz: list.defination,
-                                      ttl: list,
+                                      vocabCard: list,
                                       // currentSet: widget.ttl,
                                     )));
                       },
@@ -138,7 +139,7 @@ class _AllSetState extends State<AllSet> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: FutureBuilder(
-            future: dbManager2.getnd_TitleList(),
+            future: dbManager2.getAllVocabCards(),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 titleList = snapshot.data;

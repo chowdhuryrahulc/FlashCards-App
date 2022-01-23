@@ -1,8 +1,9 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
-import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:provider/src/provider.dart';
 
 class audioPlayer extends StatefulWidget {
@@ -17,12 +18,12 @@ class audioPlayer extends StatefulWidget {
 }
 
 class _audioPlayerState extends State<audioPlayer> {
-  final DBManager2 dbManager2 = DBManager2();
-  List<nd_title>? list;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? list;
   bool togglePlay = false;
   // int i = 0;
 
-  updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
+  updateFavoriteTitle(int favoriteToggle, VocabCardModal ttlmX) {
     if (favoriteToggle == 0) {
       setState(() {
         dbManager2.updateFavoriteTitle(ttlmX, 1);
@@ -46,8 +47,8 @@ class _audioPlayerState extends State<audioPlayer> {
           children: [
             FutureBuilder(
                 future: widget.currentSetUsedForDatabaseSearch == null
-                    ? dbManager2.getnd_TitleList()
-                    : dbManager2.getNEWtitleList(
+                    ? dbManager2.getAllVocabCards()
+                    : dbManager2.getVocabCardsusingCurrentSet(
                         widget.currentSetUsedForDatabaseSearch),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {

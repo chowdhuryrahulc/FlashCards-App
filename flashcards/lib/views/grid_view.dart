@@ -1,4 +1,5 @@
-import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/main.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/views/list_view.dart';
@@ -18,12 +19,12 @@ class gridView extends StatefulWidget {
 }
 
 class _gridViewState extends State<gridView> {
-  final DBManager2 dbManager2 = DBManager2();
+  final VocabDatabase dbManager2 = VocabDatabase();
 
-  List<nd_title>? titleList;
+  List<VocabCardModal>? titleList;
 
-  CardGridX(BuildContext context, nd_title list) {
-    final DBManager2 dbManager2 = DBManager2();
+  CardGridX(BuildContext context, VocabCardModal list) {
+    final VocabDatabase dbManager2 = VocabDatabase();
 
     updateFavoriteTitle(int favoriteToggle) {
       if (favoriteToggle == 0) {
@@ -87,7 +88,7 @@ class _gridViewState extends State<gridView> {
                                           editxyz: edi,
                                           termxyz: list.term,
                                           definationxyz: list.defination,
-                                          ttl: list,
+                                          vocabCard: list,
                                           currentSet: widget
                                               .currentSetUsedForDatabaseSearch,
                                         )));
@@ -156,9 +157,9 @@ class _gridViewState extends State<gridView> {
         padding: const EdgeInsets.symmetric(horizontal: 8),
         child: FutureBuilder(
             future: widget.currentSetUsedForDatabaseSearch == null
-                ? dbManager2.getnd_TitleList()
-                : dbManager2
-                    .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
+                ? dbManager2.getAllVocabCards()
+                : dbManager2.getVocabCardsusingCurrentSet(
+                    widget.currentSetUsedForDatabaseSearch),
             // dbManager2.getNEWtitleList(widget.ttl!),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
@@ -216,8 +217,8 @@ class _gridViewState extends State<gridView> {
   }
 
   Memorized() {
-    Future<int> j = dbManager2.getCount();
-    print(j);
+    // Future<int> j = dbManager2.getCount();
+    // print(j);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

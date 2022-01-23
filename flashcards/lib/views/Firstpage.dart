@@ -1,9 +1,9 @@
 // ignore_for_file: must_be_immutable
 
-import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/database/database_helper.dart';
-import 'package:flashcards/modals/Practice.dart';
-import 'package:flashcards/modals/createSet.dart';
+import 'package:flashcards/Modals/headlineModal.dart';
+import 'package:flashcards/Widgets/Practice.dart';
+import 'package:flashcards/Widgets/createSet.dart';
+import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -12,7 +12,7 @@ import 'BasicReview.dart';
 import '../drawer.dart';
 
 GoogleSignIn sign = GoogleSignIn();
-title? titl;
+Headlines? titl;
 
 class Firstpage extends StatefulWidget {
   GoogleSignInAccount? googleAccount;

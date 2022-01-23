@@ -1,7 +1,6 @@
-import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/main.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
 
 class match_cards extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
@@ -15,8 +14,8 @@ class match_cards extends StatefulWidget {
 }
 
 class _match_cardsState extends State<match_cards> {
-  final DBManager2 dbManager2 = DBManager2();
-  List<nd_title>? list;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? list;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +24,9 @@ class _match_cardsState extends State<match_cards> {
       backgroundColor: Colors.blue,
       body: FutureBuilder(
           future: widget.currentSetUsedForDatabaseSearch == null
-              ? dbManager2.getnd_TitleList()
-              : dbManager2
-                  .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
+              ? dbManager2.getAllVocabCards()
+              : dbManager2.getVocabCardsusingCurrentSet(
+                  widget.currentSetUsedForDatabaseSearch),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               list = snapshot.data;
@@ -49,7 +48,7 @@ class _match_cardsState extends State<match_cards> {
 }
 
 class textContainer extends StatefulWidget {
-  final List<nd_title> list;
+  final List<VocabCardModal> list;
   final bool rightDirection; // left =false, right = true
   const textContainer(this.rightDirection, this.list, {Key? key})
       : super(key: key);

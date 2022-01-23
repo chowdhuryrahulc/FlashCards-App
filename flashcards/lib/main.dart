@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:typed_data';
+import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/Profilepage.dart';
-import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/database/database_helper.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
+import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,13 +12,14 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  DBManager().getTitleList();
+  HeadlineDatabase().getTitleList();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
     ChangeNotifierProvider(create: (_) => darktheme()),
     ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
     ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),
     ChangeNotifierProvider(create: (_) => gridViewVisibleControl()),
+    ChangeNotifierProvider(create: (_) => pictureBLOBControl()),
   ], child: MyApp()));
 }
 
@@ -127,6 +130,17 @@ class _MyAppState extends State<MyApp> {
       dialogBackgroundColor: Colors.black);
 }
 
+// Get the data, Put the data
+class pictureBLOBControl extends ChangeNotifier {
+  Uint8List? uint8list;
+
+  sendPictureUint8List(Uint8List uint8List) {
+    uint8list = uint8List;
+    print(uint8List);
+    notifyListeners();
+  }
+}
+
 class darktheme extends ChangeNotifier {
   bool _dark = false;
   bool get dark => _dark;
@@ -170,7 +184,7 @@ class iAudioPlayerControl extends ChangeNotifier {
     notifyListeners();
   }
 
-  increment(List<nd_title>? list) {
+  increment(List<VocabCardModal>? list) {
     if (i < list!.length - 1) {
       i++;
     }

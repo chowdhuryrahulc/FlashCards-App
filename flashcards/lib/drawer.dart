@@ -1,12 +1,11 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flashcards/Widgets/progressCalender.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
-import 'package:flashcards/modals/progressCalender.dart';
 import 'package:flashcards/views/AllCards.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 

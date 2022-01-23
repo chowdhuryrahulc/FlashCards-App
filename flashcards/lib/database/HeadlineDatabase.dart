@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_conditional_assignment
 
+import 'package:flashcards/Modals/headlineModal.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DBManager {
-  Database? _database;
+class HeadlineDatabase {
+  Database? _headlineDatabase;
 
   // Future openDb2() async {
   //   print('Terminator ON');
@@ -16,9 +17,9 @@ class DBManager {
   // }
 
   Future openDb() async {
-    if (_database == null) {
+    if (_headlineDatabase == null) {
       //If Database doesnt exist, then only create the Database
-      _database = await openDatabase(
+      _headlineDatabase = await openDatabase(
           join(await getDatabasesPath(), "TitleA.db"),
           version: 1, onCreate: (Database db, int version) async {
         await db.execute(
@@ -27,17 +28,18 @@ class DBManager {
     }
   }
 
-  Future<int> insertTitle(title title) async {
+  Future<int> insertTitle(Headlines title) async {
     await openDb();
-    return await _database!.insert('title', title.toMap());
+    return await _headlineDatabase!.insert('title', title.toMap());
   }
 
-  Future<List<title>> getTitleList() async {
+  Future<List<Headlines>> getTitleList() async {
     await openDb();
-    final List<Map<String, dynamic>> maps = await _database!.query('title');
+    final List<Map<String, dynamic>> maps =
+        await _headlineDatabase!.query('title');
     return List.generate(
         maps.length,
-        (i) => title(
+        (i) => Headlines(
               id: maps[i]['id'],
               name: maps[i]['name'],
               description: maps[i]['description'],
@@ -45,40 +47,21 @@ class DBManager {
             ));
   }
 
-  Future<int> updateTitle(title title) async {
+  Future<int> updateTitle(Headlines title) async {
     await openDb();
-    return await _database!
+    return await _headlineDatabase!
         .update('title', title.toMap(), where: 'id=?', whereArgs: [title.id]);
   }
 
-  Future<int> updateArchiveTitle(title title, int archive) async {
+  Future<int> updateArchiveTitle(Headlines title, int archive) async {
     await openDb();
     print(archive);
-    return await _database!.update('title', title.toArchiveMap(archive),
+    return await _headlineDatabase!.update('title', title.toArchiveMap(archive),
         where: 'id=?', whereArgs: [title.id]);
   }
 
   Future<void> deleteTitle(int id) async {
     await openDb();
-    await _database!.delete('title', where: 'id=?', whereArgs: [id]);
-  }
-}
-
-class title {
-  int? id;
-  String name;
-  String description;
-  int? archive;
-
-  title({this.id, required this.name, required this.description, this.archive});
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'description': description};
-  }
-
-  Map<String, dynamic> toArchiveMap(int archive) {
-    return {
-      'id': id,
-      'archive': archive,
-    };
+    await _headlineDatabase!.delete('title', where: 'id=?', whereArgs: [id]);
   }
 }

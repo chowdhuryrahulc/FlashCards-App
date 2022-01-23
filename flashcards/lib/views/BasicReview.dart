@@ -1,4 +1,5 @@
-import 'package:flashcards/database/2nd_database_helper.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/views/Firstpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -14,12 +15,12 @@ class BasicReview extends StatefulWidget {
 }
 
 class _BasicReviewState extends State<BasicReview> {
-  final DBManager2 dbManager2 = DBManager2();
-  List<nd_title>? list;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? list;
   PageController insidePageController = PageController();
   PageController outsidePageController = PageController();
 
-  updateFavoriteTitle(int favoriteToggle, nd_title ttlmX) {
+  updateFavoriteTitle(int favoriteToggle, VocabCardModal ttlmX) {
     if (favoriteToggle == 0) {
       setState(() {
         dbManager2.updateFavoriteTitle(ttlmX, 1);
@@ -57,9 +58,9 @@ class _BasicReviewState extends State<BasicReview> {
         Expanded(
             child: FutureBuilder(
           future: widget.currentSetUsedForDatabaseSearch == null
-              ? dbManager2.getnd_TitleList()
-              : dbManager2
-                  .getNEWtitleList(widget.currentSetUsedForDatabaseSearch),
+              ? dbManager2.getAllVocabCards()
+              : dbManager2.getVocabCardsusingCurrentSet(
+                  widget.currentSetUsedForDatabaseSearch),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               list = snapshot.data;
@@ -68,7 +69,7 @@ class _BasicReviewState extends State<BasicReview> {
                   scrollDirection: Axis.horizontal,
                   itemCount: list!.length,
                   itemBuilder: (context, index) {
-                    nd_title ttlm = list![index];
+                    VocabCardModal ttlm = list![index];
                     return Column(
                       children: [
                         Expanded(

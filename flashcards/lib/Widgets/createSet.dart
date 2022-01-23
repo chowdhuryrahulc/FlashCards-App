@@ -1,10 +1,12 @@
-import 'package:flashcards/database/2nd_database_helper.dart';
-import 'package:flashcards/database/database_helper.dart';
+import 'package:flashcards/Modals/headlineModal.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
+import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:flutter/material.dart';
 
 @override
 createSet(BuildContext context,
-    {String? title, String? description, bool? edit, title? ttl}) {
+    {String? title, String? description, bool? edit, Headlines? ttl}) {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   Color textColor = Theme.of(context).colorScheme.primary;
@@ -210,15 +212,15 @@ createSet(BuildContext context,
 }
 
 _submitTitle(BuildContext context, ttleControl, descripControl,
-    {bool? editx, title? ttl, String? titleM}) async {
-  final DBManager dbManager = DBManager();
-  final DBManager2 dbManager2 = DBManager2();
+    {bool? editx, Headlines? ttl, String? titleM}) async {
+  final HeadlineDatabase dbManager = HeadlineDatabase();
+  final VocabDatabase dbManager2 = VocabDatabase();
   // title? TTitle;
-  List<nd_title> ist = await dbManager2.getnd_TitleList();
+  List<VocabCardModal> ist = await dbManager2.getAllVocabCards();
 
   // nd_title? nd_title = [];
   if (editx == null) {
-    title ttl = title(name: ttleControl, description: descripControl);
+    Headlines ttl = Headlines(name: ttleControl, description: descripControl);
     dbManager.insertTitle(ttl).then((value) => null);
   } else {
     print('FloaTing EditOr ${ttleControl}');
