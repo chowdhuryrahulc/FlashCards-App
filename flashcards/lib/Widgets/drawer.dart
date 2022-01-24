@@ -1,5 +1,6 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Widgets/progressCalender.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';

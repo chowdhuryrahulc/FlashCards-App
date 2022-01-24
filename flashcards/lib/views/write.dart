@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:provider/provider.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/Widgets/addDrawing.dart';
@@ -62,6 +63,8 @@ class _writeState extends State<write> {
   Widget build(BuildContext context) {
     Color textColor = Theme.of(context).colorScheme.primary;
     Color iconColor = Theme.of(context).iconTheme.color!;
+    Uint8List? pic =
+        Provider.of<pictureBLOBControl>(context, listen: false).uint8list;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -71,7 +74,11 @@ class _writeState extends State<write> {
             },
             icon: Icon(Icons.clear_sharp)),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.help_outline_rounded)),
+          IconButton(
+              onPressed: () {
+                setState(() {});
+              },
+              icon: Icon(Icons.help_outline_rounded)),
           IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
         ],
       ),
@@ -130,6 +137,14 @@ class _writeState extends State<write> {
                             icon: Icon(Icons.photo_rounded, color: iconColor),
                             iconSize: 35),
                       ),
+                      pic == null
+                          ? Text("Image")
+                          : Image.memory(
+                              pic,
+                              height: 200,
+                              width: 200,
+                            ),
+                      // )
                       Text("Tag",
                           style: TextStyle(
                             fontSize: 15,
@@ -198,7 +213,7 @@ class _writeState extends State<write> {
                     label: Text('ADD NEXT CARD'),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        _submitTitle(
+                        submitTitle(
                           context,
                           termController.text,
                           definationController.text,
@@ -229,9 +244,6 @@ class _writeState extends State<write> {
   }
 
   void showBottomSheet(visible) {
-    Color textColor = Theme.of(context).colorScheme.primary;
-    Color iconColor = Theme.of(context).iconTheme.color!;
-
     pickImageFromGallery(ImageSource imageSource) {
       ImagePicker()
           .pickImage(source: imageSource)
@@ -255,6 +267,9 @@ class _writeState extends State<write> {
     showModalBottomSheet(
         context: context,
         builder: (context) {
+          Color textColor = Theme.of(context).colorScheme.primary;
+          Color iconColor = Theme.of(context).iconTheme.color!;
+
           return Column(mainAxisSize: MainAxisSize.min, children: [
             ListTile(
                 leading: Icon(Icons.share, color: iconColor),
@@ -263,66 +278,64 @@ class _writeState extends State<write> {
                   style: TextStyle(color: textColor),
                 ),
                 onTap: () {
+                  Navigator.pop(context);
                   addDrawing(context);
                 }),
             ListTile(
-                leading: Icon(
-                  Icons.photo,
-                  color: iconColor,
-                ),
+                leading: Icon(Icons.photo, color: iconColor),
                 title: Text(
                   'Select from gallery',
                   style: TextStyle(color: textColor),
                 ),
                 onTap: () {
+                  Navigator.pop(context);
                   pickImageFromGallery(ImageSource.gallery);
                 }),
             ListTile(
-                leading: Icon(
-                  Icons.camera_alt,
-                  color: iconColor,
-                ),
+                leading: Icon(Icons.camera_alt, color: iconColor),
                 title: Text(
                   'Take photo',
                   style: TextStyle(color: textColor),
                 ),
                 onTap: () {
+                  Navigator.pop(context);
                   pickImageFromGallery(ImageSource.camera);
                 }),
             Visibility(
-              visible: visible,
-              child: ListTile(
-                  leading: Icon(Icons.delete, color: iconColor),
-                  title: Text(
-                    'Clear image',
-                    style: TextStyle(color: textColor),
-                  ),
-                  onTap: () {}),
-            ),
+                visible: visible,
+                child: ListTile(
+                    leading: Icon(Icons.delete, color: iconColor),
+                    title: Text(
+                      'Clear image',
+                      style: TextStyle(color: textColor),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                    }))
           ]);
         });
   }
 }
 
-_submitTitle(context, termControl, definationControl, currentSetControl,
+submitTitle(context, termControl, definationControl, currentSetControl,
     {exampleControl, bool? editxy, VocabCardModal? ttl}) {
-  final VocabDatabase dbManager2 = VocabDatabase();
+  final VocabDatabase vocabDatabase = VocabDatabase();
   // title? TTitle;
   // print(ttl!.nd_id);
   if (editxy == null) {
-    Uint8List pic = context.watch<pictureBLOBControl>().uint8list;
     VocabCardModal ttl = VocabCardModal(
         term: termControl,
         defination: definationControl,
         example: exampleControl,
         current_set: currentSetControl,
-        picture: pic); //TODO enter to db
-    dbManager2.insertVocabCards(ttl).then((value) => null);
+        picture:
+            Provider.of<pictureBLOBControl>(context, listen: false).uint8list);
+    vocabDatabase.insertVocabCards(ttl).then((value) => null);
   } else {
     // print('FloaTing EditOr ${ttl!.nd_id}');
     ttl!.term = termControl;
     ttl.defination = definationControl;
     // title ttl = title(name: ttleControl, description: descripControl);
-    dbManager2.updateTitle(ttl).then((value) => null);
+    vocabDatabase.updateTitle(ttl).then((value) => null);
   }
 }

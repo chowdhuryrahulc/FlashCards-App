@@ -1,5 +1,4 @@
 import 'package:flashcards/database/google_sign_in.dart';
-import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';

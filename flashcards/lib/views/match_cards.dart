@@ -64,6 +64,7 @@ class _textContainerState extends State<textContainer>
 
   @override
   void initState() {
+    widget.list.shuffle();
     leftSlideAnimationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000));
     rightSlideAnimationController = AnimationController(

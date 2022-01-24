@@ -1,8 +1,6 @@
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
-import 'package:flashcards/views/Firstpage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 class BasicReview extends StatefulWidget {
@@ -15,19 +13,19 @@ class BasicReview extends StatefulWidget {
 }
 
 class _BasicReviewState extends State<BasicReview> {
-  final VocabDatabase dbManager2 = VocabDatabase();
-  List<VocabCardModal>? list;
+  final VocabDatabase vocabDatabase = VocabDatabase();
+  List<VocabCardModal>? vocabCardModalList;
   PageController insidePageController = PageController();
   PageController outsidePageController = PageController();
 
   updateFavoriteTitle(int favoriteToggle, VocabCardModal ttlmX) {
     if (favoriteToggle == 0) {
       setState(() {
-        dbManager2.updateFavoriteTitle(ttlmX, 1);
+        vocabDatabase.updateFavoriteTitle(ttlmX, 1);
       });
     } else if (favoriteToggle == 1) {
       setState(() {
-        dbManager2.updateFavoriteTitle(ttlmX, 0);
+        vocabDatabase.updateFavoriteTitle(ttlmX, 0);
       });
     }
   }
@@ -47,8 +45,7 @@ class _BasicReviewState extends State<BasicReview> {
       appBar: AppBar(
           leading: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Firstpage()));
+                Navigator.pop(context);
               },
               icon: Icon(Icons.clear_sharp)),
           actions: [
@@ -58,18 +55,18 @@ class _BasicReviewState extends State<BasicReview> {
         Expanded(
             child: FutureBuilder(
           future: widget.currentSetUsedForDatabaseSearch == null
-              ? dbManager2.getAllVocabCards()
-              : dbManager2.getVocabCardsusingCurrentSet(
+              ? vocabDatabase.getAllVocabCards()
+              : vocabDatabase.getVocabCardsusingCurrentSet(
                   widget.currentSetUsedForDatabaseSearch),
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
-              list = snapshot.data;
+              vocabCardModalList = snapshot.data;
               return PageView.builder(
                   controller: outsidePageController,
                   scrollDirection: Axis.horizontal,
-                  itemCount: list!.length,
+                  itemCount: vocabCardModalList!.length,
                   itemBuilder: (context, index) {
-                    VocabCardModal ttlm = list![index];
+                    VocabCardModal singleVocabCard = vocabCardModalList![index];
                     return Column(
                       children: [
                         Expanded(
@@ -82,10 +79,18 @@ class _BasicReviewState extends State<BasicReview> {
                             },
                             children: [
                               Container(
+                                decoration: BoxDecoration(
+                                  image: singleVocabCard.picture == null
+                                      ? null
+                                      : DecorationImage(
+                                          image: MemoryImage(
+                                              singleVocabCard.picture!),
+                                          fit: BoxFit.fill),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .primaryVariant,
+                                ),
                                 margin: EdgeInsets.all(8),
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .primaryVariant,
                                 child: InkWell(
                                   onTap: () {
                                     // pageController.jumpToPage(1);
@@ -100,14 +105,15 @@ class _BasicReviewState extends State<BasicReview> {
                                           top: 0,
                                           left: 0,
                                           child: IconButton(
+                                            color: Colors.red,
                                             onPressed: () {
                                               updateFavoriteTitle(
-                                                  ttlm.favorite ?? 0, ttlm);
+                                                  singleVocabCard.favorite ?? 0,
+                                                  singleVocabCard);
                                             },
                                             icon: Icon(() {
-                                              //TODO Color Change
-                                              if (ttlm.favorite == 1) {
-                                                // Colors.red;
+                                              if (singleVocabCard.favorite ==
+                                                  1) {
                                                 return Icons.favorite;
                                               } else {
                                                 return Icons.favorite_border;
@@ -115,7 +121,7 @@ class _BasicReviewState extends State<BasicReview> {
                                             }()),
                                           )),
                                       Text(
-                                        '${ttlm.term}',
+                                        '${singleVocabCard.term}',
                                         style: TextStyle(fontSize: 50),
                                         textAlign: TextAlign.center,
                                       ),
@@ -164,7 +170,7 @@ class _BasicReviewState extends State<BasicReview> {
                                     alignment: Alignment.center,
                                     children: [
                                       Text(
-                                        "${ttlm.defination}",
+                                        "${singleVocabCard.defination}",
                                         style: TextStyle(fontSize: 50),
                                         textAlign: TextAlign.center,
                                       ),

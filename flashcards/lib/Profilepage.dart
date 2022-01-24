@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flashcards/views/google.dart';
-import 'package:flashcards/views/Firstpage.dart';
+import 'package:flashcards/views/list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +28,7 @@ class _ProfilepageState extends State<Profilepage> {
                   child: Text('Something is Wrong'),
                 );
               } else if (snapshot.hasData) {
-                return Firstpage();
+                return list_view();
               } else {
                 return google();
               }

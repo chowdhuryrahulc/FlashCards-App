@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:math';
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,6 @@ class _select_definitionState extends State<select_definition>
                                   icon: Icon(Icons.close)),
                             ),
                             body: SizedBox(
-                              // height: 50,
                               child: Column(
                                 children: [
                                   dialogListTile(
@@ -196,7 +196,6 @@ class _OptionWidgetState extends State<OptionWidget>
           controller!.forward(from: 0.0);
           containerColor = Colors.green;
           await Future.delayed(Duration(seconds: 2));
-          // visible = false;
           context.read<iSelectDefinationControl>().increment();
         } else {
           controller!.forward(from: 0.0);
@@ -245,7 +244,6 @@ class _OptionWidgetState extends State<OptionWidget>
 
 generateRandomOptions(List<VocabCardModal> list, int i) {
   var r = Random();
-  // var X = r.nextInt(list.length);
   // generating 3 options
   VocabCardModal A = list[r.nextInt(list.length)];
   VocabCardModal B = list[r.nextInt(list.length)];

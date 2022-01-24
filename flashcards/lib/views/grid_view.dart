@@ -1,7 +1,7 @@
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/main.dart';
-import 'package:flashcards/views/Firstpage.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
@@ -61,14 +61,13 @@ class _gridViewState extends State<gridView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              InkWell(
-                onTap: () {
+              IconButton(
+                color: Colors.red,
+                onPressed: () {
                   updateFavoriteTitle(list.favorite ?? 0);
                 },
-                child: Icon(() {
-                  //TODO Color Change
+                icon: Icon(() {
                   if (list.favorite == 1) {
-                    // Colors.red;
                     return Icons.favorite;
                   } else {
                     return Icons.favorite_border;
@@ -91,7 +90,11 @@ class _gridViewState extends State<gridView> {
                                           vocabCard: list,
                                           currentSet: widget
                                               .currentSetUsedForDatabaseSearch,
-                                        )));
+                                        ))).then((value) {
+                              setState(() {
+                                Navigator.pop(context);
+                              });
+                            });
                           },
                           child: popUpTitle(Icons.edit, 'Edit'))),
                   PopupMenuItem(
@@ -208,7 +211,9 @@ class _gridViewState extends State<gridView> {
                         builder: (context) => write(
                               currentSet:
                                   widget.currentSetUsedForDatabaseSearch,
-                            )));
+                            ))).then((value) {
+                  setState(() {});
+                });
               },
             )
           : null,

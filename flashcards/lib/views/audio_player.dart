@@ -1,7 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
-import 'package:flashcards/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:provider/src/provider.dart';
@@ -20,8 +20,6 @@ class audioPlayer extends StatefulWidget {
 class _audioPlayerState extends State<audioPlayer> {
   final VocabDatabase dbManager2 = VocabDatabase();
   List<VocabCardModal>? list;
-  bool togglePlay = false;
-  // int i = 0;
 
   updateFavoriteTitle(int favoriteToggle, VocabCardModal ttlmX) {
     if (favoriteToggle == 0) {
@@ -92,32 +90,26 @@ class _audioPlayerState extends State<audioPlayer> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                InkWell(
-                    onTap: () {
+                IconButton(
+                    iconSize: 50,
+                    onPressed: () {
                       context.read<iAudioPlayerControl>().decrement();
                     },
-                    child: Icon(Icons.skip_previous, size: 50)),
-                InkWell(
-                    onTap: () async {
-                      setState(() {
-                        togglePlay = !togglePlay;
-                      });
-                      //
-                      for (i; i < list!.length - 1 && togglePlay == true; i++) {
-                        await Future.delayed(Duration(seconds: 2));
-                        setState(() {});
-                      }
+                    icon: Icon(Icons.skip_previous)),
+                IconButton(
+                    iconSize: 50,
+                    onPressed: () {
+                      context.read<iAudioPlayerControl>().togglePlayer(list);
                     },
-                    child: Icon(
-                        togglePlay
-                            ? Icons.playlist_play_rounded
-                            : Icons.play_circle_outline,
-                        size: 50)),
-                InkWell(
-                    onTap: () {
+                    icon: Icon(context.watch<iAudioPlayerControl>().togglePlay
+                        ? Icons.playlist_play_rounded
+                        : Icons.play_circle_outline)),
+                IconButton(
+                    iconSize: 50,
+                    onPressed: () {
                       context.read<iAudioPlayerControl>().increment(list);
                     },
-                    child: Icon(Icons.skip_next, size: 50))
+                    icon: Icon(Icons.skip_next))
               ],
             )
           ],

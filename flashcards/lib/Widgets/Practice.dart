@@ -1,3 +1,4 @@
+import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/views/BasicReview.dart';
 import 'package:flashcards/views/audio_player.dart';
 import 'package:flashcards/views/combined_review.dart';
@@ -72,31 +73,4 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
               ]),
             ));
       });
-}
-
-InkWell practiceListTile(
-    BuildContext context, String title, String subtitle, dynamic dynamic,
-    {bool vissible = false}) {
-  return InkWell(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => dynamic));
-    },
-    child: ListTile(
-        leading: CircleAvatar(),
-        title: Row(
-          children: [
-            Text(title,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            Visibility(visible: vissible, child: pro())
-          ],
-        ),
-        subtitle: Text(subtitle,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary))),
-  );
-}
-
-pro() {
-  return Container(
-      child: Text('PRO', style: TextStyle(color: Colors.white)),
-      color: Colors.blue);
 }

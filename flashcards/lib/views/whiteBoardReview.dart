@@ -1,6 +1,3 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 enum CanvasBackground { dots, vlines, hlines, grid, none }

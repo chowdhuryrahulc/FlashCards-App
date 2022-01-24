@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 
@@ -102,18 +103,4 @@ addDrawing(BuildContext context) {
           );
         });
       });
-}
-
-InkWell addDrawingColorControls(
-    CanvasController canvasController, Color color, BuildContext context) {
-  return InkWell(
-    onTap: () {
-      canvasController.brushColor = color;
-    },
-    child: Container(
-      height: 56,
-      color: color,
-      width: (MediaQuery.of(context).size.width - 40) / 4,
-    ),
-  );
 }
