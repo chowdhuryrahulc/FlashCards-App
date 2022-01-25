@@ -163,7 +163,6 @@ class _gridViewState extends State<gridView> {
                 ? dbManager2.getAllVocabCards()
                 : dbManager2.getVocabCardsusingCurrentSet(
                     widget.currentSetUsedForDatabaseSearch),
-            // dbManager2.getNEWtitleList(widget.ttl!),
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 titleList = snapshot.data;

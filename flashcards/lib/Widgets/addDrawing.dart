@@ -1,13 +1,28 @@
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:provider/src/provider.dart';
 
 addDrawing(BuildContext context) {
   late CanvasController canvasController;
   canvasController = CanvasController();
   canvasController.strokeWidthh = 3.0;
+  final addDrawingKey = GlobalKey();
+
+  void generateImageBytes(BuildContext context) async {
+    if (canvasController.isEmpty) return;
+    RenderRepaintBoundary boundary = addDrawingKey.currentContext!
+        .findRenderObject()! as RenderRepaintBoundary;
+    ui.Image image = await boundary.toImage();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    Uint8List pngBytes = byteData!.buffer.asUint8List();
+    context.read<pictureBLOBControl>().sendPictureUint8List(pngBytes);
+  }
 
   return showDialog(
       context: context,
@@ -23,15 +38,23 @@ addDrawing(BuildContext context) {
                       },
                       icon: Icon(Icons.close)),
                   actions: [
-                    IconButton(onPressed: () {}, icon: Icon(Icons.check)),
+                    IconButton(
+                        onPressed: () {
+                          generateImageBytes(context);
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.check)),
                   ]),
               body: Column(
                 children: [
                   Expanded(
                       child: Container(
                           color: Colors.white,
-                          child: canvasWidget(
-                            canvasController: canvasController,
+                          child: RepaintBoundary(
+                            key: addDrawingKey,
+                            child: canvasWidget(
+                              canvasController: canvasController,
+                            ),
                           ))),
                   Row(
                     children: [

@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class pictureBLOBControl extends ChangeNotifier {
   Uint8List? uint8list;
 
-  sendPictureUint8List(Uint8List uint8List) {
+  void sendPictureUint8List(Uint8List uint8List) {
     uint8list = uint8List;
+    print(uint8list);
     notifyListeners();
   }
 }

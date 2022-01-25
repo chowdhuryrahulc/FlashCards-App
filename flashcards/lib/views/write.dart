@@ -55,7 +55,6 @@ class _writeState extends State<write> {
   TextEditingController termController = TextEditingController();
   TextEditingController definationController = TextEditingController();
   TextEditingController exampleController = TextEditingController();
-  // String? termxy;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -244,23 +243,18 @@ class _writeState extends State<write> {
   }
 
   void showBottomSheet(visible) {
-    pickImageFromGallery(ImageSource imageSource) {
+    void pickImageFromGallery(ImageSource imageSource) {
       ImagePicker()
           .pickImage(source: imageSource)
           .then((XFilefromImagepicker) async {
-        // File? croppedFile = await ImageCropper.cropImage(
-        //     sourcePath: XFilefromImagepicker!.path,
-        //     aspectRatio: CropAspectRatio(ratioX: 829, ratioY: 985),
-        //     maxWidth: 512,
-        //     maxHeight: 512,
-        //     compressQuality: 50 // Working
-        //     );
-
-        Uint8List uint8list = await XFilefromImagepicker!.readAsBytes();
+        File? croppedFile = await ImageCropper.cropImage(
+            sourcePath: XFilefromImagepicker!.path,
+            aspectRatio: CropAspectRatio(ratioX: 829, ratioY: 985),
+            maxWidth: 512,
+            maxHeight: 512,
+            compressQuality: 50);
+        Uint8List uint8list = croppedFile!.readAsBytesSync();
         context.read<pictureBLOBControl>().sendPictureUint8List(uint8list);
-        // Picture picture = Picture(0, uint8list);
-        // databaseHelper!.savePicture(picture);
-        // refreshImages();
       });
     }
 
