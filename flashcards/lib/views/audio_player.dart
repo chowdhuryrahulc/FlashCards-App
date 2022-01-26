@@ -102,7 +102,7 @@ class _audioPlayerState extends State<audioPlayer> {
                       context.read<iAudioPlayerControl>().togglePlayer(list);
                     },
                     icon: Icon(context.watch<iAudioPlayerControl>().togglePlay
-                        ? Icons.playlist_play_rounded
+                        ? Icons.pause_rounded
                         : Icons.play_circle_outline)),
                 IconButton(
                     iconSize: 50,

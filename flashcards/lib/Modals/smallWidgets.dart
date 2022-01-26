@@ -5,6 +5,7 @@ InkWell addDrawingColorControls(
     CanvasController canvasController, Color color, BuildContext context) {
   return InkWell(
     onTap: () {
+      canvasController.isEraseMode = false;
       canvasController.brushColor = color;
     },
     child: Container(

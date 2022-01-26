@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class pictureBLOBControl extends ChangeNotifier {
   Uint8List? uint8list;
 
-  void sendPictureUint8List(Uint8List uint8List) {
+  void sendPictureUint8List(Uint8List? uint8List) {
     uint8list = uint8List;
     print(uint8list);
     notifyListeners();
@@ -41,12 +41,10 @@ class gridViewVisibleControl extends ChangeNotifier {
 
 class iSelectDefinationControl extends ChangeNotifier {
   int i = 0;
-  increment(//! For length overflow error
-      // List<VocabCardModal>? list
-      ) {
-    // if (i < list!.length - 1) {
-    i++;
-    // }
+  increment(List<VocabCardModal>? list) {
+    if (i < list!.length - 1) {
+      i++;
+    }
     notifyListeners();
   }
 }

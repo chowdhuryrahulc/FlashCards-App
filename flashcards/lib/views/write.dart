@@ -218,9 +218,14 @@ class _writeState extends State<write> {
                           definationController.text,
                           widget.currentSet,
                           exampleControl: exampleController.text,
+                          pictureControl: pic,
                           editxy: widget.editxyz,
                           ttl: widget.vocabCard,
                         );
+                        context
+                            .read<pictureBLOBControl>()
+                            .sendPictureUint8List(null);
+                        setState(() {});
                         FocusScope.of(context).requestFocus(node1);
                         termController.clear();
                         definationController.clear();
@@ -312,7 +317,7 @@ class _writeState extends State<write> {
 }
 
 submitTitle(context, termControl, definationControl, currentSetControl,
-    {exampleControl, bool? editxy, VocabCardModal? ttl}) {
+    {exampleControl, pictureControl, bool? editxy, VocabCardModal? ttl}) {
   final VocabDatabase vocabDatabase = VocabDatabase();
   // title? TTitle;
   // print(ttl!.nd_id);
@@ -322,8 +327,7 @@ submitTitle(context, termControl, definationControl, currentSetControl,
         defination: definationControl,
         example: exampleControl,
         current_set: currentSetControl,
-        picture:
-            Provider.of<pictureBLOBControl>(context, listen: false).uint8list);
+        picture: pictureControl);
     vocabDatabase.insertVocabCards(ttl).then((value) => null);
   } else {
     // print('FloaTing EditOr ${ttl!.nd_id}');

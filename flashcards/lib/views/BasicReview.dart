@@ -61,6 +61,7 @@ class _BasicReviewState extends State<BasicReview> {
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               vocabCardModalList = snapshot.data;
+              vocabCardModalList!.shuffle();
               return PageView.builder(
                   controller: outsidePageController,
                   scrollDirection: Axis.horizontal,

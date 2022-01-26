@@ -81,16 +81,16 @@ addDrawing(BuildContext context) {
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
                             onPressed: () {
-                              canvasController.undo();
+                              canvasController.strokeWidthh = 15.0;
                             },
-                            icon: Icon(Icons.undo)),
+                            icon: Icon(Icons.brightness_1, size: 20)),
                       ),
                       Container(
                         height: 56,
                         width: (MediaQuery.of(context).size.width - 40) / 4,
                         child: IconButton(
                             onPressed: () {
-                              canvasController.redo();
+                              canvasController.isEraseMode = true;
                             },
                             icon: Icon(Icons.redo)),
                       ),

@@ -118,10 +118,10 @@ class _select_definitionState extends State<select_definition>
                                     fontSize: 50)),
                           ),
                         ),
-                        OptionWidget(listABC[0], list![i].defination),
-                        OptionWidget(listABC[1], list![i].defination),
-                        OptionWidget(listABC[2], list![i].defination),
-                        OptionWidget(listABC[3], list![i].defination),
+                        OptionWidget(listABC[0], list![i].defination, list),
+                        OptionWidget(listABC[1], list![i].defination, list),
+                        OptionWidget(listABC[2], list![i].defination, list),
+                        OptionWidget(listABC[3], list![i].defination, list),
                       ],
                     );
                   } else {
@@ -148,12 +148,14 @@ class _select_definitionState extends State<select_definition>
 }
 
 class OptionWidget extends StatefulWidget {
+  final List<VocabCardModal>? list;
   final VocabCardModal textInput;
   final String answer;
 
   const OptionWidget(
     this.textInput,
-    this.answer, {
+    this.answer,
+    this.list, {
     Key? key,
   }) : super(key: key);
 
@@ -196,7 +198,7 @@ class _OptionWidgetState extends State<OptionWidget>
           controller!.forward(from: 0.0);
           containerColor = Colors.green;
           await Future.delayed(Duration(seconds: 2));
-          context.read<iSelectDefinationControl>().increment();
+          context.read<iSelectDefinationControl>().increment(widget.list);
         } else {
           controller!.forward(from: 0.0);
           visible = true;
