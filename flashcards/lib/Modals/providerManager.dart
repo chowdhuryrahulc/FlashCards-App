@@ -23,12 +23,18 @@ class darktheme extends ChangeNotifier {
 }
 
 class iMatchControl extends ChangeNotifier {
-  bool cardWhiteColor = true;
+  Color cardWhiteColor = Colors.white;
 
-  cardColorChanger() {
-    cardWhiteColor = !cardWhiteColor;
-    print(cardWhiteColor);
-    notifyListeners();
+  ColorcardColorChanger(Color cardColor) {
+    if (cardColor == Colors.white) {
+      return cardWhiteColor == Colors.blue;
+    } else {
+      return cardWhiteColor == Colors.white;
+    }
+
+    // cardWhiteColor = !cardWhiteColor;
+    // print(cardWhiteColor);
+    // notifyListeners();
   }
 
   notifyListeners();
@@ -45,10 +51,29 @@ class gridViewVisibleControl extends ChangeNotifier {
 
 class iSelectDefinationControl extends ChangeNotifier {
   int i = 0;
+  bool visible = false;
   increment(List<VocabCardModal>? list) {
     if (i < list!.length - 1) {
       i++;
+      visible = false;
     }
+    notifyListeners();
+  }
+}
+
+class iWhiteBoardReviewControl extends ChangeNotifier {
+  int i = 0;
+  bool visible = false;
+  increment(List<VocabCardModal>? list) {
+    if (i < list!.length - 1) {
+      i++;
+      visible = false;
+    }
+    notifyListeners();
+  }
+
+  updateVisible() {
+    visible = true;
     notifyListeners();
   }
 }

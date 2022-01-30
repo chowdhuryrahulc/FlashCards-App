@@ -12,11 +12,10 @@ ThemeData lightThemeData(context) => ThemeData(
         secondaryVariant: Colors.white,
       ),
       textTheme: Theme.of(context).textTheme.copyWith(
-            bodyText1: Theme.of(context)
-                .textTheme
-                .bodyText1!
-                .apply(color: Colors.black),
-          ),
+          bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
+              fontStyle: FontStyle.italic,
+              fontSizeFactor: 5,
+              color: Colors.black)),
       drawerTheme:
           Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.white),
       primaryColor: Colors.amber,
@@ -79,10 +78,8 @@ ThemeData darkThemeData(context) => ThemeData(
     //! THIS IS TEXTTHEME. NOT COLOR
     // NOT USED
     textTheme: Theme.of(context).textTheme.copyWith(
-        bodyText1: Theme.of(context)
-            .textTheme
-            .bodyText1!
-            .apply(color: Colors.white, fontSizeFactor: 10
-                // fontSizeDelta:
-                )),
+        bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
+            fontStyle: FontStyle.italic,
+            fontSizeFactor: 5,
+            color: Colors.white)),
     dialogBackgroundColor: Colors.black);

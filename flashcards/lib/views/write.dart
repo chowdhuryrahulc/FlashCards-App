@@ -229,6 +229,7 @@ class _writeState extends State<write> {
                         FocusScope.of(context).requestFocus(node1);
                         termController.clear();
                         definationController.clear();
+                        exampleController.clear();
                       }
 
                       // await users.add({

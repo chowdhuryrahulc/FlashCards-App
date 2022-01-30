@@ -1,4 +1,8 @@
+import 'package:flashcards/Modals/providerManager.dart';
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 enum CanvasBackground { dots, vlines, hlines, grid, none }
 
@@ -14,8 +18,10 @@ class WhiteBoardReview extends StatefulWidget {
 }
 
 class _WhiteBoardReviewState extends State<WhiteBoardReview> {
-  bool vissible = true;
+  // bool vissible = true;
   late CanvasController canvasController;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  List<VocabCardModal>? list;
 
   @override
   void initState() {
@@ -26,160 +32,176 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
 
   @override
   Widget build(BuildContext context) {
+    int i = context.watch<iWhiteBoardReviewControl>().i;
+    bool visible = context.watch<iWhiteBoardReviewControl>().visible;
     return Scaffold(
-        body: Column(children: [
-      Container(
-        width: MediaQuery.of(context).size.width,
-        color: Colors.grey[400],
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            'OSAKA',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      Visibility(
-        visible: !vissible,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          color: Colors.grey[400],
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'KAMAMOTO',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-        ),
-      ),
-      Expanded(
-          // key: stickeyKey,
-          child: Container(
-              color: Colors.white,
-              child: canvasWidget(
-                canvasController: canvasController,
-              ))),
-      Row(
-        children: [
-          Container(
-            height: 56,
-            color: Colors.lightGreen,
-            width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(
-                onPressed: () {
-                  canvasController.strokeWidthh = 3.0;
-                },
-                icon: Icon(Icons.brightness_1, size: 7)),
-          ),
-          Container(
-            height: 56,
-            color: Colors.lightGreen,
-            width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(
-                onPressed: () {
-                  canvasController.strokeWidthh = 7.0;
-                },
-                icon: Icon(Icons.brightness_1, size: 15)),
-          ),
-          Container(
-            color: Colors.lightGreen,
-            height: 56,
-            width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(
-                onPressed: () {
-                  canvasController.undo();
-                },
-                icon: Icon(Icons.undo)),
-          ),
-          Container(
-            color: Colors.lightGreen,
-            height: 56,
-            width: MediaQuery.of(context).size.width / 4,
-            child: IconButton(
-                onPressed: () {
-                  canvasController.redo();
-                },
-                icon: Icon(Icons.redo)),
-          ),
-        ],
-      ),
-      Visibility(
-        visible: vissible,
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              vissible = !vissible;
-            });
-          },
-          child: Container(
-              color: Colors.blue,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  'SHOW ANSWER',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, color: Colors.white),
-                ),
-              )),
-        ),
-      ),
-      Visibility(
-        visible: !vissible,
-        child: Container(
-          height: 56,
-          width: MediaQuery.of(context).size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                height: 56,
-                width: MediaQuery.of(context).size.width / 3,
-                child: MaterialButton(
-                  onPressed: () {
-                    setState(() {
-                      // N = N + 1;
-                    });
-                  },
-                  child: Text("Hard"),
-                  color: Colors.red,
-                ),
-              ),
-              Container(
-                height: 56,
-                width: MediaQuery.of(context).size.width / 3,
-                child: MaterialButton(
-                  onPressed: () {
-                    setState(() {
-                      // N = N + 1;
-                    });
-                  },
-                  child: Text("Normal"),
-                  color: Colors.blue,
-                ),
-              ),
-              Container(
-                height: 56,
-                width: MediaQuery.of(context).size.width / 3,
-                child: MaterialButton(
-                  onPressed: () {
-                    setState(() {
-                      // N = N + 1;
-                    });
-                  },
-                  child: Text("Easy"),
-                  color: Colors.green,
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ]));
+        body: FutureBuilder(
+            future: widget.currentSetUsedForDatabaseSearch == null
+                ? dbManager2.getAllVocabCards()
+                : dbManager2.getVocabCardsusingCurrentSet(
+                    widget.currentSetUsedForDatabaseSearch),
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                list = snapshot.data;
+                return Column(children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.grey[400],
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Text(
+                        list![i].term,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: visible,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.grey[400],
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Text(
+                          list![i].defination,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                      // key: stickeyKey,
+                      child: Container(
+                          color: Colors.white,
+                          child: canvasWidget(
+                            canvasController: canvasController,
+                          ))),
+                  Row(
+                    children: [
+                      Container(
+                        height: 56,
+                        color: Colors.lightGreen,
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: IconButton(
+                            onPressed: () {
+                              canvasController.strokeWidthh = 3.0;
+                            },
+                            icon: Icon(Icons.brightness_1, size: 7)),
+                      ),
+                      Container(
+                        height: 56,
+                        color: Colors.lightGreen,
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: IconButton(
+                            onPressed: () {
+                              canvasController.strokeWidthh = 7.0;
+                            },
+                            icon: Icon(Icons.brightness_1, size: 15)),
+                      ),
+                      Container(
+                        color: Colors.lightGreen,
+                        height: 56,
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: IconButton(
+                            onPressed: () {
+                              canvasController.undo();
+                            },
+                            icon: Icon(Icons.undo)),
+                      ),
+                      Container(
+                        color: Colors.lightGreen,
+                        height: 56,
+                        width: MediaQuery.of(context).size.width / 4,
+                        child: IconButton(
+                            onPressed: () {
+                              canvasController.redo();
+                            },
+                            icon: Icon(Icons.redo)),
+                      ),
+                    ],
+                  ),
+                  Visibility(
+                    visible: !visible,
+                    child: InkWell(
+                      onTap: () {
+                        context
+                            .read<iWhiteBoardReviewControl>()
+                            .updateVisible();
+                      },
+                      child: Container(
+                          color: Colors.blue,
+                          width: MediaQuery.of(context).size.width,
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'SHOW ANSWER',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                          )),
+                    ),
+                  ),
+                  Visibility(
+                    visible: visible,
+                    child: Container(
+                      height: 56,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Container(
+                            height: 56,
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: MaterialButton(
+                              onPressed: () {
+                                context
+                                    .read<iWhiteBoardReviewControl>()
+                                    .increment(list);
+                              },
+                              child: Text("Hard"),
+                              color: Colors.red,
+                            ),
+                          ),
+                          Container(
+                            height: 56,
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: MaterialButton(
+                              onPressed: () {
+                                context
+                                    .read<iWhiteBoardReviewControl>()
+                                    .increment(list);
+                              },
+                              child: Text("Normal"),
+                              color: Colors.blue,
+                            ),
+                          ),
+                          Container(
+                            height: 56,
+                            width: MediaQuery.of(context).size.width / 3,
+                            child: MaterialButton(
+                              onPressed: () {
+                                context
+                                    .read<iWhiteBoardReviewControl>()
+                                    .increment(list);
+                              },
+                              child: Text("Easy"),
+                              color: Colors.green,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ]);
+              } else {
+                return Container();
+              }
+            }));
   }
 }
 

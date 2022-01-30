@@ -166,7 +166,6 @@ class OptionWidget extends StatefulWidget {
 class _OptionWidgetState extends State<OptionWidget>
     with SingleTickerProviderStateMixin {
   AnimationController? controller;
-  bool visible = false;
 
   @override
   void initState() {
@@ -184,6 +183,7 @@ class _OptionWidgetState extends State<OptionWidget>
   @override
   Widget build(BuildContext context) {
     Color containerColor = Theme.of(context).colorScheme.secondary;
+    bool visible = context.watch<iSelectDefinationControl>().visible;
     final Animation<double> offsetAnimation = Tween(begin: 0.0, end: 7.0)
         .chain(CurveTween(curve: Curves.elasticIn))
         .animate(controller!)

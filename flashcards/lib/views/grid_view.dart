@@ -22,6 +22,7 @@ class _gridViewState extends State<gridView> {
   final VocabDatabase dbManager2 = VocabDatabase();
 
   List<VocabCardModal>? titleList;
+  bool visibleListExample = false;
 
   CardGridX(BuildContext context, VocabCardModal list) {
     final VocabDatabase dbManager2 = VocabDatabase();
@@ -58,6 +59,13 @@ class _gridViewState extends State<gridView> {
               style: TextStyle(
                   fontSize: 15, color: Theme.of(context).colorScheme.primary)),
           SizedBox(height: 15),
+          Visibility(
+            visible: list.example != null,
+            child: Text(list.example!,
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Theme.of(context).colorScheme.primary)),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -130,8 +138,6 @@ class _gridViewState extends State<gridView> {
 
   @override
   Widget build(BuildContext context) {
-    bool visibleTernaryFAB =
-        context.watch<gridViewVisibleControl>().visibleTernaryFAB;
     if (widget.currentSetUsedForDatabaseSearch == null) {
       context.read<gridViewVisibleControl>().updateVisibleTernaryFAB(false);
     }
@@ -168,54 +174,40 @@ class _gridViewState extends State<gridView> {
                 titleList = snapshot.data;
                 return Scrollbar(
                   thickness: 10,
-                  child: NotificationListener<UserScrollNotification>(
-                    onNotification: (notification) {
-                      if (notification.direction == ScrollDirection.forward ||
-                          notification.direction == ScrollDirection.reverse) {
-                        context
-                            .read<gridViewVisibleControl>()
-                            .updateVisibleTernaryFAB(false);
-                      } else {
-                        context
-                            .read<gridViewVisibleControl>()
-                            .updateVisibleTernaryFAB(true);
-                      }
-                      return true;
+                  child: StaggeredGridView.countBuilder(
+                    crossAxisCount: 2,
+                    itemCount: titleList!.length,
+                    itemBuilder: (context, index) {
+                      return CardGridX(context, titleList![index]);
                     },
-                    child: StaggeredGridView.countBuilder(
-                      crossAxisCount: 2,
-                      itemCount: titleList!.length,
-                      itemBuilder: (context, index) {
-                        return CardGridX(context, titleList![index]);
-                      },
-                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                      mainAxisSpacing: 2.0,
-                      crossAxisSpacing: 2.0,
-                      shrinkWrap: true,
-                    ),
+                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                    mainAxisSpacing: 2.0,
+                    crossAxisSpacing: 2.0,
+                    shrinkWrap: true,
                   ),
                 );
               }
-              return Container();
+              return Container(
+                child: Center(
+                  child: Text('No Cards present'),
+                ),
+              );
             }),
       ),
-      floatingActionButton: visibleTernaryFAB
-          ? FloatingActionButton.extended(
-              label: Text("ADD CARDS"),
-              icon: Icon(Icons.add),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => write(
-                              currentSet:
-                                  widget.currentSetUsedForDatabaseSearch,
-                            ))).then((value) {
-                  setState(() {});
-                });
-              },
-            )
-          : null,
+      floatingActionButton: FloatingActionButton.extended(
+        label: Text("ADD CARDS"),
+        icon: Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => write(
+                        currentSet: widget.currentSetUsedForDatabaseSearch,
+                      ))).then((value) {
+            setState(() {});
+          });
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

@@ -11,9 +11,10 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  HeadlineDatabase().getTitleList();
+  await HeadlineDatabase().getTitleList();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+    ChangeNotifierProvider(create: (context) => iWhiteBoardReviewControl()),
     ChangeNotifierProvider(create: (_) => darktheme()),
     ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
     ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),

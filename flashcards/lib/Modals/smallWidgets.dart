@@ -1,3 +1,5 @@
+import 'package:flashcards/Modals/vocabCardModal.dart';
+import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 
@@ -16,26 +18,79 @@ InkWell addDrawingColorControls(
   );
 }
 
-InkWell practiceListTile(
+practiceListTile(
     BuildContext context, String title, String subtitle, dynamic dynamic,
     {bool vissible = false}) {
-  return InkWell(
-    onTap: () {
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => dynamic));
-    },
-    child: ListTile(
-        leading: CircleAvatar(),
-        title: Row(
-          children: [
-            Text(title,
-                style: TextStyle(color: Theme.of(context).colorScheme.primary)),
-            Visibility(visible: vissible, child: pro())
-          ],
-        ),
-        subtitle: Text(subtitle,
-            style: TextStyle(color: Theme.of(context).colorScheme.primary))),
-  );
+  final VocabDatabase vocabDatabase = VocabDatabase();
+  List<VocabCardModal>? vocabCardModalList;
+
+  return FutureBuilder(
+      future: vocabDatabase.getVocabCardsusingCurrentSet(title),
+      builder: (context, AsyncSnapshot snapshot) {
+        if (snapshot.hasData) {
+          vocabCardModalList = snapshot.data;
+          if (vocabCardModalList!.length != 0) {
+            return InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => dynamic));
+              },
+              child: ListTile(
+                  leading: CircleAvatar(),
+                  title: Row(
+                    children: [
+                      Text(title,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary)),
+                      Visibility(visible: vissible, child: pro())
+                    ],
+                  ),
+                  subtitle: Text(subtitle,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary))),
+            );
+          } else {
+            return InkWell(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: ListTile(
+                  leading: CircleAvatar(),
+                  title: Row(
+                    children: [
+                      Text(title,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary)),
+                      Visibility(visible: vissible, child: pro())
+                    ],
+                  ),
+                  subtitle: Text(subtitle,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary))),
+            );
+          }
+        } else {
+          return InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: ListTile(
+                leading: CircleAvatar(),
+                title: Row(
+                  children: [
+                    Text(title,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary)),
+                    Visibility(visible: vissible, child: pro())
+                  ],
+                ),
+                subtitle: Text(subtitle,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary))),
+          );
+        }
+      });
 }
 
 pro() {

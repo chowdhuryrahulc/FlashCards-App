@@ -23,7 +23,6 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
   AnimationController? leftSlideAnimationController;
   AnimationController? rightSlideAnimationController;
 
-  // List<int> _list = [];
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
   final GlobalKey<AnimatedListState> _rightKey = GlobalKey<AnimatedListState>();
 
@@ -45,12 +44,6 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
     rightSlideAnimationController!.dispose();
     super.dispose();
   }
-
-  // void _addItem() {
-  //   final int _index = _list.length;
-  //   _list.insert(_index, _index);
-  //   _listKey.currentState!.insertItem(_index);
-  // }
 
   void _removeItem(String _item, int index, bool left) {
     // final int _index = index - 1;
@@ -115,7 +108,7 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
 
   Widget _buildItem(
       String _item, int index, bool left, Animation<double> _animation) {
-    bool cardColor = Provider.of<iMatchControl>(context).cardWhiteColor;
+    Color cardColor = Provider.of<iMatchControl>(context).cardWhiteColor;
     print('cardColor: $cardColor');
     return SizeTransition(
       sizeFactor: _animation,
@@ -123,11 +116,11 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
         onTap: () {
           // Provider.of<iMatchControl>(context, listen: false).cardColorChanger();
           // cardWhiteColor = false;
-          _removeItem(_item, index, left);
+          // _removeItem(_item, index, left);
           // print(index);
         },
         child: Card(
-          color: cardColor ? Colors.white : Colors.blue,
+          color: cardColor,
           child: ListTile(
             title: Text(
               _item,
