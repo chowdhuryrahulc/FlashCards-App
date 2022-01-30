@@ -18,6 +18,7 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
     ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),
     ChangeNotifierProvider(create: (_) => gridViewVisibleControl()),
+    ChangeNotifierProvider(create: (_) => iMatchControl()),
     ChangeNotifierProvider(create: (_) => pictureBLOBControl()),
   ], child: MyApp()));
 }

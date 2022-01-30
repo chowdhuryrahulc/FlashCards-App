@@ -1,70 +1,34 @@
+// ignore_for_file: prefer_const_constructors, camel_case_types, prefer_const_literals_to_create_immutables
+
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
-class match_cards extends StatefulWidget {
-  String? currentSetUsedForDatabaseSearch;
-  match_cards({
+class matchCards extends StatefulWidget {
+  final String? currentSetUsedForDatabaseSearch;
+  const matchCards({
     Key? key,
     this.currentSetUsedForDatabaseSearch,
   }) : super(key: key);
 
   @override
-  State<match_cards> createState() => _match_cardsState();
+  _matchCardsState createState() => _matchCardsState();
 }
 
-class _match_cardsState extends State<match_cards> {
+class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
   final VocabDatabase dbManager2 = VocabDatabase();
   List<VocabCardModal>? list;
-
-  @override
-  Widget build(BuildContext context) {
-    // int i = context.watch<iMatchControl>().i;
-    return Scaffold(
-      backgroundColor: Colors.blue,
-      body: FutureBuilder(
-          future: widget.currentSetUsedForDatabaseSearch == null
-              ? dbManager2.getAllVocabCards()
-              : dbManager2.getVocabCardsusingCurrentSet(
-                  widget.currentSetUsedForDatabaseSearch),
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              list = snapshot.data;
-              return SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    textContainer(false, list!),
-                    textContainer(true, list!),
-                  ],
-                ),
-              );
-            } else {
-              return Container();
-            }
-          }),
-    );
-  }
-}
-
-class textContainer extends StatefulWidget {
-  final List<VocabCardModal> list;
-  final bool rightDirection; // left =false, right = true
-  const textContainer(this.rightDirection, this.list, {Key? key})
-      : super(key: key);
-
-  @override
-  _textContainerState createState() => _textContainerState();
-}
-
-class _textContainerState extends State<textContainer>
-    with TickerProviderStateMixin {
   AnimationController? leftSlideAnimationController;
   AnimationController? rightSlideAnimationController;
 
+  // List<int> _list = [];
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+  final GlobalKey<AnimatedListState> _rightKey = GlobalKey<AnimatedListState>();
+
   @override
   void initState() {
-    widget.list.shuffle();
     leftSlideAnimationController = AnimationController(
         vsync: this, duration: Duration(milliseconds: 1000));
     rightSlideAnimationController = AnimationController(
@@ -82,33 +46,93 @@ class _textContainerState extends State<textContainer>
     super.dispose();
   }
 
+  // void _addItem() {
+  //   final int _index = _list.length;
+  //   _list.insert(_index, _index);
+  //   _listKey.currentState!.insertItem(_index);
+  // }
+
+  void _removeItem(String _item, int index, bool left) {
+    // final int _index = index - 1;
+    // _list.removeAt(index);
+    left
+        ? _listKey.currentState!.removeItem(index,
+            (context, animation) => _buildItem(_item, index, left, animation))
+        : _rightKey.currentState!.removeItem(
+            index,
+            (context, animation) =>
+                _buildItem(index.toString(), index, left, animation));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SlideTransition(
-        position: Tween<Offset>(
-                begin: widget.rightDirection ? Offset(1, 0) : Offset(-1, 0),
-                end: Offset.zero)
-            .animate(widget.rightDirection
-                ? rightSlideAnimationController!
-                : leftSlideAnimationController!),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            for (int i = 0; i < 10 && i <= widget.list.length - 1; i++)
-              Container(
-                width: MediaQuery.of(context).size.width,
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(10),
-                color: Colors.white,
-                child: Center(
-                    child: Text(
-                        widget.rightDirection
-                            ? widget.list[i].defination
-                            : widget.list[i].term,
-                        style: TextStyle(fontSize: 20))),
-              ),
-          ],
+    return Scaffold(
+      backgroundColor: Colors.blue,
+      body: FutureBuilder(
+          future: widget.currentSetUsedForDatabaseSearch == null
+              ? dbManager2.getAllVocabCards()
+              : dbManager2.getVocabCardsusingCurrentSet(
+                  widget.currentSetUsedForDatabaseSearch),
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              list = snapshot.data;
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  animatedListColumn(true, list!),
+                  animatedListColumn(false, list!),
+                ],
+              );
+            } else {
+              return Container();
+            }
+          }),
+    );
+  }
+
+  animatedListColumn(bool left, List<VocabCardModal> list) {
+    return SlideTransition(
+      position: Tween<Offset>(
+              begin: left ? Offset(-1, 0) : Offset(1, 0), end: Offset.zero)
+          .animate(left
+              ? leftSlideAnimationController!
+              : rightSlideAnimationController!),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width / 2,
+        child: AnimatedList(
+          shrinkWrap: true,
+          key: left ? _listKey : _rightKey,
+          initialItemCount: 10,
+          itemBuilder:
+              (BuildContext context, int index, Animation<double> animation) {
+            return _buildItem(left ? list[index].term : list[index].defination,
+                index, left, animation);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildItem(
+      String _item, int index, bool left, Animation<double> _animation) {
+    bool cardColor = Provider.of<iMatchControl>(context).cardWhiteColor;
+    print('cardColor: $cardColor');
+    return SizeTransition(
+      sizeFactor: _animation,
+      child: InkWell(
+        onTap: () {
+          // Provider.of<iMatchControl>(context, listen: false).cardColorChanger();
+          // cardWhiteColor = false;
+          _removeItem(_item, index, left);
+          // print(index);
+        },
+        child: Card(
+          color: cardColor ? Colors.white : Colors.blue,
+          child: ListTile(
+            title: Text(
+              _item,
+            ),
+          ),
         ),
       ),
     );

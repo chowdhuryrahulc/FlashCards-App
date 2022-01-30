@@ -23,11 +23,15 @@ class darktheme extends ChangeNotifier {
 }
 
 class iMatchControl extends ChangeNotifier {
-  int i = 0;
-  increment() {
-    i++;
+  bool cardWhiteColor = true;
+
+  cardColorChanger() {
+    cardWhiteColor = !cardWhiteColor;
+    print(cardWhiteColor);
     notifyListeners();
   }
+
+  notifyListeners();
 }
 
 class gridViewVisibleControl extends ChangeNotifier {

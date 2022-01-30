@@ -46,7 +46,7 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
                       currentSetUsedForDatabaseSearch: cardName,
                     )),
                 practiceListTile(context, 'Match Cards',
-                    'Match between two lists', match_cards()),
+                    'Match between two lists', matchCards()),
                 practiceListTile(context, 'Writing Review', 'Review by writing',
                     writingReview()),
                 practiceListTile(
