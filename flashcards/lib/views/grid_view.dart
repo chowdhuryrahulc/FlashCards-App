@@ -1,4 +1,5 @@
 import 'package:flashcards/Modals/providerManager.dart';
+import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/main.dart';
@@ -172,26 +173,27 @@ class _gridViewState extends State<gridView> {
             builder: (context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
                 titleList = snapshot.data;
-                return Scrollbar(
-                  thickness: 10,
-                  child: StaggeredGridView.countBuilder(
-                    crossAxisCount: 2,
-                    itemCount: titleList!.length,
-                    itemBuilder: (context, index) {
-                      return CardGridX(context, titleList![index]);
-                    },
-                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                    mainAxisSpacing: 2.0,
-                    crossAxisSpacing: 2.0,
-                    shrinkWrap: true,
-                  ),
-                );
+                if (titleList!.length != 0) {
+                  return Scrollbar(
+                    thickness: 10,
+                    child: StaggeredGridView.countBuilder(
+                      crossAxisCount: 2,
+                      itemCount: titleList!.length,
+                      itemBuilder: (context, index) {
+                        return CardGridX(context, titleList![index]);
+                      },
+                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                      mainAxisSpacing: 2.0,
+                      crossAxisSpacing: 2.0,
+                      shrinkWrap: true,
+                    ),
+                  );
+                } else {
+                  return gridViewEmptyContainer();
+                }
+              } else {
+                return gridViewEmptyContainer();
               }
-              return Container(
-                child: Center(
-                  child: Text('No Cards present'),
-                ),
-              );
             }),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -213,9 +215,6 @@ class _gridViewState extends State<gridView> {
   }
 
   Memorized() {
-    // Future<int> j = dbManager2.getCount();
-    // print(j);
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(

@@ -11,11 +11,20 @@ ThemeData lightThemeData(context) => ThemeData(
         primaryVariant: Colors.green,
         secondaryVariant: Colors.white,
       ),
+      dialogTheme: DialogTheme(
+          backgroundColor: Colors.white,
+          titleTextStyle: TextStyle(color: Colors.black),
+          contentTextStyle: TextStyle(color: Colors.black)),
       textTheme: Theme.of(context).textTheme.copyWith(
-          bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
-              fontStyle: FontStyle.italic,
-              fontSizeFactor: 5,
-              color: Colors.black)),
+            bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
+                fontStyle: FontStyle.italic,
+                fontSizeFactor: 5,
+                color: Colors.black),
+            bodyText2: Theme.of(context)
+                .textTheme
+                .bodyText2!
+                .apply(fontSizeFactor: 25, color: Colors.black),
+          ),
       drawerTheme:
           Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.white),
       primaryColor: Colors.amber,
@@ -48,6 +57,10 @@ ThemeData darkThemeData(context) => ThemeData(
     scaffoldBackgroundColor: Colors.black,
     backgroundColor: Colors.black,
     iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
+    dialogTheme: DialogTheme(
+        backgroundColor: Colors.grey[900],
+        titleTextStyle: TextStyle(color: Colors.white),
+        contentTextStyle: TextStyle(color: Colors.white)),
     bottomSheetTheme: Theme.of(context)
         .bottomSheetTheme
         .copyWith(backgroundColor: Colors.black),
@@ -75,11 +88,14 @@ ThemeData darkThemeData(context) => ThemeData(
         trackColor: MaterialStateProperty.all(Colors.lightBlue),
         trackBorderColor: MaterialStateProperty.all(Colors.lightBlue),
         showTrackOnHover: true),
-    //! THIS IS TEXTTHEME. NOT COLOR
-    // NOT USED
     textTheme: Theme.of(context).textTheme.copyWith(
-        bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
-            fontStyle: FontStyle.italic,
-            fontSizeFactor: 5,
-            color: Colors.white)),
+          bodyText1: Theme.of(context).textTheme.bodyText1!.apply(
+              fontStyle: FontStyle.italic,
+              fontSizeFactor: 5,
+              color: Colors.white),
+          bodyText2: Theme.of(context)
+              .textTheme
+              .bodyText2!
+              .apply(fontSizeFactor: 25, color: Colors.white),
+        ),
     dialogBackgroundColor: Colors.black);

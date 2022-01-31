@@ -1,4 +1,6 @@
 import 'package:flashcards/Modals/headlineModal.dart';
+import 'package:flashcards/Modals/providerManager.dart';
+import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/Widgets/Practice.dart';
 import 'package:flashcards/Widgets/createSet.dart';
@@ -8,6 +10,7 @@ import 'package:flashcards/Widgets/drawer.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:provider/src/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'BasicReview.dart';
 import 'grid_view.dart';
@@ -47,15 +50,10 @@ class _list_viewState extends State<list_view> {
     }
   }
 
-  // @override
-  // void initState() {
-  //   setState(() {});
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final textThemeControl = Theme.of(context).colorScheme.primary;
+    Headlines? head = context.watch<createSetFutureHeadlineControl>().headline;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -114,6 +112,7 @@ class _list_viewState extends State<list_view> {
                         children: [
                           Container(
                             margin: EdgeInsets.all(5),
+                            //! padding
                             decoration: BoxDecoration(
                               border: Border.all(width: 2, color: Colors.grey),
                             ),
@@ -204,6 +203,7 @@ class _list_viewState extends State<list_view> {
                               }()),
                               child: Container(
                                 margin: EdgeInsets.symmetric(vertical: 4),
+                                padding: EdgeInsets.only(left: 4),
                                 height: 150,
                                 decoration: BoxDecoration(
                                     gradient: LinearGradient(stops: [
@@ -211,10 +211,10 @@ class _list_viewState extends State<list_view> {
                                       0.02
                                     ], colors: [
                                       ttl.archive == 1
-                                          ? Colors.blue
-                                          : Theme.of(context)
+                                          ? Theme.of(context)
                                               .colorScheme
-                                              .secondary,
+                                              .secondary
+                                          : Colors.blue,
                                       Theme.of(context).colorScheme.secondary
                                     ]),
                                     borderRadius: BorderRadius.all(
@@ -248,7 +248,7 @@ class _list_viewState extends State<list_view> {
                                                   color: textThemeControl),
                                             ),
                                             Text(
-                                              "N cards menorized",
+                                              " N cards menorized",
                                               style: TextStyle(
                                                   fontSize: 12,
                                                   color: textThemeControl),
@@ -285,6 +285,7 @@ class _list_viewState extends State<list_view> {
                                               PopupMenuItem(
                                                   child: InkWell(
                                                       onTap: () {
+                                                        Navigator.pop(context);
                                                         Navigator.push(context,
                                                             MaterialPageRoute(
                                                                 builder:
@@ -309,6 +310,7 @@ class _list_viewState extends State<list_view> {
                                               PopupMenuItem(
                                                   child: InkWell(
                                                       onTap: () {
+                                                        Navigator.pop(context);
                                                         updateArchiveTitle(ttl);
                                                       },
                                                       child: popUpTitle(
@@ -395,10 +397,12 @@ class _list_viewState extends State<list_view> {
                                                                               BorderRadius.circular(40.0)))),
                                                             );
                                                           } else {
-                                                            return addCardsButton();
+                                                            return addCardsButton(
+                                                                ttl);
                                                           }
                                                         } else {
-                                                          return addCardsButton();
+                                                          return addCardsButton(
+                                                              ttl);
                                                         }
                                                       })),
                                               SizedBox(
@@ -454,30 +458,37 @@ class _list_viewState extends State<list_view> {
           }),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("CREATE SET"),
+        heroTag: 'terminator',
         icon: Icon(Icons.add),
         onPressed: () {
-          createSet(context).then((val) {
-            setState(() {});
-          });
+          createSet(context);
+          if (head != null) {
+            titleList!.insert(titleList!.length + 1, head);
+            print(head.name);
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
-  Container createYourFirstSetListView() {
-    return Container(
-      child: Center(
-        child: Text(
-          'Create your first set',
-          style: TextStyle(fontSize: 25),
-        ),
-      ),
+  addCardsButton(Headlines ttl) {
+    return FloatingActionButton.extended(
+      elevation: 0,
+      heroTag: ttl.id,
+      onPressed: () {
+        Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        gridView(currentSetUsedForDatabaseSearch: ttl.name)))
+            .then((value) {
+          setState(() {});
+        });
+      },
+      label: Text('ADD CARDS'),
+      // icon: Icon(Icons.add),
     );
-  }
-
-  ElevatedButton addCardsButton() {
-    return ElevatedButton(onPressed: () {}, child: Text('Add Cards'));
   }
 }
 

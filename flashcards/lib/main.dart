@@ -14,6 +14,8 @@ Future<void> main() async {
   await HeadlineDatabase().getTitleList();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => GoogleSignInProvider()),
+    ChangeNotifierProvider(
+        create: (context) => createSetFutureHeadlineControl()),
     ChangeNotifierProvider(create: (context) => iWhiteBoardReviewControl()),
     ChangeNotifierProvider(create: (_) => darktheme()),
     ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),

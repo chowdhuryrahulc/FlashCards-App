@@ -1,11 +1,13 @@
 import 'package:flashcards/Modals/headlineModal.dart';
+import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 @override
-createSet(BuildContext context,
+Future createSet(BuildContext context,
     {String? title, String? description, bool? edit, Headlines? ttl}) {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -15,6 +17,7 @@ createSet(BuildContext context,
     // descriptionController.text= description;
   }
 
+  Future<Headlines> head;
   final _formKey = GlobalKey<FormState>();
 
   String? Z;
@@ -195,6 +198,7 @@ createSet(BuildContext context,
                                           editx: edit,
                                           ttl: ttl,
                                           titleM: title);
+                                      // print(head.name);
                                       setState(() {
                                         Navigator.pop(context);
                                       });
@@ -215,22 +219,20 @@ _submitTitle(BuildContext context, ttleControl, descripControl,
     {bool? editx, Headlines? ttl, String? titleM}) async {
   final HeadlineDatabase dbManager = HeadlineDatabase();
   final VocabDatabase dbManager2 = VocabDatabase();
-  // title? TTitle;
   List<VocabCardModal> ist = await dbManager2.getAllVocabCards();
 
-  // nd_title? nd_title = [];
   if (editx == null) {
     Headlines ttl = Headlines(name: ttleControl, description: descripControl);
     dbManager.insertTitle(ttl).then((value) => null);
+    context.read<createSetFutureHeadlineControl>().updateFutureHeadline(ttl);
   } else {
     print('FloaTing EditOr ${ttleControl}');
     ttl!.name = ttleControl;
     ttl.description = descripControl;
-    // title ttl = title(name: ttleControl, description: descripControl);
     dbManager.updateTitle(ttl).then((value) => null);
     for (int b = 0; b < ist.length - 1; b++) {
       await dbManager2.renameCurrent_setListView(titleM!, ttleControl, ist[b]);
     }
-    //! ERROR:- nd_title
+    context.read<createSetFutureHeadlineControl>().updateFutureHeadline(ttl);
   }
 }

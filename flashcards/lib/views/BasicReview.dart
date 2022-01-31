@@ -38,7 +38,7 @@ class _BasicReviewState extends State<BasicReview> {
     await TTS.speak(X);
   }
 
-  int N = 0;
+  // int N = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +61,7 @@ class _BasicReviewState extends State<BasicReview> {
           builder: (context, AsyncSnapshot snapshot) {
             if (snapshot.hasData) {
               vocabCardModalList = snapshot.data;
-              vocabCardModalList!.shuffle();
+              // vocabCardModalList!.shuffle();
               return PageView.builder(
                   controller: outsidePageController,
                   scrollDirection: Axis.horizontal,
@@ -96,7 +96,7 @@ class _BasicReviewState extends State<BasicReview> {
                                   onTap: () {
                                     // pageController.jumpToPage(1);
                                     insidePageController.animateToPage(1,
-                                        duration: Duration(milliseconds: 300),
+                                        duration: Duration(milliseconds: 500),
                                         curve: Curves.ease);
                                   },
                                   child: Stack(
@@ -145,6 +145,7 @@ class _BasicReviewState extends State<BasicReview> {
                                         child: Align(
                                           alignment: Alignment.bottomCenter,
                                           child: FloatingActionButton(
+                                            heroTag: singleVocabCard.term,
                                             backgroundColor: Colors.red,
                                             child: Icon(Icons.rotate_right),
                                             onPressed: () {},
@@ -188,7 +189,7 @@ class _BasicReviewState extends State<BasicReview> {
                                         child: Align(
                                           alignment: Alignment.bottomCenter,
                                           child: FloatingActionButton(
-                                            heroTag: 'true',
+                                            heroTag: singleVocabCard.defination,
                                             backgroundColor: Colors.red,
                                             child: Icon(Icons.rotate_right),
                                             onPressed: () {},
@@ -209,50 +210,21 @@ class _BasicReviewState extends State<BasicReview> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Container(
-                                height: 56,
-                                width: MediaQuery.of(context).size.width / 3,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    nextPage(outsidePageController);
-                                    setState(() {
-                                      N = N + 1;
-                                    });
-                                  },
-                                  child: Text("Hard"),
-                                  color: Colors.red,
-                                ),
-                              ),
-                              Container(
-                                height: 56,
-                                width: MediaQuery.of(context).size.width / 3,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      nextPage(outsidePageController);
-
-                                      N = N + 1;
-                                    });
-                                  },
-                                  child: Text("Normal"),
-                                  color: Colors.blue,
-                                ),
-                              ),
-                              Container(
-                                height: 56,
-                                width: MediaQuery.of(context).size.width / 3,
-                                child: MaterialButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      nextPage(outsidePageController);
-
-                                      N = N + 1;
-                                    });
-                                  },
-                                  child: Text("Easy"),
-                                  color: Colors.green,
-                                ),
-                              )
+                              basicReviewBottomButtons(
+                                  buttonName: 'Hard',
+                                  buttonColor: Colors.red,
+                                  outsidePageController: outsidePageController,
+                                  vocabCardModalList: vocabCardModalList),
+                              basicReviewBottomButtons(
+                                  buttonName: 'Normal',
+                                  buttonColor: Colors.blue,
+                                  outsidePageController: outsidePageController,
+                                  vocabCardModalList: vocabCardModalList),
+                              basicReviewBottomButtons(
+                                  buttonName: 'Easy',
+                                  buttonColor: Colors.green,
+                                  outsidePageController: outsidePageController,
+                                  vocabCardModalList: vocabCardModalList)
                             ],
                           ),
                         ),
@@ -269,9 +241,40 @@ class _BasicReviewState extends State<BasicReview> {
   }
 }
 
-nextPage(PageController pageController2) {
-  pageController2.animateToPage(pageController2.page!.toInt() + 1,
-      duration: Duration(seconds: 1), curve: Curves.ease);
+class basicReviewBottomButtons extends StatelessWidget {
+  const basicReviewBottomButtons({
+    Key? key,
+    required this.buttonName,
+    required this.buttonColor,
+    required this.outsidePageController,
+    required this.vocabCardModalList,
+  }) : super(key: key);
+  final Color buttonColor;
+  final String buttonName;
+  final PageController outsidePageController;
+  final List<VocabCardModal>? vocabCardModalList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56,
+      width: MediaQuery.of(context).size.width / 3,
+      child: MaterialButton(
+        onPressed: () {
+          nextPage(outsidePageController, vocabCardModalList);
+        },
+        child: Text(buttonName),
+        color: buttonColor,
+      ),
+    );
+  }
+}
+
+nextPage(PageController pageController2, List<VocabCardModal>? list) {
+  if (pageController2.page!.toInt() < list!.length - 1) {
+    pageController2.animateToPage(pageController2.page!.toInt() + 1,
+        duration: Duration(milliseconds: 500), curve: Curves.ease);
+  }
 }
 
 

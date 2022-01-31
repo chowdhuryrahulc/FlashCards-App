@@ -1,5 +1,6 @@
 // Get the data, Put the data
 import 'dart:typed_data';
+import 'package:flashcards/Modals/headlineModal.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flutter/material.dart';
 
@@ -49,9 +50,25 @@ class gridViewVisibleControl extends ChangeNotifier {
   }
 }
 
+class createSetFutureHeadlineControl extends ChangeNotifier {
+  Headlines? headline;
+
+  Future updateFutureHeadline(Headlines head) async {
+    headline = head;
+    notifyListeners();
+  }
+
+  notifyListeners();
+}
+
 class iSelectDefinationControl extends ChangeNotifier {
   int i = 0;
   bool visible = false;
+  makeIZero() {
+    i = 0;
+    notifyListeners();
+  }
+
   increment(List<VocabCardModal>? list) {
     if (i < list!.length - 1) {
       i++;
@@ -72,6 +89,11 @@ class iWhiteBoardReviewControl extends ChangeNotifier {
     notifyListeners();
   }
 
+  makeIZero() {
+    i = 0;
+    notifyListeners();
+  }
+
   updateVisible() {
     visible = true;
     notifyListeners();
@@ -88,12 +110,23 @@ class iAudioPlayerControl extends ChangeNotifier {
     notifyListeners();
   }
 
+  makeIZero() {
+    i = 0;
+    notifyListeners();
+  }
+
   togglePlayer(List<VocabCardModal>? list) async {
     togglePlay = !togglePlay;
-    for (int j = 0; j < list!.length - 1 && togglePlay == true; j++) {
+    for (i; i < list!.length - 1 && togglePlay == true; await i++) {
+      print(i);
+      print(list.length - 1);
       await Future.delayed(Duration(milliseconds: 1000));
-      i++;
+      // i++;
       notifyListeners();
+    }
+    ;
+    if (i == (list.length - 1)) {
+      togglePlay = false;
     }
   }
 

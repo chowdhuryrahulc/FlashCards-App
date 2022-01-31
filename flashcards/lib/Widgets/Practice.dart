@@ -37,25 +37,33 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
                     context,
                     'Basic Review',
                     'Basic flashcards review',
-                    BasicReview(currentSetUsedForDatabaseSearch: cardName)),
+                    BasicReview(currentSetUsedForDatabaseSearch: cardName),
+                    0,
+                    cardName: cardName),
                 practiceListTile(
                     context,
                     'Select Definition',
                     'Select the correct definition',
                     select_definition(
                       currentSetUsedForDatabaseSearch: cardName,
-                    )),
+                    ),
+                    5,
+                    cardName: cardName),
                 practiceListTile(context, 'Match Cards',
-                    'Match between two lists', matchCards()),
+                    'Match between two lists', matchCards(), 10,
+                    cardName: cardName),
                 practiceListTile(context, 'Writing Review', 'Review by writing',
-                    writingReview()),
+                    writingReview(), 0,
+                    cardName: cardName),
                 practiceListTile(
                     context,
                     'Audio Player',
                     'Review by listening to your cards',
                     audioPlayer(
                       currentSetUsedForDatabaseSearch: cardName,
-                    )),
+                    ),
+                    0,
+                    cardName: cardName),
                 practiceListTile(
                     context,
                     'Whiteboard review  ',
@@ -63,13 +71,15 @@ Future<dynamic> Practice(BuildContext context, {cardName}) {
                     WhiteBoardReview(
                       currentSetUsedForDatabaseSearch: cardName,
                     ),
+                    0,
+                    cardName: cardName,
                     vissible: true),
                 practiceListTile(context, 'Memory Game ',
-                    'Reveal and match cards', MemoryGame(),
-                    vissible: true),
+                    'Reveal and match cards', MemoryGame(), 0,
+                    cardName: cardName, vissible: true),
                 practiceListTile(
-                    context, 'Combined Review (PRO)  ', '', CombinedReview(),
-                    vissible: true)
+                    context, 'Combined Review (PRO)  ', '', CombinedReview(), 0,
+                    cardName: cardName, vissible: true)
               ]),
             ));
       });
