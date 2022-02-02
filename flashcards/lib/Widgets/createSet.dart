@@ -74,6 +74,7 @@ Future createSet(BuildContext context,
                     body: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: SingleChildScrollView(
+                        physics: NeverScrollableScrollPhysics(),
                         child: Column(
                           children: [
                             TextFormField(
@@ -108,7 +109,8 @@ Future createSet(BuildContext context,
                             Row(
                               children: [
                                 Text("Category",
-                                    style: TextStyle(color: textColor)),
+                                    style: TextStyle(
+                                        color: textColor, fontSize: 15)),
                                 IconButton(
                                   onPressed: () {},
                                   icon: Icon(Icons.access_alarm),
@@ -121,7 +123,8 @@ Future createSet(BuildContext context,
                             Row(
                               children: [
                                 Text("Term language",
-                                    style: TextStyle(color: textColor)),
+                                    style: TextStyle(
+                                        color: textColor, fontSize: 15)),
                               ],
                             ),
                             SizedBox(
@@ -148,7 +151,8 @@ Future createSet(BuildContext context,
                             Row(
                               children: [
                                 Text("Definition language",
-                                    style: TextStyle(color: textColor)),
+                                    style: TextStyle(
+                                        color: textColor, fontSize: 15)),
                               ],
                             ),
                             SizedBox(
@@ -175,12 +179,14 @@ Future createSet(BuildContext context,
                             Center(
                               child: Text(
                                   "In case of missing languages, or if audio does not work you need to install the language.",
-                                  style: TextStyle(color: textColor)),
+                                  style: TextStyle(
+                                      color: textColor, fontSize: 15)),
                             ),
                             TextButton(
                                 onPressed: () {},
                                 child: Text("INSTALL LANGUAGES",
-                                    style: TextStyle(color: Colors.blue))),
+                                    style: TextStyle(
+                                        color: Colors.blue, fontSize: 15))),
                             SizedBox(
                               height: 20,
                             ),

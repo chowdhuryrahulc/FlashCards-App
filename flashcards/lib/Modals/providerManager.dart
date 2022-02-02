@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 class pictureBLOBControl extends ChangeNotifier {
   Uint8List? uint8list;
 
+  makeIZero() {
+    uint8list = null;
+    notifyListeners();
+  }
+
   void sendPictureUint8List(Uint8List? uint8List) {
     uint8list = uint8List;
     print(uint8list);
@@ -64,6 +69,7 @@ class createSetFutureHeadlineControl extends ChangeNotifier {
 class iSelectDefinationControl extends ChangeNotifier {
   int i = 0;
   bool visible = false;
+
   makeIZero() {
     i = 0;
     notifyListeners();

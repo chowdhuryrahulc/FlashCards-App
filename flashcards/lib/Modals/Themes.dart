@@ -20,10 +20,6 @@ ThemeData lightThemeData(context) => ThemeData(
                 fontStyle: FontStyle.italic,
                 fontSizeFactor: 5,
                 color: Colors.black),
-            bodyText2: Theme.of(context)
-                .textTheme
-                .bodyText2!
-                .apply(fontSizeFactor: 25, color: Colors.black),
           ),
       drawerTheme:
           Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.white),
@@ -93,9 +89,5 @@ ThemeData darkThemeData(context) => ThemeData(
               fontStyle: FontStyle.italic,
               fontSizeFactor: 5,
               color: Colors.white),
-          bodyText2: Theme.of(context)
-              .textTheme
-              .bodyText2!
-              .apply(fontSizeFactor: 25, color: Colors.white),
         ),
     dialogBackgroundColor: Colors.black);

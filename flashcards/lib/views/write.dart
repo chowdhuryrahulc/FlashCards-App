@@ -64,182 +64,179 @@ class _writeState extends State<write> {
     Color iconColor = Theme.of(context).iconTheme.color!;
     Uint8List? pic =
         Provider.of<pictureBLOBControl>(context, listen: false).uint8list;
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.clear_sharp)),
-        actions: [
-          IconButton(
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<pictureBLOBControl>().makeIZero();
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          leading: IconButton(
               onPressed: () {
-                setState(() {});
+                Navigator.pop(context);
               },
-              icon: Icon(Icons.help_outline_rounded)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
-        ],
-      ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      TextFormField(
-                        focusNode: node1,
-                        style: TextStyle(color: textColor),
-                        validator: (val) =>
-                            val!.isNotEmpty ? null : 'Term Should Not Be Empty',
-                        controller: termController,
-                        decoration: InputDecoration(
-                            labelText: "TERM",
-                            hintText: "TERM",
-                            hintStyle: TextStyle(color: textColor),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)))),
-                      ),
-                      ListTile(
-                        leading: IconButton(
-                            onPressed: () {
-                              showBottomSheet(false);
-                            },
-                            icon: Icon(Icons.photo_rounded),
-                            color: iconColor,
-                            iconSize: 35),
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: textColor),
-                        validator: (val) => val!.isNotEmpty
-                            ? null
-                            : 'Defination Should Not Be Empty',
-                        controller: definationController,
-                        decoration: InputDecoration(
-                            labelText: "DEFINITION",
-                            hintText: "DEFINITION",
-                            hintStyle: TextStyle(color: textColor),
-                            border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10.0)))),
-                      ),
-                      ListTile(
-                        leading: IconButton(
-                            onPressed: () {
-                              showBottomSheet(true);
-                            },
-                            icon: Icon(Icons.photo_rounded, color: iconColor),
-                            iconSize: 35),
-                      ),
-                      pic == null
-                          ? Text("Image")
-                          : Image.memory(
-                              pic,
-                              height: 200,
-                              width: 200,
-                            ),
-                      // )
-                      Text("Tag",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
-                          )),
-                      ListTile(
-                        title: Row(
-                          children: [
-                            Text("Advanced",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: textColor)),
-                            Switch(
-                                value: HIDDEN,
-                                onChanged: (changed) {
-                                  setState(() {
-                                    HIDDEN = changed;
-                                  });
-                                }),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Visibility(
-                    visible: HIDDEN,
-                    child: Column(
+              icon: Icon(Icons.clear_sharp)),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  setState(() {});
+                },
+                icon: Icon(Icons.help_outline_rounded)),
+            IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
+          ],
+        ),
+        body: Container(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Column(
                       children: [
+                        TextFormField(
+                          focusNode: node1,
+                          style: TextStyle(color: textColor),
+                          validator: (val) => val!.isNotEmpty
+                              ? null
+                              : 'Term Should Not Be Empty',
+                          controller: termController,
+                          decoration: InputDecoration(
+                              labelText: "TERM",
+                              hintText: "TERM",
+                              hintStyle: TextStyle(color: textColor),
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)))),
+                        ),
+                        SizedBox(height: 35),
+                        TextFormField(
+                          style: TextStyle(color: textColor),
+                          validator: (val) => val!.isNotEmpty
+                              ? null
+                              : 'Defination Should Not Be Empty',
+                          controller: definationController,
+                          decoration: InputDecoration(
+                              labelText: "DEFINITION",
+                              hintText: "DEFINITION",
+                              hintStyle: TextStyle(color: textColor),
+                              border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)))),
+                        ),
                         ListTile(
-                          title: TextFormField(
-                            style: TextStyle(color: textColor),
-                            controller: exampleController,
-                            onChanged: (value) {
-                              // example = value;
-                            },
-                            decoration: InputDecoration(
-                                labelText: "Examples",
-                                hintText: "Examples",
-                                hintStyle: TextStyle(color: textColor),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0)))),
+                          leading: IconButton(
+                              onPressed: () {
+                                showBottomSheet();
+                              },
+                              icon: Icon(Icons.photo_rounded, color: iconColor),
+                              iconSize: 35),
+                        ),
+                        pic == null
+                            ? Text("Image")
+                            : Image.memory(
+                                pic,
+                                height: 200,
+                                width: 200,
+                              ),
+                        // )
+                        Text("Tag",
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            )),
+                        ListTile(
+                          title: Row(
+                            children: [
+                              Text("Advanced",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold,
+                                      color: textColor)),
+                              Switch(
+                                  value: HIDDEN,
+                                  onChanged: (changed) {
+                                    setState(() {
+                                      HIDDEN = changed;
+                                    });
+                                  }),
+                            ],
                           ),
                         ),
-                        ListTile(
-                            title: TextField(
+                      ],
+                    ),
+                    Visibility(
+                      visible: HIDDEN,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: TextFormField(
                               style: TextStyle(color: textColor),
+                              controller: exampleController,
+                              onChanged: (value) {
+                                // example = value;
+                              },
                               decoration: InputDecoration(
-                                  labelText: "URL",
-                                  hintText: "URL",
+                                  labelText: "Examples",
+                                  hintText: "Examples",
                                   hintStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(10.0)))),
                             ),
-                            trailing: IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.account_balance_rounded,
-                                    color: iconColor))),
-                      ],
+                          ),
+                          ListTile(
+                              title: TextField(
+                                style: TextStyle(color: textColor),
+                                decoration: InputDecoration(
+                                    labelText: "URL",
+                                    hintText: "URL",
+                                    hintStyle: TextStyle(color: textColor),
+                                    border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10.0)))),
+                              ),
+                              trailing: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.account_balance_rounded,
+                                      color: iconColor))),
+                        ],
+                      ),
                     ),
-                  ),
-                  FloatingActionButton.extended(
-                    label: Text('ADD NEXT CARD'),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        submitTitle(
-                          context,
-                          termController.text,
-                          definationController.text,
-                          widget.currentSet,
-                          exampleControl: exampleController.text,
-                          pictureControl: pic,
-                          editxy: widget.editxyz,
-                          ttl: widget.vocabCard,
-                        );
-                        context
-                            .read<pictureBLOBControl>()
-                            .sendPictureUint8List(null);
-                        setState(() {});
-                        FocusScope.of(context).requestFocus(node1);
-                        termController.clear();
-                        definationController.clear();
-                        exampleController.clear();
-                      }
+                    FloatingActionButton.extended(
+                      label: Text('ADD NEXT CARD'),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          submitTitle(
+                            context,
+                            termController.text,
+                            definationController.text,
+                            widget.currentSet,
+                            exampleControl: exampleController.text,
+                            pictureControl: pic,
+                            editxy: widget.editxyz,
+                            ttl: widget.vocabCard,
+                          );
+                          context.read<pictureBLOBControl>().makeIZero();
+                          setState(() {});
+                          FocusScope.of(context).requestFocus(node1);
+                          termController.clear();
+                          definationController.clear();
+                          exampleController.clear();
+                        }
 
-                      // await users.add({
-                      //   'name': '$term',
-                      //   'age': '$definition',
-                      //   'Notes': '$example'
-                      // }).then((value) => print('user added'));
-                    },
-                  ),
-                ],
+                        // await users.add({
+                        //   'name': '$term',
+                        //   'age': '$definition',
+                        //   'Notes': '$example'
+                        // }).then((value) => print('user added'));
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -248,7 +245,7 @@ class _writeState extends State<write> {
     );
   }
 
-  void showBottomSheet(visible) {
+  void showBottomSheet() {
     void pickImageFromGallery(ImageSource imageSource) {
       ImagePicker()
           .pickImage(source: imageSource)
@@ -259,8 +256,10 @@ class _writeState extends State<write> {
             maxWidth: 512,
             maxHeight: 512,
             compressQuality: 50);
-        Uint8List uint8list = croppedFile!.readAsBytesSync();
-        context.read<pictureBLOBControl>().sendPictureUint8List(uint8list);
+        if (croppedFile != null) {
+          Uint8List? uint8list = croppedFile.readAsBytesSync();
+          context.read<pictureBLOBControl>().sendPictureUint8List(uint8list);
+        }
       });
     }
 
@@ -301,17 +300,15 @@ class _writeState extends State<write> {
                   Navigator.pop(context);
                   pickImageFromGallery(ImageSource.camera);
                 }),
-            Visibility(
-                visible: visible,
-                child: ListTile(
-                    leading: Icon(Icons.delete, color: iconColor),
-                    title: Text(
-                      'Clear image',
-                      style: TextStyle(color: textColor),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                    }))
+            ListTile(
+                leading: Icon(Icons.delete, color: iconColor),
+                title: Text(
+                  'Clear image',
+                  style: TextStyle(color: textColor),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                })
           ]);
         });
   }

@@ -1,23 +1,24 @@
 {
   "project_info": {
     "project_number": "1034019272134",
+    "firebase_url": "https://flashcards056-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "flashcards056",
     "storage_bucket": "flashcards056.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1034019272134:android:b13308cc321a3f5e9c6ec7",
+        "mobilesdk_app_id": "1:1034019272134:android:c76b901f2c9063e09c6ec7",
         "android_client_info": {
-          "package_name": "com.example.flashcards"
+          "package_name": "com.berlinger.flashcards"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1034019272134-tfa1tbhe5i2qmvvjugcotnpat7flo402.apps.googleusercontent.com",
+          "client_id": "1034019272134-7659fsjmc2e01vb8rd36cvpbhp4n3jj9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.flashcards",
+            "package_name": "com.berlinger.flashcards",
             "certificate_hash": "8eaf51eaf32672ea7b9593f658932c24d2ac4d49"
           }
         },
