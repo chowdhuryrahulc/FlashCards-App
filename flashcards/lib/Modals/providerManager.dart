@@ -58,7 +58,12 @@ class gridViewVisibleControl extends ChangeNotifier {
 class createSetFutureHeadlineControl extends ChangeNotifier {
   Headlines? headline;
 
-  Future updateFutureHeadline(Headlines head) async {
+  makeIZero() {
+    headline == null;
+    notifyListeners();
+  }
+
+  Future updateFutureHeadline(Headlines? head) async {
     headline = head;
     notifyListeners();
   }

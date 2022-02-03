@@ -117,7 +117,7 @@ addDrawing(BuildContext context) {
                       addDrawingColorControls(
                           canvasController, Colors.red, context),
                       addDrawingColorControls(
-                          canvasController, Colors.black, context)
+                          canvasController, Colors.black87, context)
                     ],
                   ),
                 ],

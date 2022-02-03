@@ -75,13 +75,9 @@ class _gridViewState extends State<gridView> {
                 onPressed: () {
                   updateFavoriteTitle(list.favorite ?? 0);
                 },
-                icon: Icon(() {
-                  if (list.favorite == 1) {
-                    return Icons.favorite;
-                  } else {
-                    return Icons.favorite_border;
-                  }
-                }()),
+                icon: list.favorite == 1
+                    ? Icon(Icons.favorite)
+                    : Icon(Icons.favorite_border),
               ),
               PopupMenuButton(itemBuilder: (BuildContext context) {
                 return [

@@ -83,7 +83,28 @@ class _writeState extends State<write> {
                   setState(() {});
                 },
                 icon: Icon(Icons.help_outline_rounded)),
-            IconButton(onPressed: () {}, icon: Icon(Icons.check_outlined))
+            IconButton(
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    submitTitle(
+                      context,
+                      termController.text,
+                      definationController.text,
+                      widget.currentSet,
+                      exampleControl: exampleController.text,
+                      pictureControl: pic,
+                      editxy: widget.editxyz,
+                      ttl: widget.vocabCard,
+                    );
+                    context.read<pictureBLOBControl>().makeIZero();
+                    setState(() {});
+                    FocusScope.of(context).requestFocus(node1);
+                    termController.clear();
+                    definationController.clear();
+                    exampleController.clear();
+                  }
+                },
+                icon: Icon(Icons.check_outlined))
           ],
         ),
         body: Container(

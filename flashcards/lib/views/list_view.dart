@@ -474,10 +474,6 @@ class _list_viewState extends State<list_view> {
         icon: Icon(Icons.add),
         onPressed: () {
           createSet(context);
-          if (head != null) {
-            titleList!.insert(titleList!.length + 1, head);
-            print(head.name);
-          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

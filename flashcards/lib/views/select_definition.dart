@@ -6,6 +6,7 @@ import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 
 import '../main.dart';
@@ -48,94 +49,105 @@ class _select_definitionState extends State<select_definition>
 
   @override
   Widget build(BuildContext context) {
-    int i = context.watch<iSelectDefinationControl>().i;
-    return WillPopScope(
-      onWillPop: () async {
-        context.read<iSelectDefinationControl>().makeIZero();
-        return true;
-      },
-      child: Scaffold(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return Dialog(
-                            insetPadding: EdgeInsets.symmetric(
-                                vertical:
-                                    MediaQuery.of(context).size.width / 1.7,
-                                horizontal: 20),
-                            child: Scaffold(
-                              appBar: AppBar(
-                                leading: IconButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    icon: Icon(Icons.close)),
-                              ),
-                              body: SizedBox(
-                                child: Column(
-                                  children: [
-                                    dialogListTile(
-                                        'Reversed review', switchValue1),
-                                    dialogListTile(
-                                        'Reveal random side', switchValue2),
-                                    dialogListTile(
-                                        'Show only image', switchValue3),
-                                    dialogListTile(
-                                        'Auto read cards', switchValue4)
-                                  ],
+    return ChangeNotifierProvider(
+      create: (_) => iSelectDefinationControl(),
+      child: Builder(builder: (BuildContext context) {
+        int i = context.watch<iSelectDefinationControl>().i;
+        return WillPopScope(
+          onWillPop: () async {
+            context.read<iSelectDefinationControl>().makeIZero();
+            return true;
+          },
+          child: Scaffold(
+              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+              appBar: AppBar(
+                actions: [
+                  IconButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                insetPadding: EdgeInsets.symmetric(
+                                    vertical:
+                                        MediaQuery.of(context).size.width / 1.7,
+                                    horizontal: 20),
+                                child: Scaffold(
+                                  appBar: AppBar(
+                                    leading: IconButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        icon: Icon(Icons.close)),
+                                  ),
+                                  body: SizedBox(
+                                    child: Column(
+                                      children: [
+                                        dialogListTile(
+                                            'Reversed review', switchValue1),
+                                        dialogListTile(
+                                            'Reveal random side', switchValue2),
+                                        dialogListTile(
+                                            'Show only image', switchValue3),
+                                        dialogListTile(
+                                            'Auto read cards', switchValue4)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      },
+                      icon: Icon(Icons.settings))
+                ],
+              ),
+              body: SingleChildScrollView(
+                child: SlideTransition(
+                  position:
+                      Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
+                          .animate(slideAnimationController!),
+                  child: FutureBuilder(
+                      future: widget.currentSetUsedForDatabaseSearch == null
+                          ? dbManager2.getAllVocabCards()
+                          : dbManager2.getVocabCardsusingCurrentSet(
+                              widget.currentSetUsedForDatabaseSearch),
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          list = snapshot.data;
+                          var listABC = generateRandomOptions(list!, i);
+                          return Column(
+                            children: [
+                              Container(
+                                height: 350,
+                                color: Theme.of(context).colorScheme.secondary,
+                                margin: EdgeInsets.all(7.0),
+                                child: Center(
+                                  child: Text(list![i].term,
+                                      style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          fontSize: 50)),
                                 ),
                               ),
-                            ),
+                              OptionWidget(
+                                  listABC[0], list![i].defination, list),
+                              OptionWidget(
+                                  listABC[1], list![i].defination, list),
+                              OptionWidget(
+                                  listABC[2], list![i].defination, list),
+                              OptionWidget(
+                                  listABC[3], list![i].defination, list),
+                            ],
                           );
-                        });
-                  },
-                  icon: Icon(Icons.settings))
-            ],
-          ),
-          body: SingleChildScrollView(
-            child: SlideTransition(
-              position: Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
-                  .animate(slideAnimationController!),
-              child: FutureBuilder(
-                  future: widget.currentSetUsedForDatabaseSearch == null
-                      ? dbManager2.getAllVocabCards()
-                      : dbManager2.getVocabCardsusingCurrentSet(
-                          widget.currentSetUsedForDatabaseSearch),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.hasData) {
-                      list = snapshot.data;
-                      var listABC = generateRandomOptions(list!, i);
-                      return Column(
-                        children: [
-                          Container(
-                            height: 350,
-                            color: Theme.of(context).colorScheme.secondary,
-                            margin: EdgeInsets.all(7.0),
-                            child: Center(
-                              child: Text(list![i].term,
-                                  style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      fontSize: 50)),
-                            ),
-                          ),
-                          OptionWidget(listABC[0], list![i].defination, list),
-                          OptionWidget(listABC[1], list![i].defination, list),
-                          OptionWidget(listABC[2], list![i].defination, list),
-                          OptionWidget(listABC[3], list![i].defination, list),
-                        ],
-                      );
-                    } else {
-                      return Container();
-                    }
-                  }),
-            ),
-          )),
+                        } else {
+                          return Container();
+                        }
+                      }),
+                ),
+              )),
+        );
+      }),
     );
   }
 

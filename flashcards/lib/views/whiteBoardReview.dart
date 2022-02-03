@@ -220,7 +220,7 @@ class _canvasWidgetState extends State<canvasWidget> {
       // Probable for 1st time. When app starts.
       canvasController = CanvasController();
       canvasController.strokeWidthh = 5.0;
-      canvasController.brushColor = Colors.black;
+      canvasController.brushColor = Colors.black87;
       canvasController.backgroundColor = Colors.grey[100]!;
     } else {
       canvasController = widget.canvasController!;
@@ -268,7 +268,7 @@ class _canvasWidgetState extends State<canvasWidget> {
 }
 
 class CanvasController extends ChangeNotifier {
-  Color _color = Colors.black;
+  Color _color = Colors.black87;
   Color _backgroundColor = Colors.white;
   double _strokeWidth = 4.0;
   bool _isEraseMode = false;
