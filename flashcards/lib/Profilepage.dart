@@ -19,15 +19,17 @@ class _ProfilepageState extends State<Profilepage> {
         child: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Something is Wrong'),
-                );
-              } else if (snapshot.hasData) {
+              print('CONNECTION STATE: ${snapshot}');
+              // if (snapshot.connectionState == ConnectionState.waiting) {
+              //   return Center(
+              //     child: CircularProgressIndicator(),
+              //   );
+              // } else if (snapshot.hasError) {
+              //   return Center(
+              //     child: Text('Something is Wrong'),
+              //   );
+              // } else
+              if (snapshot.hasData) {
                 return list_view();
               } else {
                 return google();

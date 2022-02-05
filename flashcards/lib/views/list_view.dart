@@ -268,19 +268,14 @@ class _list_viewState extends State<list_view> {
                                                 PopupMenuItem(
                                                   child: InkWell(
                                                     onTap: () {
+                                                      Navigator.pop(context);
                                                       bool? edi = true;
                                                       createSet(context,
-                                                              title: ttl.name,
-                                                              description: ttl
-                                                                  .description,
-                                                              edit: edi,
-                                                              ttl: ttl)
-                                                          .then((value) {
-                                                        setState(() {
-                                                          Navigator.pop(
-                                                              context);
-                                                        });
-                                                      });
+                                                          title: ttl.name,
+                                                          description:
+                                                              ttl.description,
+                                                          edit: edi,
+                                                          ttl: ttl);
                                                     },
                                                     child: popUpTitle(
                                                         Icons.edit, "Edit"),

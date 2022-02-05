@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 class GoogleSignInProvider extends ChangeNotifier {
   final googleSignIn = GoogleSignIn();
   GoogleSignInAccount? user;
+  // final FirebaseAuth firebaseAuth;
   Future googleLogin() async {
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) return;

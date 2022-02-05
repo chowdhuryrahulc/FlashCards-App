@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flashcards/Modals/providerManager.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/Widgets/addDrawing.dart';
@@ -307,9 +308,16 @@ class _writeState extends State<write> {
                   'Select from gallery',
                   style: TextStyle(color: textColor),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  pickImageFromGallery(ImageSource.gallery);
+                  //TODO GALLERY PERMISSIONS
+                  var status = await Permission.storage.request();
+                  print('GALLERY STATUS $status');
+                  if (status.isDenied) {
+                    SnackBar(content: Text('Gallery Access Denied'));
+                  } else if (status.isGranted) {
+                    pickImageFromGallery(ImageSource.gallery);
+                  }
                 }),
             ListTile(
                 leading: Icon(Icons.camera_alt, color: iconColor),
@@ -317,9 +325,14 @@ class _writeState extends State<write> {
                   'Take photo',
                   style: TextStyle(color: textColor),
                 ),
-                onTap: () {
+                onTap: () async {
                   Navigator.pop(context);
-                  pickImageFromGallery(ImageSource.camera);
+                  var status = await Permission.camera.request();
+                  if (status.isDenied) {
+                    SnackBar(content: Text('Camera Access Denied'));
+                  } else if (status.isGranted) {
+                    pickImageFromGallery(ImageSource.camera);
+                  }
                 }),
             ListTile(
                 leading: Icon(Icons.delete, color: iconColor),

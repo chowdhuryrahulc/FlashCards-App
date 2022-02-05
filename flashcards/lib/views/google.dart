@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +13,19 @@ class google extends StatefulWidget {
 }
 
 class _googleState extends State<google> {
+  Connectivity? connectivity;
+  StreamSubscription<ConnectivityResult>? streamSubscription;
+
   @override
   void initState() {
+    connectivity = Connectivity();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -29,8 +42,15 @@ class _googleState extends State<google> {
           ClipOval(
             child: InkWell(
                 onTap: () async {
-                  Provider.of<GoogleSignInProvider>(context, listen: false)
-                      .googleLogin();
+                  streamSubscription = connectivity!.onConnectivityChanged
+                      .listen((ConnectivityResult connectivityResult) {
+                    if (connectivityResult == ConnectivityResult.none) {
+                      print(connectivityResult);
+                    } else {
+                      Provider.of<GoogleSignInProvider>(context, listen: false)
+                          .googleLogin();
+                    }
+                  });
                 },
                 child: Container(
                   height: 250,
