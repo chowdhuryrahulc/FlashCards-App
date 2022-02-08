@@ -1,7 +1,7 @@
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+// import 'package:flutter_tts/flutter_tts.dart';
 
 class BasicReview extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
@@ -32,11 +32,11 @@ class _BasicReviewState extends State<BasicReview> {
 
   // final Stream<QuerySnapshot> users =
   //     FirebaseFirestore.instance.collection("users").snapshots();
-  final TTS = FlutterTts();
+  // final TTS = FlutterTts();
 
-  Future S(X) async {
-    await TTS.speak(X);
-  }
+  // Future S(X) async {
+  //   await TTS.speak(X);
+  // }
 
   // int N = 0;
   @override
