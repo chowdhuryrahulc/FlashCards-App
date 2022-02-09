@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flashcards/Modals/providerManager.dart';
+import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
@@ -18,6 +19,7 @@ class write extends StatefulWidget {
   bool? editxyz;
   String? termxyz;
   String? definationxyz;
+  String? examplexyz;
   VocabCardModal? vocabCard;
   String? currentSet; //TODO PROBABLY REQUIRED
 
@@ -25,6 +27,7 @@ class write extends StatefulWidget {
     this.editxyz,
     this.termxyz,
     this.definationxyz,
+    this.examplexyz,
     this.vocabCard,
     this.currentSet,
     Key? key,
@@ -40,6 +43,10 @@ class _writeState extends State<write> {
     if (widget.termxyz != null) {
       termController.text = widget.termxyz!;
       definationController.text = widget.definationxyz!;
+      if (widget.examplexyz != null) {
+        HIDDEN = true;
+        exampleController.text = widget.examplexyz!;
+      }
     }
     // currentSet = widget.currentSet;
     super.initState();
@@ -97,6 +104,7 @@ class _writeState extends State<write> {
                       editxy: widget.editxyz,
                       ttl: widget.vocabCard,
                     );
+                    HIDDEN = false;
                     context.read<pictureBLOBControl>().makeIZero();
                     setState(() {});
                     FocusScope.of(context).requestFocus(node1);
@@ -125,6 +133,8 @@ class _writeState extends State<write> {
                               ? null
                               : 'Term Should Not Be Empty',
                           controller: termController,
+                          textInputAction: TextInputAction.next,
+                          textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                               labelText: "TERM",
                               hintText: "TERM",
@@ -140,6 +150,7 @@ class _writeState extends State<write> {
                               ? null
                               : 'Defination Should Not Be Empty',
                           controller: definationController,
+                          textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                               labelText: "DEFINITION",
                               hintText: "DEFINITION",
@@ -198,6 +209,8 @@ class _writeState extends State<write> {
                             title: TextFormField(
                               style: TextStyle(color: textColor),
                               controller: exampleController,
+                              textInputAction: TextInputAction.done,
+                              textCapitalization: TextCapitalization.sentences,
                               onChanged: (value) {
                                 // example = value;
                               },
@@ -243,6 +256,7 @@ class _writeState extends State<write> {
                             ttl: widget.vocabCard,
                           );
                           context.read<pictureBLOBControl>().makeIZero();
+                          HIDDEN = false;
                           setState(() {});
                           FocusScope.of(context).requestFocus(node1);
                           termController.clear();
@@ -254,7 +268,7 @@ class _writeState extends State<write> {
                         //   'name': '$term',
                         //   'age': '$definition',
                         //   'Notes': '$example'
-                        // }).then((value) => print('user added'));
+                        // }));
                       },
                     ),
                   ],
@@ -312,7 +326,6 @@ class _writeState extends State<write> {
                   Navigator.pop(context);
                   //TODO GALLERY PERMISSIONS
                   var status = await Permission.storage.request();
-                  print('GALLERY STATUS $status');
                   if (status.isDenied) {
                     SnackBar(content: Text('Gallery Access Denied'));
                   } else if (status.isGranted) {
@@ -352,7 +365,6 @@ submitTitle(context, termControl, definationControl, currentSetControl,
     {exampleControl, pictureControl, bool? editxy, VocabCardModal? ttl}) {
   final VocabDatabase vocabDatabase = VocabDatabase();
   // title? TTitle;
-  // print(ttl!.nd_id);
   if (editxy == null) {
     VocabCardModal ttl = VocabCardModal(
         term: termControl,
@@ -362,10 +374,9 @@ submitTitle(context, termControl, definationControl, currentSetControl,
         picture: pictureControl);
     vocabDatabase.insertVocabCards(ttl).then((value) => null);
   } else {
-    // print('FloaTing EditOr ${ttl!.nd_id}');
     ttl!.term = termControl;
     ttl.defination = definationControl;
-    // title ttl = title(name: ttleControl, description: descripControl);
+    ttl.example = exampleControl;
     vocabDatabase.updateTitle(ttl).then((value) => null);
   }
 }

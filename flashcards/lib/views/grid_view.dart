@@ -60,13 +60,16 @@ class _gridViewState extends State<gridView> {
               style: TextStyle(
                   fontSize: 15, color: Theme.of(context).colorScheme.primary)),
           SizedBox(height: 15),
-          Visibility(
-            visible: list.example != null,
-            child: Text(list.example!,
-                style: TextStyle(
-                    fontSize: 15,
-                    color: Theme.of(context).colorScheme.primary)),
-          ),
+          Text(list.example!,
+              style: TextStyle(
+                  fontSize: 12,
+                  fontStyle: FontStyle.italic,
+                  color: Theme.of(context).colorScheme.primary)),
+          list.picture != null
+              ? Center(
+                  child:
+                      SizedBox(height: 100, child: Image.memory(list.picture!)))
+              : SizedBox(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -92,6 +95,7 @@ class _gridViewState extends State<gridView> {
                                           editxyz: edi,
                                           termxyz: list.term,
                                           definationxyz: list.defination,
+                                          examplexyz: list.example,
                                           vocabCard: list,
                                           currentSet: widget
                                               .currentSetUsedForDatabaseSearch,

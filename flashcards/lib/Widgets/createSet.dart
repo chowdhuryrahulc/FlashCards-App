@@ -204,7 +204,6 @@ Future createSet(BuildContext context,
                                           editx: edit,
                                           ttl: ttl,
                                           titleM: title);
-                                      // print(head.name);
                                       setState(() {
                                         Navigator.pop(context);
                                       });
@@ -229,16 +228,23 @@ _submitTitle(BuildContext context, ttleControl, descripControl,
 
   if (editx == null) {
     Headlines ttl = Headlines(name: ttleControl, description: descripControl);
-    dbManager.insertTitle(ttl).then((value) => null);
-    context.read<createSetFutureHeadlineControl>().updateFutureHeadline(ttl);
+    await dbManager.insertTitle(ttl).then((value) async {
+      await context
+          .read<createSetFutureHeadlineControl>()
+          .updateFutureHeadline(ttl);
+    });
+
+    //NULL CHECK ERROR IN FIRST ATTEMPT
   } else {
-    print('FloaTing EditOr ${ttleControl}');
     ttl!.name = ttleControl;
     ttl.description = descripControl;
-    dbManager.updateTitle(ttl).then((value) => null);
+    await dbManager.updateTitle(ttl).then((value) async {
+      await context
+          .read<createSetFutureHeadlineControl>()
+          .updateFutureHeadline(ttl);
+    });
     for (int b = 0; b < ist.length - 1; b++) {
       await dbManager2.renameCurrent_setListView(titleM!, ttleControl, ist[b]);
     }
-    context.read<createSetFutureHeadlineControl>().updateFutureHeadline(ttl);
   }
 }

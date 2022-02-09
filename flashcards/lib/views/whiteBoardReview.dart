@@ -162,6 +162,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
                                 context
                                     .read<iWhiteBoardReviewControl>()
                                     .increment(list);
+                                canvasController.clear();
                               },
                               child: Text("Hard"),
                               color: Colors.red,
@@ -175,6 +176,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
                                 context
                                     .read<iWhiteBoardReviewControl>()
                                     .increment(list);
+                                canvasController.clear();
                               },
                               child: Text("Normal"),
                               color: Colors.blue,
@@ -188,6 +190,7 @@ class _WhiteBoardReviewState extends State<WhiteBoardReview> {
                                 context
                                     .read<iWhiteBoardReviewControl>()
                                     .increment(list);
+                                canvasController.clear();
                               },
                               child: Text("Easy"),
                               color: Colors.green,
@@ -316,7 +319,6 @@ class CanvasController extends ChangeNotifier {
   double get strokeWidthh => _strokeWidth;
 
   set strokeWidthh(double thickness) {
-    print(thickness);
     _strokeWidth = thickness;
     _updatePaint();
   }

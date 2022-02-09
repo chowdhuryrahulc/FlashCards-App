@@ -109,7 +109,6 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
   Widget _buildItem(
       String _item, int index, bool left, Animation<double> _animation) {
     Color cardColor = Provider.of<iMatchControl>(context).cardWhiteColor;
-    print('cardColor: $cardColor');
     return SizeTransition(
       sizeFactor: _animation,
       child: InkWell(
@@ -117,7 +116,6 @@ class _matchCardsState extends State<matchCards> with TickerProviderStateMixin {
           // Provider.of<iMatchControl>(context, listen: false).cardColorChanger();
           // cardWhiteColor = false;
           // _removeItem(_item, index, left);
-          // print(index);
         },
         child: Card(
           color: cardColor,

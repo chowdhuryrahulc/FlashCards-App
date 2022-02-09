@@ -27,7 +27,7 @@ class list_view extends StatefulWidget {
 }
 
 class _list_viewState extends State<list_view> {
-  bool checkBoxToggle = true;
+  bool checkBoxToggle = false;
   final HeadlineDatabase dbManager = HeadlineDatabase();
   final VocabDatabase vocabDatabase = VocabDatabase();
   List<VocabCardModal>? vocabCardModalList;
@@ -197,7 +197,6 @@ class _list_viewState extends State<list_view> {
                                     if (checkBoxToggle == true) {
                                       return true;
                                     } else {
-                                      print('archive true||X false');
                                       return false;
                                     }
                                   } else {
@@ -334,14 +333,17 @@ class _list_viewState extends State<list_view> {
                                                         "Move Cards")),
                                                 PopupMenuItem(
                                                     child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      dbManager
-                                                          .deleteTitle(ttl.id!);
+                                                  onTap: () async {
+                                                    // setState(() async {
+                                                    await dbManager
+                                                        .deleteTitle(ttl.id!)
+                                                        .then((value) {
                                                       titleList!
                                                           .removeAt(index);
+                                                      setState(() {});
                                                       Navigator.pop(context);
                                                     });
+                                                    // });
                                                   },
                                                   child: Row(
                                                     mainAxisAlignment:

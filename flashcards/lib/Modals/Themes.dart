@@ -8,8 +8,8 @@ ThemeData lightThemeData(context) => ThemeData(
       colorScheme: ColorScheme.fromSwatch().copyWith(
         primary: Colors.black,
         secondary: Colors.white,
-        primaryVariant: Colors.green,
-        secondaryVariant: Colors.white,
+        primaryContainer: Colors.green,
+        secondaryContainer: Colors.white,
       ),
       dialogTheme: DialogTheme(
           backgroundColor: Colors.white,
@@ -54,7 +54,7 @@ ThemeData darkThemeData(context) => ThemeData(
     backgroundColor: Colors.black,
     iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
     dialogTheme: DialogTheme(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: Colors.yellow, //not used
         titleTextStyle: TextStyle(color: Colors.white),
         contentTextStyle: TextStyle(color: Colors.white)),
     bottomSheetTheme: Theme.of(context)
@@ -70,8 +70,8 @@ ThemeData darkThemeData(context) => ThemeData(
     colorScheme: ColorScheme.fromSwatch().copyWith(
       primary: Colors.white, // for ListView headline and subtitle
       secondary: Colors.grey[900], // for Container in ListView
-      primaryVariant: Colors.blueGrey[700], // BasicReview container color
-      secondaryVariant: Colors.blueGrey[300], // BasicReview container color
+      primaryContainer: Colors.blueGrey[700], // BasicReview container color
+      secondaryContainer: Colors.blueGrey[300], // BasicReview container color
     ),
     textSelectionTheme: Theme.of(context)
         .textSelectionTheme
@@ -90,4 +90,4 @@ ThemeData darkThemeData(context) => ThemeData(
               fontSizeFactor: 5,
               color: Colors.white),
         ),
-    dialogBackgroundColor: Colors.black);
+    dialogBackgroundColor: Colors.yellow);

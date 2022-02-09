@@ -14,7 +14,6 @@ class pictureBLOBControl extends ChangeNotifier {
 
   void sendPictureUint8List(Uint8List? uint8List) {
     uint8list = uint8List;
-    print(uint8list);
     notifyListeners();
   }
 }
@@ -39,7 +38,6 @@ class iMatchControl extends ChangeNotifier {
     }
 
     // cardWhiteColor = !cardWhiteColor;
-    // print(cardWhiteColor);
     // notifyListeners();
   }
 
@@ -129,8 +127,6 @@ class iAudioPlayerControl extends ChangeNotifier {
   togglePlayer(List<VocabCardModal>? list) async {
     togglePlay = !togglePlay;
     for (i; i < list!.length - 1 && togglePlay == true; await i++) {
-      print(i);
-      print(list.length - 1);
       await Future.delayed(Duration(milliseconds: 1000));
       // i++;
       notifyListeners();

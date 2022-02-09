@@ -45,7 +45,7 @@ class _googleState extends State<google> {
                   streamSubscription = connectivity!.onConnectivityChanged
                       .listen((ConnectivityResult connectivityResult) {
                     if (connectivityResult == ConnectivityResult.none) {
-                      print(connectivityResult);
+                      SnackBar(content: Text('No Internet Connection'));
                     } else {
                       Provider.of<GoogleSignInProvider>(context, listen: false)
                           .googleLogin();

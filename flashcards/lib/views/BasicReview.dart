@@ -75,9 +75,7 @@ class _BasicReviewState extends State<BasicReview> {
                             controller: insidePageController,
                             scrollDirection: Axis.vertical,
                             physics: BouncingScrollPhysics(),
-                            onPageChanged: (number) {
-                              // print('Page number is ' + number.toString());
-                            },
+                            onPageChanged: (number) {},
                             children: [
                               Container(
                                 decoration: BoxDecoration(
@@ -89,7 +87,7 @@ class _BasicReviewState extends State<BasicReview> {
                                           fit: BoxFit.fill),
                                   color: Theme.of(context)
                                       .colorScheme
-                                      .primaryVariant,
+                                      .primaryContainer,
                                 ),
                                 margin: EdgeInsets.all(8),
                                 child: InkWell(
@@ -123,7 +121,9 @@ class _BasicReviewState extends State<BasicReview> {
                                           )),
                                       Text(
                                         '${singleVocabCard.term}',
-                                        style: TextStyle(fontSize: 50),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline1,
                                         textAlign: TextAlign.center,
                                       ),
                                       Positioned(

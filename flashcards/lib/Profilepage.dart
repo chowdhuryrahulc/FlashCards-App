@@ -19,7 +19,6 @@ class _ProfilepageState extends State<Profilepage> {
         child: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              print('CONNECTION STATE: ${snapshot}');
               // if (snapshot.connectionState == ConnectionState.waiting) {
               //   return Center(
               //     child: CircularProgressIndicator(),
