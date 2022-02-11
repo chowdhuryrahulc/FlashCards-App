@@ -7,6 +7,7 @@ class GoogleSignInProvider extends ChangeNotifier {
   GoogleSignInAccount? user;
   // final FirebaseAuth firebaseAuth;
   Future googleLogin() async {
+    print('I AM GOING IN');
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) return;
     user = googleUser;

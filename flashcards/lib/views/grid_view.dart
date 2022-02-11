@@ -67,8 +67,10 @@ class _gridViewState extends State<gridView> {
                   color: Theme.of(context).colorScheme.primary)),
           list.picture != null
               ? Center(
-                  child:
-                      SizedBox(height: 100, child: Image.memory(list.picture!)))
+                  child: Container(
+                      height: 100,
+                      color: Colors.white,
+                      child: Image.memory(list.picture!)))
               : SizedBox(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

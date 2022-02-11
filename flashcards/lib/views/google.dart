@@ -14,18 +14,11 @@ class google extends StatefulWidget {
 
 class _googleState extends State<google> {
   Connectivity? connectivity;
-  StreamSubscription<ConnectivityResult>? streamSubscription;
 
   @override
   void initState() {
     connectivity = Connectivity();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    streamSubscription?.cancel();
-    super.dispose();
   }
 
   @override
@@ -42,15 +35,30 @@ class _googleState extends State<google> {
           ClipOval(
             child: InkWell(
                 onTap: () async {
-                  streamSubscription = connectivity!.onConnectivityChanged
-                      .listen((ConnectivityResult connectivityResult) {
-                    if (connectivityResult == ConnectivityResult.none) {
-                      SnackBar(content: Text('No Internet Connection'));
-                    } else {
-                      Provider.of<GoogleSignInProvider>(context, listen: false)
-                          .googleLogin();
-                    }
-                  });
+                  var result = await connectivity!.checkConnectivity();
+                  switch (result) {
+                    case ConnectivityResult.none:
+                      {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('No Internet Connection'),
+                            duration: Duration(milliseconds: 300)));
+                        break;
+                      }
+                    case ConnectivityResult.mobile:
+                      {
+                        Provider.of<GoogleSignInProvider>(context,
+                                listen: false)
+                            .googleLogin();
+                        break;
+                      }
+                    case ConnectivityResult.wifi:
+                      {
+                        Provider.of<GoogleSignInProvider>(context,
+                                listen: false)
+                            .googleLogin();
+                        break;
+                      }
+                  }
                 },
                 child: Container(
                   height: 250,

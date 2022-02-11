@@ -78,6 +78,7 @@ class _writeState extends State<write> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).drawerTheme.backgroundColor,
         appBar: AppBar(
           elevation: 0,
           leading: IconButton(
@@ -137,6 +138,7 @@ class _writeState extends State<write> {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                               labelText: "TERM",
+                              labelStyle: TextStyle(color: textColor),
                               hintText: "TERM",
                               hintStyle: TextStyle(color: textColor),
                               border: OutlineInputBorder(
@@ -153,6 +155,7 @@ class _writeState extends State<write> {
                           textCapitalization: TextCapitalization.sentences,
                           decoration: InputDecoration(
                               labelText: "DEFINITION",
+                              labelStyle: TextStyle(color: textColor),
                               hintText: "DEFINITION",
                               hintStyle: TextStyle(color: textColor),
                               border: OutlineInputBorder(
@@ -216,6 +219,7 @@ class _writeState extends State<write> {
                               },
                               decoration: InputDecoration(
                                   labelText: "Examples",
+                                  labelStyle: TextStyle(color: textColor),
                                   hintText: "Examples",
                                   hintStyle: TextStyle(color: textColor),
                                   border: OutlineInputBorder(
@@ -228,6 +232,7 @@ class _writeState extends State<write> {
                                 style: TextStyle(color: textColor),
                                 decoration: InputDecoration(
                                     labelText: "URL",
+                                    labelStyle: TextStyle(color: textColor),
                                     hintText: "URL",
                                     hintStyle: TextStyle(color: textColor),
                                     border: OutlineInputBorder(

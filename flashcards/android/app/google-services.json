@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "1034019272134-7659fsjmc2e01vb8rd36cvpbhp4n3jj9.apps.googleusercontent.com",
+          "client_id": "1034019272134-dh82bnbik252bjmv3of1uh3qijl0e5og.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.berlinger.flashcards",
-            "certificate_hash": "8eaf51eaf32672ea7b9593f658932c24d2ac4d49"
+            "certificate_hash": "aba4b5cdf7763b58f139f9ac3b4afd9e92ccb109"
           }
         },
         {

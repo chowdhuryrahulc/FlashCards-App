@@ -54,7 +54,8 @@ ThemeData darkThemeData(context) => ThemeData(
     backgroundColor: Colors.black,
     iconTheme: Theme.of(context).iconTheme.copyWith(color: Colors.white),
     dialogTheme: DialogTheme(
-        backgroundColor: Colors.yellow, //not used
+        // Used in for teachers drawer dialog box
+        backgroundColor: Colors.grey[500], //not used
         titleTextStyle: TextStyle(color: Colors.white),
         contentTextStyle: TextStyle(color: Colors.white)),
     bottomSheetTheme: Theme.of(context)
@@ -63,10 +64,11 @@ ThemeData darkThemeData(context) => ThemeData(
     floatingActionButtonTheme: Theme.of(context)
         .floatingActionButtonTheme
         .copyWith(backgroundColor: Colors.blue),
-    drawerTheme:
-        Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.black),
+    drawerTheme: Theme.of(context)
+        .drawerTheme
+        .copyWith(backgroundColor: Colors.grey[900]),
     //! colorSceme.copywith. try different combos.
-    primaryColor: Colors.amber, // Drawer header
+    primaryColor: Colors.blue, // Drawer header
     colorScheme: ColorScheme.fromSwatch().copyWith(
       primary: Colors.white, // for ListView headline and subtitle
       secondary: Colors.grey[900], // for Container in ListView
@@ -78,7 +80,7 @@ ThemeData darkThemeData(context) => ThemeData(
         .copyWith(selectionColor: Colors.blue), // for toggleDarkThemeButtom
     dividerColor: Colors.white,
     popupMenuTheme: Theme.of(context).popupMenuTheme.copyWith(
-        color: Colors.black, textStyle: TextStyle(color: Colors.white)),
+        color: Colors.grey[900], textStyle: TextStyle(color: Colors.white)),
     scrollbarTheme: Theme.of(context).scrollbarTheme.copyWith(
         thumbColor: MaterialStateProperty.all(Colors.blue),
         trackColor: MaterialStateProperty.all(Colors.lightBlue),

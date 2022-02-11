@@ -83,6 +83,7 @@ Future createSet(BuildContext context,
                                   ? null
                                   : 'Name Should Not Be Empty',
                               controller: titleController,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration(
                                   labelText: "Name",
                                   labelStyle: TextStyle(color: textColor),
@@ -96,6 +97,7 @@ Future createSet(BuildContext context,
                             TextField(
                               style: TextStyle(color: textColor),
                               controller: descriptionController,
+                              textCapitalization: TextCapitalization.sentences,
                               decoration: InputDecoration(
                                   labelText: "Description-optional",
                                   labelStyle: TextStyle(color: textColor),

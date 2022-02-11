@@ -65,7 +65,8 @@ class _list_viewState extends State<list_view> {
               icon: Icon(Icons.refresh)),
           IconButton(
               onPressed: () async {
-                await launch("https://www.youtube.com/");
+                await launch(
+                    "https://github.com/chowdhuryrahulc/Privacy-Policy");
               },
               icon: Icon(Icons.help_outline_rounded)),
           PopupMenuButton(itemBuilder: (BuildContext context) {
@@ -204,6 +205,7 @@ class _list_viewState extends State<list_view> {
                                   }
                                 }()),
                                 child: Container(
+                                  key: Key('listViewContainerKey'),
                                   margin: EdgeInsets.symmetric(vertical: 4),
                                   padding: EdgeInsets.only(left: 4),
                                   height: 150,
@@ -222,6 +224,7 @@ class _list_viewState extends State<list_view> {
                                       borderRadius: BorderRadius.all(
                                           const Radius.circular(6.0))),
                                   child: InkWell(
+                                    splashColor: Colors.grey[600],
                                     onTap: () {
                                       Navigator.push(
                                           context,

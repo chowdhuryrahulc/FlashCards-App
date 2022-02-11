@@ -101,7 +101,7 @@ class _drawerState extends State<drawer> {
                               child: Text('CLOSE')),
                           TextButton(
                               onPressed: () {
-                                launch('mailto:prabir0712@gmail.com?');
+                                launch('mailto:chowdhuryrahulc@gmail.com?');
                               },
                               child: Text('CONTACT US')),
                         ],
