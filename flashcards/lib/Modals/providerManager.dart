@@ -61,7 +61,8 @@ class createSetFutureHeadlineControl extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateFutureHeadline(Headlines? head) async {
+  Future updateFutureHeadline(Headlines head) async {
+    print('HEAD ID ${head.id}');
     headline = head;
     notifyListeners();
   }

@@ -6,6 +6,8 @@ import 'package:flashcards/database/HeadlineDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/src/provider.dart';
 
+import '../views/list_view.dart';
+
 @override
 Future createSet(BuildContext context,
     {String? title, String? description, bool? edit, Headlines? ttl}) {
@@ -40,213 +42,214 @@ Future createSet(BuildContext context,
       )
       .toList();
 
-  return showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(builder: (context, setState) {
-          return Form(
-            key: _formKey,
-            child: Dialog(
-                insetPadding: EdgeInsets.all(20),
-                child: Scaffold(
-                    appBar: AppBar(
-                      elevation: 0.0,
-                      leading: IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.close)),
-                      actions: [
-                        IconButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _submitTitle(context, titleController.text,
-                                    descriptionController.text,
-                                    editx: edit, ttl: ttl, titleM: title);
-                                setState(() {
-                                  Navigator.pop(context);
-                                });
-                              }
-                            },
-                            icon: Icon(Icons.check))
-                      ],
-                    ),
-                    body: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
-                        physics: NeverScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              style: TextStyle(color: textColor),
-                              validator: (val) => val!.isNotEmpty
-                                  ? null
-                                  : 'Name Should Not Be Empty',
-                              controller: titleController,
-                              textCapitalization: TextCapitalization.sentences,
-                              decoration: InputDecoration(
-                                  labelText: "Name",
-                                  labelStyle: TextStyle(color: textColor),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)))),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            TextField(
-                              style: TextStyle(color: textColor),
-                              controller: descriptionController,
-                              textCapitalization: TextCapitalization.sentences,
-                              decoration: InputDecoration(
-                                  labelText: "Description-optional",
-                                  labelStyle: TextStyle(color: textColor),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0)))),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text("Category",
-                                    style: TextStyle(
-                                        color: textColor, fontSize: 15)),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.access_alarm),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text("Term language",
-                                    style: TextStyle(
-                                        color: textColor, fontSize: 15)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                DropdownButton<String>(
-                                  value: Z,
-                                  hint: Text('English',
-                                      style: TextStyle(color: textColor)),
-                                  onChanged: (String? N) {
-                                    if (N != null) {
-                                      Z = N;
-                                    }
-                                  },
-                                  items: J,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                Text("Definition language",
-                                    style: TextStyle(
-                                        color: textColor, fontSize: 15)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Row(
-                              children: [
-                                DropdownButton<String>(
-                                  value: M,
-                                  hint: Text('English',
-                                      style: TextStyle(color: textColor)),
-                                  onChanged: (String? N1) {
-                                    if (N1 != null) {
-                                      M = N1;
-                                    }
-                                  },
-                                  items: J,
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Center(
-                              child: Text(
-                                  "In case of missing languages, or if audio does not work you need to install the language.",
-                                  style: TextStyle(
-                                      color: textColor, fontSize: 15)),
-                            ),
-                            TextButton(
-                                onPressed: () {},
-                                child: Text("INSTALL LANGUAGES",
-                                    style: TextStyle(
-                                        color: Colors.blue, fontSize: 15))),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width:
-                                  (MediaQuery.of(context).size.width / 2) + 10,
-                              child: FloatingActionButton.extended(
-                                  backgroundColor: Colors.blue,
-                                  onPressed: () {
-                                    if (_formKey.currentState!.validate()) {
-                                      _submitTitle(
-                                          context,
-                                          titleController.text,
-                                          descriptionController.text,
-                                          editx: edit,
-                                          ttl: ttl,
-                                          titleM: title);
-                                      setState(() {
-                                        Navigator.pop(context);
-                                      });
-                                    }
-                                  },
-                                  label: Text("ADD CARDS")),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ))),
-          );
-        });
+//? The BuildContext is the reason why the listView is updating.
+  _submitTitle(BuildContext context, ttleControl, descripControl,
+      {bool? editx, Headlines? ttl, String? titleM}) async {
+    final HeadlineDatabase dbManager = HeadlineDatabase();
+    final VocabDatabase dbManager2 = VocabDatabase();
+    List<VocabCardModal> ist = await dbManager2.getAllVocabCards();
+
+    if (editx == null) {
+      Headlines ttl = Headlines(name: ttleControl, description: descripControl);
+      await dbManager.insertTitle(ttl).then((value) async {
+        try {
+          await context
+              .read<createSetFutureHeadlineControl>()
+              .updateFutureHeadline(ttl);
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text('Press Refresh to Continue'),
+              duration: Duration(milliseconds: 1000)));
+        }
       });
-}
-
-_submitTitle(BuildContext context, ttleControl, descripControl,
-    {bool? editx, Headlines? ttl, String? titleM}) async {
-  final HeadlineDatabase dbManager = HeadlineDatabase();
-  final VocabDatabase dbManager2 = VocabDatabase();
-  List<VocabCardModal> ist = await dbManager2.getAllVocabCards();
-
-  if (editx == null) {
-    Headlines ttl = Headlines(name: ttleControl, description: descripControl);
-    await dbManager.insertTitle(ttl).then((value) async {
-      await context
-          .read<createSetFutureHeadlineControl>()
-          .updateFutureHeadline(ttl);
-    });
-
-    //NULL CHECK ERROR IN FIRST ATTEMPT
-  } else {
-    ttl!.name = ttleControl;
-    ttl.description = descripControl;
-    await dbManager.updateTitle(ttl).then((value) async {
-      await context
-          .read<createSetFutureHeadlineControl>()
-          .updateFutureHeadline(ttl);
-    });
-    for (int b = 0; b < ist.length - 1; b++) {
-      await dbManager2.renameCurrent_setListView(titleM!, ttleControl, ist[b]);
+    } else {
+      ttl!.name = ttleControl;
+      ttl.description = descripControl;
+      await dbManager.updateTitle(ttl).then((value) async {
+        await context
+            .read<createSetFutureHeadlineControl>()
+            .updateFutureHeadline(ttl);
+      });
+      for (int b = 0; b < ist.length - 1; b++) {
+        await dbManager2.renameCurrent_setListView(
+            titleM!, ttleControl, ist[b]);
+      }
     }
   }
+
+  return showDialog(
+      context: skey.currentContext!,
+      builder: (skodacontext) {
+        // return StatefulBuilder(builder: (context, setState) {
+        return Form(
+          key: _formKey,
+          child: Dialog(
+              insetPadding: EdgeInsets.all(20),
+              child: Scaffold(
+                  appBar: AppBar(
+                    elevation: 0.0,
+                    leading: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.close)),
+                    actions: [
+                      IconButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _submitTitle(context, titleController.text,
+                                  descriptionController.text,
+                                  editx: edit, ttl: ttl, titleM: title);
+                              // setState(() {
+                              Navigator.pop(context);
+                              // });
+                            }
+                          },
+                          icon: Icon(Icons.check))
+                    ],
+                  ),
+                  body: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            style: TextStyle(color: textColor),
+                            validator: (val) => val!.isNotEmpty
+                                ? null
+                                : 'Name Should Not Be Empty',
+                            controller: titleController,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                                labelText: "Name",
+                                labelStyle: TextStyle(color: textColor),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)))),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          TextField(
+                            style: TextStyle(color: textColor),
+                            controller: descriptionController,
+                            textCapitalization: TextCapitalization.sentences,
+                            decoration: InputDecoration(
+                                labelText: "Description-optional",
+                                labelStyle: TextStyle(color: textColor),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0)))),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text("Category",
+                                  style: TextStyle(
+                                      color: textColor, fontSize: 15)),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.access_alarm),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text("Term language",
+                                  style: TextStyle(
+                                      color: textColor, fontSize: 15)),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              DropdownButton<String>(
+                                value: Z,
+                                hint: Text('English',
+                                    style: TextStyle(color: textColor)),
+                                onChanged: (String? N) {
+                                  if (N != null) {
+                                    Z = N;
+                                  }
+                                },
+                                items: J,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              Text("Definition language",
+                                  style: TextStyle(
+                                      color: textColor, fontSize: 15)),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            children: [
+                              DropdownButton<String>(
+                                value: M,
+                                hint: Text('English',
+                                    style: TextStyle(color: textColor)),
+                                onChanged: (String? N1) {
+                                  if (N1 != null) {
+                                    M = N1;
+                                  }
+                                },
+                                items: J,
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                            child: Text(
+                                "In case of missing languages, or if audio does not work you need to install the language.",
+                                style:
+                                    TextStyle(color: textColor, fontSize: 15)),
+                          ),
+                          TextButton(
+                              onPressed: () {},
+                              child: Text("INSTALL LANGUAGES",
+                                  style: TextStyle(
+                                      color: Colors.blue, fontSize: 15))),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: (MediaQuery.of(context).size.width / 2) + 10,
+                            child: FloatingActionButton.extended(
+                                backgroundColor: Colors.blue,
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _submitTitle(context, titleController.text,
+                                        descriptionController.text,
+                                        editx: edit, ttl: ttl, titleM: title);
+                                    // setState(() {
+                                    Navigator.pop(context);
+                                    // });
+                                  }
+                                },
+                                label: Text("ADD CARDS")),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ))),
+        );
+        // });
+      });
 }

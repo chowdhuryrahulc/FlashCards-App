@@ -18,8 +18,9 @@ InkWell addDrawingColorControls(
   );
 }
 
-Container createYourFirstSetListView() {
+Container createYourFirstSetListView(context) {
   return Container(
+    height: MediaQuery.of(context).size.height,
     child: Center(
       child: Text(
         'Create your first set',

@@ -26,6 +26,8 @@ class list_view extends StatefulWidget {
   _list_viewState createState() => _list_viewState();
 }
 
+final skey = GlobalKey<ScaffoldState>();
+
 class _list_viewState extends State<list_view> {
   bool checkBoxToggle = false;
   final HeadlineDatabase dbManager = HeadlineDatabase();
@@ -55,6 +57,7 @@ class _list_viewState extends State<list_view> {
     final textThemeControl = Theme.of(context).colorScheme.primary;
     Headlines? head = context.watch<createSetFutureHeadlineControl>().headline;
     return Scaffold(
+      key: skey,
       appBar: AppBar(
         elevation: 0,
         actions: [
@@ -461,10 +464,10 @@ class _list_viewState extends State<list_view> {
                     )
                   ]);
                 } else {
-                  return createYourFirstSetListView();
+                  return createYourFirstSetListView(context);
                 }
               } else {
-                return createYourFirstSetListView();
+                return createYourFirstSetListView(context);
               }
             }),
       ),
