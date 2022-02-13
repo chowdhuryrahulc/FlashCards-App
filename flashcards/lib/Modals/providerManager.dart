@@ -129,7 +129,10 @@ class iAudioPlayerControl extends ChangeNotifier {
     togglePlay = !togglePlay;
     for (i; i < list!.length - 1 && togglePlay == true; await i++) {
       await Future.delayed(Duration(milliseconds: 1000));
-      // i++;
+      if (i == (list.length - 1)) {
+        break;
+      }
+      ;
       notifyListeners();
     }
     ;
