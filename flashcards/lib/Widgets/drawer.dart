@@ -7,6 +7,7 @@ import 'package:flashcards/main.dart';
 import 'package:flashcards/views/AllCards.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
 
@@ -46,7 +47,9 @@ class _drawerState extends State<drawer> {
                 progressCalender(context);
               },
               child: drawerListTile(Icons.show_chart, "Progress")),
-          drawerListTile(Icons.import_export, "Import Cards"),
+          InkWell(
+              onTap: () {},
+              child: drawerListTile(Icons.import_export, "Import Cards")),
           drawerListTile(Icons.announcement, "Needing Review"),
           InkWell(
             onTap: () {
