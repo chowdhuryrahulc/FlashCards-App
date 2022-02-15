@@ -121,7 +121,8 @@ class _list_viewState extends State<list_view> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => gridView(
-                            currentSetUsedForDatabaseSearch: ttl.name)))
+                            currentSetUsedForDatabaseSearch: ttl.name,
+                            vocabCardModalList: vocabCardModalList!)))
                 .then((value) {
               setState(() {});
             });
@@ -172,8 +173,8 @@ class _list_viewState extends State<list_view> {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return gridView(
-                                      currentSetUsedForDatabaseSearch:
-                                          ttl.name);
+                                      currentSetUsedForDatabaseSearch: ttl.name,
+                                      vocabCardModalList: vocabCardModalList);
                                 }));
                               },
                               child: popUpTitle(Icons.add, "Add cards"))),
@@ -239,8 +240,9 @@ class _list_viewState extends State<list_view> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => BasicReview(
-                                                currentSetUsedForDatabaseSearch:
-                                                    ttl.name)));
+                                                  vocabCardModalList:
+                                                      vocabCardModalList,
+                                                )));
                                   },
                                   child: Text("REVIEW",
                                       style: TextStyle(color: Colors.blue)),
@@ -415,11 +417,11 @@ class _list_viewState extends State<list_view> {
       heroTag: ttl.id,
       onPressed: () {
         Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        gridView(currentSetUsedForDatabaseSearch: ttl.name)))
-            .then((value) {
+            context,
+            MaterialPageRoute(
+                builder: (context) => gridView(
+                    currentSetUsedForDatabaseSearch: ttl.name,
+                    vocabCardModalList: vocabCardModalList!))).then((value) {
           setState(() {});
         });
       },

@@ -2,18 +2,20 @@ import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/smallWidgets.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flashcards/database/VocabDatabase.dart';
-import 'package:flashcards/main.dart';
 import 'package:flashcards/views/list_view.dart';
 import 'package:flashcards/views/write.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/src/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class gridView extends StatefulWidget {
   String? currentSetUsedForDatabaseSearch;
-  gridView({Key? key, this.currentSetUsedForDatabaseSearch})
+  List<VocabCardModal> vocabCardModalList;
+
+  gridView(
+      {Key? key,
+      this.currentSetUsedForDatabaseSearch,
+      required this.vocabCardModalList})
       : super(key: key); //! ttl entry
 
   @override
@@ -23,23 +25,22 @@ class gridView extends StatefulWidget {
 class _gridViewState extends State<gridView> {
   final VocabDatabase dbManager2 = VocabDatabase();
 
-  List<VocabCardModal>? titleList;
   bool visibleListExample = false;
 
   CardGridX(BuildContext context, VocabCardModal list) {
     final VocabDatabase dbManager2 = VocabDatabase();
 
-    updateFavoriteTitle(int favoriteToggle) {
-      if (favoriteToggle == 0) {
-        setState(() {
-          dbManager2.updateFavoriteTitle(list, 1);
-        });
-      } else if (favoriteToggle == 1) {
-        setState(() {
-          dbManager2.updateFavoriteTitle(list, 0);
-        });
-      }
-    }
+    // updateFavoriteTitle(int favoriteToggle) {
+    //   if (favoriteToggle == 0) {
+    //     setState(() {
+    //       dbManager2.updateFavoriteTitle(list, 1);
+    //     });
+    //   } else if (favoriteToggle == 1) {
+    //     setState(() {
+    //       dbManager2.updateFavoriteTitle(list, 0);
+    //     });
+    //   }
+    // }
 
     return Container(
       color: Theme.of(context).colorScheme.secondary,
@@ -79,11 +80,15 @@ class _gridViewState extends State<gridView> {
               IconButton(
                 color: Colors.red,
                 onPressed: () {
-                  updateFavoriteTitle(list.favorite ?? 0);
+                  // updateFavoriteTitle(list.favorite ?? 0);
+                  context
+                      .read<gridViewVisibleControl>()
+                      .updateFavoriteTitle(list.favorite ?? 0, list);
                 },
-                icon: list.favorite == 1
-                    ? Icon(Icons.favorite)
-                    : Icon(Icons.favorite_border),
+                icon:
+                    context.watch<gridViewVisibleControl>().favoriteToggle == 1
+                        ? Icon(Icons.favorite)
+                        : Icon(Icons.favorite_border),
               ),
               PopupMenuButton(itemBuilder: (BuildContext context) {
                 return [
@@ -167,38 +172,24 @@ class _gridViewState extends State<gridView> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: FutureBuilder(
-            future: widget.currentSetUsedForDatabaseSearch == null
-                ? dbManager2.getAllVocabCards()
-                : dbManager2.getVocabCardsusingCurrentSet(
-                    widget.currentSetUsedForDatabaseSearch),
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                titleList = snapshot.data;
-                if (titleList!.length != 0) {
-                  return Scrollbar(
-                    thickness: 10,
-                    child: StaggeredGridView.countBuilder(
-                      crossAxisCount: 2,
-                      itemCount: titleList!.length,
-                      itemBuilder: (context, index) {
-                        return CardGridX(context, titleList![index]);
-                      },
-                      staggeredTileBuilder: (index) => StaggeredTile.fit(1),
-                      mainAxisSpacing: 2.0,
-                      crossAxisSpacing: 2.0,
-                      shrinkWrap: true,
-                    ),
-                  );
-                } else {
-                  return gridViewEmptyContainer();
-                }
-              } else {
-                return gridViewEmptyContainer();
-              }
-            }),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: widget.vocabCardModalList.length != 0
+              ? Scrollbar(
+                  thickness: 10,
+                  child: StaggeredGridView.countBuilder(
+                    crossAxisCount: 2,
+                    itemCount: widget.vocabCardModalList.length,
+                    itemBuilder: (context, index) {
+                      return CardGridX(
+                          context, widget.vocabCardModalList[index]);
+                    },
+                    staggeredTileBuilder: (index) => StaggeredTile.fit(1),
+                    mainAxisSpacing: 2.0,
+                    crossAxisSpacing: 2.0,
+                    shrinkWrap: true,
+                  ),
+                )
+              : gridViewEmptyContainer()),
       floatingActionButton: FloatingActionButton.extended(
         label: Text("ADD CARDS"),
         icon: Icon(Icons.add),
@@ -226,9 +217,9 @@ class _gridViewState extends State<gridView> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              horizontalViewContainer('All', 1000),
-              horizontalViewContainer('NOT MEMORIZED', 1000),
+              horizontalViewContainer('All', widget.vocabCardModalList.length),
               horizontalViewContainer('MEMORIZED', 1000),
+              horizontalViewContainer('NOT MEMORIZED', 1000),
             ],
           ),
         ),
@@ -251,7 +242,6 @@ class _gridViewState extends State<gridView> {
           padding: const EdgeInsets.all(4.0),
           child: Text(
             '${name}:- ${number}',
-            //${titleList!.length}',
             style: TextStyle(
                 fontSize: 20,
                 color: horizontalButtonTheme ? Colors.blue : Colors.white),

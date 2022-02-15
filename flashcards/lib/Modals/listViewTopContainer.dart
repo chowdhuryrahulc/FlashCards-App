@@ -49,7 +49,9 @@ Container listViewTopContainer(BuildContext context) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => BasicReview()));
+                                    builder: (context) => BasicReview(
+                                        vocabCardModalList:
+                                            vocabCardModalList!)));
                           },
                           child: Text("REVIEW ALL",
                               style: TextStyle(color: Colors.blue)),
@@ -67,7 +69,7 @@ Container listViewTopContainer(BuildContext context) {
                       height: 35,
                       child: OutlinedButton(
                         onPressed: () {
-                          Practice(context, vocabCardModalList);
+                          Practice(context, vocabCardModalList!);
                         },
                         child: Text("PRACTICE ALL",
                             style: TextStyle(color: Colors.blue)),

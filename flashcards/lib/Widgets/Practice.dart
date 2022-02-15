@@ -7,7 +7,7 @@ import '../Modals/practiceListTile.dart';
 import '../Modals/vocabCardModal.dart';
 
 Future<dynamic> Practice(
-    BuildContext context, List<VocabCardModal>? vocabCardModalList,
+    BuildContext context, List<VocabCardModal> vocabCardModalList,
     {cardName}) {
   return showDialog(
       context: context,
@@ -36,17 +36,15 @@ Future<dynamic> Practice(
                   context,
                   'Basic Review',
                   'Basic flashcards review',
-                  BasicReview(currentSetUsedForDatabaseSearch: cardName),
+                  BasicReview(vocabCardModalList: vocabCardModalList),
                   0,
-                  vocabCardModalList!.length,
+                  vocabCardModalList.length,
                 ),
                 practiceListTile(
                   context,
                   'Select Definition',
                   'Select the correct definition',
-                  select_definition(
-                    currentSetUsedForDatabaseSearch: cardName,
-                  ),
+                  select_definition(vocabCardModalList: vocabCardModalList),
                   5,
                   vocabCardModalList.length,
                 ),
@@ -60,9 +58,7 @@ Future<dynamic> Practice(
                   context,
                   'Audio Player',
                   'Review by listening to your cards',
-                  audioPlayer(
-                    currentSetUsedForDatabaseSearch: cardName,
-                  ),
+                  audioPlayer(vocabCardModalList: vocabCardModalList),
                   0,
                   vocabCardModalList.length,
                 ),
@@ -70,9 +66,7 @@ Future<dynamic> Practice(
                     context,
                     'Whiteboard review  ',
                     'Practice by drawing the answer',
-                    WhiteBoardReview(
-                      currentSetUsedForDatabaseSearch: cardName,
-                    ),
+                    WhiteBoardReview(vocabCardModalList: vocabCardModalList),
                     0,
                     vocabCardModalList.length,
                     vissible: true),

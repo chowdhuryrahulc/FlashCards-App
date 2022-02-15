@@ -12,11 +12,10 @@ import 'package:provider/src/provider.dart';
 import '../main.dart';
 
 class select_definition extends StatefulWidget {
-  String? currentSetUsedForDatabaseSearch;
-  select_definition({
-    Key? key,
-    this.currentSetUsedForDatabaseSearch,
-  }) : super(key: key);
+  List<VocabCardModal> vocabCardModalList;
+
+  select_definition({Key? key, required this.vocabCardModalList})
+      : super(key: key);
 
   @override
   _select_definitionState createState() => _select_definitionState();
@@ -30,7 +29,6 @@ bool switchValue4 = false;
 class _select_definitionState extends State<select_definition>
     with SingleTickerProviderStateMixin {
   final VocabDatabase dbManager2 = VocabDatabase();
-  List<VocabCardModal>? list;
   AnimationController? slideAnimationController;
 
   @override
@@ -53,6 +51,7 @@ class _select_definitionState extends State<select_definition>
       create: (_) => iSelectDefinationControl(),
       child: Builder(builder: (BuildContext context) {
         int i = context.watch<iSelectDefinationControl>().i;
+        var listABC = generateRandomOptions(widget.vocabCardModalList, i);
         return WillPopScope(
           onWillPop: () async {
             context.read<iSelectDefinationControl>().makeIZero();
@@ -106,44 +105,37 @@ class _select_definitionState extends State<select_definition>
                   position:
                       Tween<Offset>(begin: Offset(-1, 0), end: Offset.zero)
                           .animate(slideAnimationController!),
-                  child: FutureBuilder(
-                      future: widget.currentSetUsedForDatabaseSearch == null
-                          ? dbManager2.getAllVocabCards()
-                          : dbManager2.getVocabCardsusingCurrentSet(
-                              widget.currentSetUsedForDatabaseSearch),
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          list = snapshot.data;
-                          var listABC = generateRandomOptions(list!, i);
-                          return Column(
-                            children: [
-                              Container(
-                                height: 350,
-                                color: Theme.of(context).colorScheme.secondary,
-                                margin: EdgeInsets.all(7.0),
-                                child: Center(
-                                  child: Text(list![i].term,
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .primary,
-                                          fontSize: 50)),
-                                ),
-                              ),
-                              OptionWidget(
-                                  listABC[0], list![i].defination, list),
-                              OptionWidget(
-                                  listABC[1], list![i].defination, list),
-                              OptionWidget(
-                                  listABC[2], list![i].defination, list),
-                              OptionWidget(
-                                  listABC[3], list![i].defination, list),
-                            ],
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 350,
+                        color: Theme.of(context).colorScheme.secondary,
+                        margin: EdgeInsets.all(7.0),
+                        child: Center(
+                          child: Text(widget.vocabCardModalList[i].term,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  fontSize: 50)),
+                        ),
+                      ),
+                      OptionWidget(
+                          listABC[0],
+                          widget.vocabCardModalList[i].defination,
+                          widget.vocabCardModalList),
+                      OptionWidget(
+                          listABC[1],
+                          widget.vocabCardModalList[i].defination,
+                          widget.vocabCardModalList),
+                      OptionWidget(
+                          listABC[2],
+                          widget.vocabCardModalList[i].defination,
+                          widget.vocabCardModalList),
+                      OptionWidget(
+                          listABC[3],
+                          widget.vocabCardModalList[i].defination,
+                          widget.vocabCardModalList),
+                    ],
+                  ),
                 ),
               )),
         );

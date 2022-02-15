@@ -8,11 +8,9 @@ import 'package:provider/provider.dart';
 import 'package:provider/src/provider.dart';
 
 class audioPlayer extends StatefulWidget {
-  String? currentSetUsedForDatabaseSearch;
-  audioPlayer({
-    Key? key,
-    this.currentSetUsedForDatabaseSearch,
-  }) : super(key: key);
+  List<VocabCardModal> vocabCardModalList;
+
+  audioPlayer({Key? key, required this.vocabCardModalList}) : super(key: key);
 
   @override
   _audioPlayerState createState() => _audioPlayerState();
@@ -20,7 +18,6 @@ class audioPlayer extends StatefulWidget {
 
 class _audioPlayerState extends State<audioPlayer> {
   final VocabDatabase dbManager2 = VocabDatabase();
-  List<VocabCardModal>? list;
 
   updateFavoriteTitle(int favoriteToggle, VocabCardModal ttlmX) {
     if (favoriteToggle == 0) {
@@ -52,51 +49,38 @@ class _audioPlayerState extends State<audioPlayer> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  FutureBuilder(
-                      future: widget.currentSetUsedForDatabaseSearch == null
-                          ? dbManager2.getAllVocabCards()
-                          : dbManager2.getVocabCardsusingCurrentSet(
-                              widget.currentSetUsedForDatabaseSearch),
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          list = snapshot.data;
-                          return Column(
-                            children: [
-                              ListTile(
-                                leading: IconButton(
-                                  color: Colors.red,
-                                  onPressed: () {
-                                    updateFavoriteTitle(
-                                        list![i].favorite ?? 0, list![i]);
-                                  },
-                                  icon: Icon(() {
-                                    if (list![i].favorite == 1) {
-                                      return Icons.favorite;
-                                    } else {
-                                      return Icons.favorite_border;
-                                    }
-                                  }()),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 200,
-                              ),
-                              Text(list![i].term,
-                                  style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      fontSize: 50)),
-                              Text(list![i].defination,
-                                  style: TextStyle(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      fontSize: 25)),
-                            ],
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }),
+                  Column(
+                    children: [
+                      ListTile(
+                        leading: IconButton(
+                          color: Colors.red,
+                          onPressed: () {
+                            updateFavoriteTitle(
+                                widget.vocabCardModalList[i].favorite ?? 0,
+                                widget.vocabCardModalList[i]);
+                          },
+                          icon: Icon(() {
+                            if (widget.vocabCardModalList[i].favorite == 1) {
+                              return Icons.favorite;
+                            } else {
+                              return Icons.favorite_border;
+                            }
+                          }()),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 200,
+                      ),
+                      Text(widget.vocabCardModalList[i].term,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 50)),
+                      Text(widget.vocabCardModalList[i].defination,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontSize: 25)),
+                    ],
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,7 +96,7 @@ class _audioPlayerState extends State<audioPlayer> {
                           onPressed: () {
                             context
                                 .read<iAudioPlayerControl>()
-                                .togglePlayer(list);
+                                .togglePlayer(widget.vocabCardModalList);
                           },
                           icon: Icon(
                               context.watch<iAudioPlayerControl>().togglePlay
@@ -121,7 +105,9 @@ class _audioPlayerState extends State<audioPlayer> {
                       IconButton(
                           iconSize: 50,
                           onPressed: () {
-                            context.read<iAudioPlayerControl>().increment(list);
+                            context
+                                .read<iAudioPlayerControl>()
+                                .increment(widget.vocabCardModalList);
                           },
                           icon: Icon(Icons.skip_next))
                     ],

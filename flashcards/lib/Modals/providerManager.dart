@@ -4,6 +4,8 @@ import 'package:flashcards/Modals/headlineModal.dart';
 import 'package:flashcards/Modals/vocabCardModal.dart';
 import 'package:flutter/material.dart';
 
+import '../database/VocabDatabase.dart';
+
 class pictureBLOBControl extends ChangeNotifier {
   Uint8List? uint8list;
 
@@ -46,6 +48,19 @@ class iMatchControl extends ChangeNotifier {
 
 class gridViewVisibleControl extends ChangeNotifier {
   bool visibleTernaryFAB = true;
+  final VocabDatabase dbManager2 = VocabDatabase();
+  int? favoriteToggle;
+
+  updateFavoriteTitle(favoriteToggle, VocabCardModal list) {
+    if (favoriteToggle == 0) {
+      dbManager2.updateFavoriteTitle(list, 1);
+      favoriteToggle == 1;
+    } else if (favoriteToggle == 1) {
+      dbManager2.updateFavoriteTitle(list, 0);
+      favoriteToggle == 0;
+    }
+    notifyListeners();
+  }
 
   updateVisibleTernaryFAB(bool visible) {
     visibleTernaryFAB = visible;
