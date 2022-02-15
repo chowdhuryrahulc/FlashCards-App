@@ -1,3 +1,6 @@
+import 'dart:ffi';
+import 'dart:typed_data';
+
 import 'package:flashcards/Modals/headlineModal.dart';
 import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/smallWidgets.dart';
@@ -11,7 +14,9 @@ import 'package:flashcards/database/VocabDatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/src/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../Modals/listViewTopContainer.dart';
 import 'BasicReview.dart';
 import 'grid_view.dart';
 
@@ -29,6 +34,27 @@ class list_view extends StatefulWidget {
 final skey = GlobalKey<ScaffoldState>();
 
 class _list_viewState extends State<list_view> {
+  String email = '';
+  String displayName = '';
+  // Uint8List? photoURL;
+  // Uint8List photoURL = Uint8List.fromList([
+
+  @override
+  void initState() {
+    getUserDetailsinSharedPreferences();
+    super.initState();
+  }
+
+  getUserDetailsinSharedPreferences() async {
+    SharedPreferences loginDetails = await SharedPreferences.getInstance();
+    email = loginDetails.getString('email')!;
+    displayName = loginDetails.getString('displayName')!;
+    // String photo = loginDetails.getString('photoURL')!;
+    // photoURL = Uint8List.fromList(photo.codeUnits);
+    // print('UINT8LIST CREDENTIALS IS ${photoURL}');
+    setState(() {}); // Probably do not need setstate?
+  }
+
   bool checkBoxToggle = false;
   final HeadlineDatabase dbManager = HeadlineDatabase();
   final VocabDatabase vocabDatabase = VocabDatabase();
@@ -50,6 +76,218 @@ class _list_viewState extends State<list_view> {
         dbManager.updateArchiveTitle(tList, 1);
       });
     }
+  }
+
+  Widget listViewContainer(
+      Headlines ttl,
+      List<VocabCardModal>? vocabCardModalList,
+      Color textThemeControl,
+      int index,
+      {bool noCards = false}) {
+    return Visibility(
+//? TRUE:- Can see
+      //? FALSE:- Cant see
+      visible: (() {
+        if (ttl.archive == 1) {
+          if (checkBoxToggle == true) {
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return true;
+        }
+      }()),
+      child: Container(
+        key: Key('listViewContainerKey'),
+        margin: EdgeInsets.symmetric(vertical: 4),
+        padding: EdgeInsets.only(left: 4),
+        height: 150,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(stops: [
+              0.02,
+              0.02
+            ], colors: [
+              ttl.archive == 1
+                  ? Theme.of(context).colorScheme.secondary
+                  : Colors.blue,
+              Theme.of(context).colorScheme.secondary
+            ]),
+            borderRadius: BorderRadius.all(const Radius.circular(6.0))),
+        child: InkWell(
+          splashColor: Colors.grey[600],
+          onTap: () {
+            Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => gridView(
+                            currentSetUsedForDatabaseSearch: ttl.name)))
+                .then((value) {
+              setState(() {});
+            });
+          },
+          child: Stack(
+            children: [
+              Positioned(
+                  child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${ttl.name}",
+                      style: TextStyle(fontSize: 35, color: textThemeControl),
+                    ),
+                    Text(
+                      "${vocabCardModalList!.length} cards total",
+                      style: TextStyle(fontSize: 12, color: textThemeControl),
+                    ),
+                  ],
+                ),
+              )),
+              Positioned(
+                  top: 0,
+                  right: 0,
+                  child: PopupMenuButton(itemBuilder: (BuildContext context) {
+                    return [
+                      PopupMenuItem(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                            bool? edi = true;
+                            createSet(context,
+                                title: ttl.name,
+                                description: ttl.description,
+                                edit: edi,
+                                ttl: ttl);
+                          },
+                          child: popUpTitle(Icons.edit, "Edit"),
+                        ),
+                      ),
+                      PopupMenuItem(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  return gridView(
+                                      currentSetUsedForDatabaseSearch:
+                                          ttl.name);
+                                }));
+                              },
+                              child: popUpTitle(Icons.add, "Add cards"))),
+                      PopupMenuItem(
+                          child: InkWell(
+                              onTap: () {
+                                share(context);
+                                Navigator.pop(context);
+                              },
+                              child: popUpTitle(Icons.share, "Share"))),
+                      PopupMenuItem(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.pop(context);
+                                updateArchiveTitle(ttl);
+                              },
+                              child: popUpTitle(Icons.archive, "Archive"))),
+                      PopupMenuItem(
+                          child:
+                              popUpTitle(Icons.import_export, "Export Cards")),
+                      PopupMenuItem(
+                          child: popUpTitle(Icons.style, "Merge sets")),
+                      PopupMenuItem(
+                          child: popUpTitle(Icons.move_to_inbox, "Move Cards")),
+                      PopupMenuItem(
+                          child: InkWell(
+                        onTap: () async {
+                          await dbManager.deleteTitle(ttl.id!).then((value) {
+                            titleList!.removeAt(index);
+                            setState(() {});
+                            Navigator.pop(context);
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.delete_forever,
+                              color: Colors.red,
+                            ),
+                            Text(" Remove"),
+                          ],
+                        ),
+                      )),
+                    ];
+                  })),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(14.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                          width: 100,
+                          height: 35,
+                          child: noCards
+                              ? addCardsButton(ttl)
+                              : OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => BasicReview(
+                                                currentSetUsedForDatabaseSearch:
+                                                    ttl.name)));
+                                  },
+                                  child: Text("REVIEW",
+                                      style: TextStyle(color: Colors.blue)),
+                                  style: ButtonStyle(
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      40.0)))),
+                                )),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        width: 100,
+                        height: 35,
+                        child: OutlinedButton(
+                          onPressed: () {
+                            Practice(context, vocabCardModalList,
+                                cardName: ttl.name);
+                          },
+                          child: Text("PRACTICE",
+                              style: TextStyle(color: Colors.blue)),
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(40.0)))),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                      onPressed: () {
+                        share(context);
+                      },
+                      icon: Icon(Icons.share)))
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -99,7 +337,11 @@ class _list_viewState extends State<list_view> {
           })
         ],
       ),
-      drawer: drawer(),
+      drawer: drawer(
+        email: email,
+        displayName: displayName,
+        // photoURL: photoURL,
+      ),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
         child: FutureBuilder(
@@ -109,81 +351,7 @@ class _list_viewState extends State<list_view> {
                 titleList = snapshot.data;
                 if (titleList!.length != 0) {
                   return Column(children: [
-                    Container(
-                        height: 140,
-                        padding: EdgeInsets.symmetric(horizontal: 18),
-                        color: Theme.of(context).colorScheme.secondary,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.all(5),
-                              //! padding
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(width: 2, color: Colors.grey),
-                              ),
-                              child: ListTile(
-                                leading: Text(
-                                  'All Sets',
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                trailing: Icon(
-                                  Icons.arrow_drop_down,
-                                  color: Theme.of(context).iconTheme.color,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                    width: 130,
-                                    height: 35,
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BasicReview()));
-                                      },
-                                      child: Text("REVIEW ALL",
-                                          style: TextStyle(color: Colors.blue)),
-                                      style: ButtonStyle(
-                                          shape: MaterialStateProperty.all(
-                                              RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          40.0)))),
-                                    )),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                SizedBox(
-                                  width: 130,
-                                  height: 35,
-                                  child: OutlinedButton(
-                                    onPressed: () {
-                                      Practice(context);
-                                    },
-                                    child: Text("PRACTICE ALL",
-                                        style: TextStyle(color: Colors.blue)),
-                                    style: ButtonStyle(
-                                        shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        40.0)))),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )),
+                    listViewTopContainer(context),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Scrollbar(
@@ -193,272 +361,30 @@ class _list_viewState extends State<list_view> {
                             itemCount: titleList!.length,
                             itemBuilder: (BuildContext context, int index) {
                               Headlines ttl = titleList![index];
-                              return Visibility(
-                                //? TRUE:- Can see
-                                //? FALSE:- Cant see
-                                visible: (() {
-                                  if (ttl.archive == 1) {
-                                    if (checkBoxToggle == true) {
-                                      return true;
-                                    } else {
-                                      return false;
-                                    }
-                                  } else {
-                                    return true;
-                                  }
-                                }()),
-                                child: Container(
-                                  key: Key('listViewContainerKey'),
-                                  margin: EdgeInsets.symmetric(vertical: 4),
-                                  padding: EdgeInsets.only(left: 4),
-                                  height: 150,
-                                  decoration: BoxDecoration(
-                                      gradient: LinearGradient(stops: [
-                                        0.02,
-                                        0.02
-                                      ], colors: [
-                                        ttl.archive == 1
-                                            ? Theme.of(context)
-                                                .colorScheme
-                                                .secondary
-                                            : Colors.blue,
-                                        Theme.of(context).colorScheme.secondary
-                                      ]),
-                                      borderRadius: BorderRadius.all(
-                                          const Radius.circular(6.0))),
-                                  child: InkWell(
-                                    splashColor: Colors.grey[600],
-                                    onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => gridView(
-                                                  currentSetUsedForDatabaseSearch:
-                                                      ttl.name))).then((value) {
-                                        setState(() {});
-                                      });
-                                    },
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                            child: Padding(
-                                          padding: const EdgeInsets.all(14.0),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "${ttl.name}",
-                                                style: TextStyle(
-                                                    fontSize: 35,
-                                                    color: textThemeControl),
-                                              ),
-                                              Text(
-                                                " N cards menorized",
-                                                style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: textThemeControl),
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                        Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: PopupMenuButton(itemBuilder:
-                                                (BuildContext context) {
-                                              return [
-                                                PopupMenuItem(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                      bool? edi = true;
-                                                      createSet(context,
-                                                          title: ttl.name,
-                                                          description:
-                                                              ttl.description,
-                                                          edit: edi,
-                                                          ttl: ttl);
-                                                    },
-                                                    child: popUpTitle(
-                                                        Icons.edit, "Edit"),
-                                                  ),
-                                                ),
-                                                PopupMenuItem(
-                                                    child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) {
-                                                            return gridView(
-                                                                currentSetUsedForDatabaseSearch:
-                                                                    ttl.name);
-                                                          }));
-                                                        },
-                                                        child: popUpTitle(
-                                                            Icons.add,
-                                                            "Add cards"))),
-                                                PopupMenuItem(
-                                                    child: InkWell(
-                                                        onTap: () {
-                                                          share(context);
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: popUpTitle(
-                                                            Icons.share,
-                                                            "Share"))),
-                                                PopupMenuItem(
-                                                    child: InkWell(
-                                                        onTap: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                          updateArchiveTitle(
-                                                              ttl);
-                                                        },
-                                                        child: popUpTitle(
-                                                            Icons.archive,
-                                                            "Archive"))),
-                                                PopupMenuItem(
-                                                    child: popUpTitle(
-                                                        Icons.import_export,
-                                                        "Export Cards")),
-                                                PopupMenuItem(
-                                                    child: popUpTitle(
-                                                        Icons.style,
-                                                        "Merge sets")),
-                                                PopupMenuItem(
-                                                    child: popUpTitle(
-                                                        Icons.move_to_inbox,
-                                                        "Move Cards")),
-                                                PopupMenuItem(
-                                                    child: InkWell(
-                                                  onTap: () async {
-                                                    // setState(() async {
-                                                    await dbManager
-                                                        .deleteTitle(ttl.id!)
-                                                        .then((value) {
-                                                      titleList!
-                                                          .removeAt(index);
-                                                      setState(() {});
-                                                      Navigator.pop(context);
-                                                    });
-                                                    // });
-                                                  },
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.delete_forever,
-                                                        color: Colors.red,
-                                                      ),
-                                                      Text(" Remove"),
-                                                    ],
-                                                  ),
-                                                )),
-                                              ];
-                                            })),
-                                        Positioned(
-                                          bottom: 0,
-                                          left: 0,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(14.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                SizedBox(
-                                                    width: 100,
-                                                    height: 35,
-                                                    child: FutureBuilder(
-                                                        future: vocabDatabase
-                                                            .getVocabCardsusingCurrentSet(
-                                                                ttl.name),
-                                                        builder: (context,
-                                                            AsyncSnapshot
-                                                                snapshot) {
-                                                          if (snapshot
-                                                              .hasData) {
-                                                            vocabCardModalList =
-                                                                snapshot.data;
-                                                            if (vocabCardModalList!
-                                                                    .length !=
-                                                                0) {
-                                                              return OutlinedButton(
-                                                                onPressed: () {
-                                                                  Navigator.push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                          builder: (context) =>
-                                                                              BasicReview(currentSetUsedForDatabaseSearch: ttl.name)));
-                                                                },
-                                                                child: Text(
-                                                                    "REVIEW",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .blue)),
-                                                                style: ButtonStyle(
-                                                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(40.0)))),
-                                                              );
-                                                            } else {
-                                                              return addCardsButton(
-                                                                  ttl);
-                                                            }
-                                                          } else {
-                                                            return addCardsButton(
-                                                                ttl);
-                                                          }
-                                                        })),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                SizedBox(
-                                                  width: 100,
-                                                  height: 35,
-                                                  child: OutlinedButton(
-                                                    onPressed: () {
-                                                      Practice(context,
-                                                          cardName: ttl.name);
-                                                    },
-                                                    child: Text("PRACTICE",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.blue)),
-                                                    style: ButtonStyle(
-                                                        shape: MaterialStateProperty.all(
-                                                            RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            40.0)))),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: IconButton(
-                                                onPressed: () {
-                                                  share(context);
-                                                },
-                                                icon: Icon(Icons.share)))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
+                              return FutureBuilder(
+                                  future: vocabDatabase
+                                      .getVocabCardsusingCurrentSet(ttl.name),
+                                  builder: (context, AsyncSnapshot snapshot) {
+                                    if (snapshot.hasData) {
+                                      vocabCardModalList = snapshot.data;
+                                      if (vocabCardModalList!.length != 0) {
+                                        return listViewContainer(
+                                            ttl,
+                                            vocabCardModalList,
+                                            textThemeControl,
+                                            index);
+                                      } else
+                                        return listViewContainer(
+                                            ttl,
+                                            vocabCardModalList,
+                                            textThemeControl,
+                                            index,
+                                            noCards: true);
+                                    } else
+                                      return Container(
+                                        height: 150,
+                                      );
+                                  });
                             }),
                       ),
                     )

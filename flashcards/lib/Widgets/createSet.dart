@@ -100,9 +100,7 @@ Future createSet(BuildContext context,
                               _submitTitle(context, titleController.text,
                                   descriptionController.text,
                                   editx: edit, ttl: ttl, titleM: title);
-                              // setState(() {
                               Navigator.pop(context);
-                              // });
                             }
                           },
                           icon: Icon(Icons.check))
@@ -145,17 +143,17 @@ Future createSet(BuildContext context,
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
-                            children: [
-                              Text("Category",
-                                  style: TextStyle(
-                                      color: textColor, fontSize: 15)),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(Icons.access_alarm),
-                              )
-                            ],
-                          ),
+                          // Row(
+                          //   children: [
+                          //     Text("Category",
+                          //         style: TextStyle(
+                          //             color: textColor, fontSize: 15)),
+                          //     IconButton(
+                          //       onPressed: () {},
+                          //       icon: Icon(Icons.access_alarm),
+                          //     )
+                          //   ],
+                          // ),
                           SizedBox(
                             height: 10,
                           ),

@@ -300,6 +300,7 @@ class _writeState extends State<write> {
         if (croppedFile != null) {
           Uint8List? uint8list = croppedFile.readAsBytesSync();
           context.read<pictureBLOBControl>().sendPictureUint8List(uint8list);
+          print('UINT8 IS $uint8list');
         }
       });
     }

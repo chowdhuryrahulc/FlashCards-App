@@ -23,7 +23,7 @@ ThemeData lightThemeData(context) => ThemeData(
           ),
       drawerTheme:
           Theme.of(context).drawerTheme.copyWith(backgroundColor: Colors.white),
-      primaryColor: Colors.amber,
+      primaryColor: Colors.blue,
       dividerColor: Colors.black,
       textSelectionTheme: Theme.of(context)
           .textSelectionTheme

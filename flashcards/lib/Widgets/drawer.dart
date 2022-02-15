@@ -1,18 +1,30 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:share/share.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Widgets/progressCalender.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
 import 'package:flashcards/views/AllCards.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:share/share.dart';
 
 class drawer extends StatefulWidget {
-  drawer({Key? key}) : super(key: key);
+  String email;
+  String displayName;
+  // Uint8List? photoURL;
+  drawer({
+    Key? key,
+    required this.email,
+    required this.displayName,
+    // this.photoURL,
+  }) : super(key: key);
 
   @override
   _drawerState createState() => _drawerState();
@@ -27,10 +39,11 @@ class _drawerState extends State<drawer> {
       child: ListView(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(user.displayName!),
-            accountEmail: Text(user.email!),
+            accountName: Text(widget.displayName),
+            accountEmail: Text(widget.email),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(user.photoURL!),
+              backgroundImage:
+                  user.photoURL != null ? NetworkImage(user.photoURL!) : null,
               radius: 50,
             ),
           ),
