@@ -36,7 +36,10 @@ Future<dynamic> Practice(
                   context,
                   'Basic Review',
                   'Basic flashcards review',
-                  BasicReview(vocabCardModalList: vocabCardModalList),
+                  BasicReview(
+                    currentSetUsedForDatabaseSearch: cardName,
+                    // vocabCardModalList: vocabCardModalList
+                  ),
                   0,
                   vocabCardModalList.length,
                 ),
@@ -58,7 +61,10 @@ Future<dynamic> Practice(
                   context,
                   'Audio Player',
                   'Review by listening to your cards',
-                  audioPlayer(vocabCardModalList: vocabCardModalList),
+                  audioPlayer(
+                    currentSetUsedForDatabaseSearch: cardName,
+                    // vocabCardModalList: vocabCardModalList
+                  ),
                   0,
                   vocabCardModalList.length,
                 ),

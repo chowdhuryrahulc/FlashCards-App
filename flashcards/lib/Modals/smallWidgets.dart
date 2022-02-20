@@ -18,6 +18,13 @@ InkWell addDrawingColorControls(
   );
 }
 
+archivedSnackbar(context, String text) {
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    content: Text(text),
+    duration: Duration(milliseconds: 300),
+  ));
+}
+
 Container createYourFirstSetListView(context) {
   return Container(
     height: MediaQuery.of(context).size.height,

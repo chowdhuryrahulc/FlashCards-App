@@ -21,7 +21,7 @@ Future<void> main() async {
     ChangeNotifierProvider(create: (context) => iWhiteBoardReviewControl()),
     ChangeNotifierProvider(create: (_) => darktheme()),
     // ChangeNotifierProvider(create: (_) => iSelectDefinationControl()),
-    // ChangeNotifierProvider(create: (_) => iAudioPlayerControl()),
+    ChangeNotifierProvider(create: (_) => createSetLanguageControl()),
     ChangeNotifierProvider(create: (_) => gridViewVisibleControl()),
     ChangeNotifierProvider(create: (_) => iMatchControl()),
     ChangeNotifierProvider(create: (_) => pictureBLOBControl()),

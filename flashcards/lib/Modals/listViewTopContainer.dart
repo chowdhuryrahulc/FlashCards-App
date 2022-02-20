@@ -50,8 +50,9 @@ Container listViewTopContainer(BuildContext context) {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => BasicReview(
-                                        vocabCardModalList:
-                                            vocabCardModalList!)));
+                                        // vocabCardModalList:
+                                        //     vocabCardModalList!
+                                        )));
                           },
                           child: Text("REVIEW ALL",
                               style: TextStyle(color: Colors.blue)),

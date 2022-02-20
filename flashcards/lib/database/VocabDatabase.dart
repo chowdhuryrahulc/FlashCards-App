@@ -10,7 +10,6 @@ class VocabDatabase {
 
   Future openVocabDatabase() async {
     if (_vocabDatabase == null) {
-      //If Database doesnt exist, then only create the Database
       _vocabDatabase = await openDatabase(
           join(await getDatabasesPath(), "vocab.db"),
           version: 1, onCreate: (Database db, int version) async {
@@ -25,27 +24,11 @@ class VocabDatabase {
     return await _vocabDatabase!.insert('nd_title', nd_title.toMap());
   }
 
-// where: 'nd_id=?', whereArgs: [nd_title.nd_id]
-
-  Future<int> getCount() async {
-    await openVocabDatabase();
-    List<Map<String, dynamic>> x = await _vocabDatabase!.rawQuery(
-        'SELECT COUNT (*) from ${VocabCardModal}'); //TODO WHERE SYMBOL
-    int? result = Sqflite.firstIntValue(x);
-    return result!;
-  }
-
   Future<List<VocabCardModal>> getVocabCardsusingCurrentSet(
       String? currentSet) async {
     await openVocabDatabase();
     final List<Map<String, dynamic>> maps = await _vocabDatabase!
-        .query('nd_title', where: 'current_set=?', whereArgs: [
-      currentSet
-    ]); //TODO NEEDS UPDATEFROM FORIGNKEY.dart contact operation
-    // await db!.rawQuery('''
-    // SELECT * FROM contact
-    // WHERE contact.FK_contact_category = ${category.id}
-    // ''');
+        .query('nd_title', where: 'current_set=?', whereArgs: [currentSet]);
     return List.generate(
         maps.length,
         (i) => VocabCardModal(
@@ -60,20 +43,10 @@ class VocabDatabase {
             picture: maps[i]['picture']));
   }
 
-  //  FirstPagr() async {
-  //   await nd_openDb();
-  //   final List<Map<String, dynamic>> maps = await _database2!.query('nd_title');
-  //   return maps;
-  // }
-
   Future<List<VocabCardModal>> getAllVocabCards() async {
     await openVocabDatabase();
-    final List<Map<String, dynamic>> maps = await _vocabDatabase!.query(
-        'nd_title'); //TODO NEEDS UPDATEFROM FORIGNKEY.dart contact operation
-    // await db!.rawQuery('''
-    // SELECT * FROM contact
-    // WHERE contact.FK_contact_category = ${category.id}
-    // ''');
+    final List<Map<String, dynamic>> maps =
+        await _vocabDatabase!.query('nd_title');
     return List.generate(
         maps.length,
         (i) => VocabCardModal(
@@ -94,14 +67,19 @@ class VocabDatabase {
         where: 'nd_id=?', whereArgs: [nd_title.nd_id]);
   }
 
-//TODO
-  Future<int> renameCurrent_setListView(
+  Future<int> renameCurrentSetListView(
       String currentSet, String newSet, VocabCardModal nd_title) async {
     await openVocabDatabase();
     return await _vocabDatabase!
         .update('nd_title', nd_title.toRenameMap(newSet), // Needs change
             where: 'current_set=?',
             whereArgs: [currentSet]);
+  }
+
+  Future<int> deleteCurrentSetListView(String currentSet) async {
+    await openVocabDatabase();
+    return await _vocabDatabase!
+        .delete('nd_title', where: 'current_set=?', whereArgs: [currentSet]);
   }
 
   Future<int> updateFavoriteTitle(VocabCardModal nd_title, int favorite) async {

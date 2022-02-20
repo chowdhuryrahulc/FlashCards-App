@@ -22,10 +22,15 @@ Future createSet(BuildContext context,
   Future<Headlines> head;
   final _formKey = GlobalKey<FormState>();
 
-  String? Z;
-  String? M;
+  String? termLanguageList;
+  String? definationLanguageList;
+  String selectedLanguage =
+      Provider.of<createSetLanguageControl>(context, listen: false)
+          .selectedLanguage;
 
-  const Y = <String>[
+  // context.watch<createSetLanguageControl>().selectedLanguage;
+
+  List<String> languages = [
     'English',
     'Arabic',
     'Bangla',
@@ -33,7 +38,7 @@ Future createSet(BuildContext context,
     'Catalan',
     'Czech'
   ];
-  final List<DropdownMenuItem<String>> J = Y
+  final List<DropdownMenuItem<String>> J = languages
       .map(
         (String value) => DropdownMenuItem<String>(
           value: value,
@@ -71,8 +76,7 @@ Future createSet(BuildContext context,
             .updateFutureHeadline(ttl);
       });
       for (int b = 0; b < ist.length - 1; b++) {
-        await dbManager2.renameCurrent_setListView(
-            titleM!, ttleControl, ist[b]);
+        await dbManager2.renameCurrentSetListView(titleM!, ttleControl, ist[b]);
       }
     }
   }
@@ -80,7 +84,6 @@ Future createSet(BuildContext context,
   return showDialog(
       context: skey.currentContext!,
       builder: (skodacontext) {
-        // return StatefulBuilder(builder: (context, setState) {
         return Form(
           key: _formKey,
           child: Dialog(
@@ -170,15 +173,22 @@ Future createSet(BuildContext context,
                           Row(
                             children: [
                               DropdownButton<String>(
-                                value: Z,
+                                value: selectedLanguage,
+                                items: languages
+                                    .map((e) => DropdownMenuItem<String>(
+                                        value: e, child: Text(e)))
+                                    .toList(),
                                 hint: Text('English',
                                     style: TextStyle(color: textColor)),
-                                onChanged: (String? N) {
-                                  if (N != null) {
-                                    Z = N;
-                                  }
+                                onChanged: (language) {
+                                  // selectedLanguage = context
+                                  //     .read<createSetLanguageControl>()
+                                  //     .updateSelectedLanguage(language!);
+                                  Provider.of<createSetLanguageControl>(context)
+                                      .updateSelectedLanguage(language!);
+                                  print('SELECTED');
+                                  // selectedLanguage = language!;
                                 },
-                                items: J,
                               ),
                             ],
                           ),
@@ -198,12 +208,12 @@ Future createSet(BuildContext context,
                           Row(
                             children: [
                               DropdownButton<String>(
-                                value: M,
+                                value: definationLanguageList,
                                 hint: Text('English',
                                     style: TextStyle(color: textColor)),
                                 onChanged: (String? N1) {
                                   if (N1 != null) {
-                                    M = N1;
+                                    definationLanguageList = N1;
                                   }
                                 },
                                 items: J,

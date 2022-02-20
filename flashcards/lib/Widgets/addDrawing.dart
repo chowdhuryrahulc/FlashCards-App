@@ -7,6 +7,7 @@ import 'package:flashcards/views/whiteBoardReview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/src/provider.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 addDrawing(BuildContext context) {
   late CanvasController canvasController;
@@ -92,7 +93,7 @@ addDrawing(BuildContext context) {
                             onPressed: () {
                               canvasController.isEraseMode = true;
                             },
-                            icon: Icon(Icons.redo)),
+                            icon: Icon(FontAwesomeIcons.eraser)),
                       ),
                     ],
                   ),

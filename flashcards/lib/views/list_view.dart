@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:typed_data';
-
 import 'package:flashcards/Modals/headlineModal.dart';
 import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Modals/smallWidgets.dart';
@@ -66,14 +63,17 @@ class _list_viewState extends State<list_view> {
     if (tList.archive == 0) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 1);
+        archivedSnackbar(context, 'Archived');
       });
     } else if (tList.archive == 1) {
       setState(() {
         dbManager.updateArchiveTitle(tList, 0);
+        archivedSnackbar(context, 'Shown');
       });
     } else {
       setState(() {
         dbManager.updateArchiveTitle(tList, 1);
+        archivedSnackbar(context, 'Archived');
       });
     }
   }
@@ -118,12 +118,12 @@ class _list_viewState extends State<list_view> {
           splashColor: Colors.grey[600],
           onTap: () {
             Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => gridView(
-                            currentSetUsedForDatabaseSearch: ttl.name,
-                            vocabCardModalList: vocabCardModalList!)))
-                .then((value) {
+                context,
+                MaterialPageRoute(
+                    builder: (context) => gridView(
+                          currentSetUsedForDatabaseSearch: ttl.name,
+                          // vocabCardModalList: vocabCardModalList!
+                        ))).then((value) {
               setState(() {});
             });
           },
@@ -173,8 +173,9 @@ class _list_viewState extends State<list_view> {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
                                   return gridView(
-                                      currentSetUsedForDatabaseSearch: ttl.name,
-                                      vocabCardModalList: vocabCardModalList);
+                                    currentSetUsedForDatabaseSearch: ttl.name,
+                                    // vocabCardModalList: vocabCardModalList
+                                  );
                                 }));
                               },
                               child: popUpTitle(Icons.add, "Add cards"))),
@@ -202,6 +203,8 @@ class _list_viewState extends State<list_view> {
                       PopupMenuItem(
                           child: InkWell(
                         onTap: () async {
+                          await vocabDatabase
+                              .deleteCurrentSetListView(ttl.name);
                           await dbManager.deleteTitle(ttl.id!).then((value) {
                             titleList!.removeAt(index);
                             setState(() {});
@@ -240,8 +243,10 @@ class _list_viewState extends State<list_view> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => BasicReview(
-                                                  vocabCardModalList:
-                                                      vocabCardModalList,
+                                                  currentSetUsedForDatabaseSearch:
+                                                      ttl.name,
+                                                  // vocabCardModalList:
+                                                  // vocabCardModalList,
                                                 )));
                                   },
                                   child: Text("REVIEW",
@@ -358,6 +363,7 @@ class _list_viewState extends State<list_view> {
                       padding: const EdgeInsets.all(8.0),
                       child: Scrollbar(
                         child: ListView.builder(
+                            key: UniqueKey(),
                             physics: ScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: titleList!.length,
@@ -420,8 +426,9 @@ class _list_viewState extends State<list_view> {
             context,
             MaterialPageRoute(
                 builder: (context) => gridView(
-                    currentSetUsedForDatabaseSearch: ttl.name,
-                    vocabCardModalList: vocabCardModalList!))).then((value) {
+                      currentSetUsedForDatabaseSearch: ttl.name,
+                      // vocabCardModalList: vocabCardModalList!
+                    ))).then((value) {
           setState(() {});
         });
       },

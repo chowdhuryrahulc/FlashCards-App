@@ -37,7 +37,6 @@ class VocabCardModal {
 
   Map<String, String> toRenameMap(String newSet) {
     return {
-      // 'nd_id': nd_id,
       'current_set': newSet,
     };
   }

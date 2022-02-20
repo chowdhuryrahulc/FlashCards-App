@@ -6,6 +6,17 @@ import 'package:flutter/material.dart';
 
 import '../database/VocabDatabase.dart';
 
+class createSetLanguageControl extends ChangeNotifier {
+  String selectedLanguage = 'English';
+  updateSelectedLanguage(String newLanguage) {
+    selectedLanguage = newLanguage;
+    print(selectedLanguage);
+    notifyListeners();
+  }
+
+  // notifyListeners();
+}
+
 class pictureBLOBControl extends ChangeNotifier {
   Uint8List? uint8list;
 

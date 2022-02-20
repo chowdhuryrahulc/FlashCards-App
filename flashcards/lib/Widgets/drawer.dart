@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flashcards/views/grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share/share.dart';
@@ -13,7 +14,6 @@ import 'package:flashcards/Modals/providerManager.dart';
 import 'package:flashcards/Widgets/progressCalender.dart';
 import 'package:flashcards/database/google_sign_in.dart';
 import 'package:flashcards/main.dart';
-import 'package:flashcards/views/AllCards.dart';
 
 class drawer extends StatefulWidget {
   String email;
@@ -49,8 +49,9 @@ class _drawerState extends State<drawer> {
           ),
           InkWell(
             onTap: () {
+              Navigator.pop(context);
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => AllSet()));
+                  context, MaterialPageRoute(builder: (context) => gridView()));
             },
             child: drawerListTile(Icons.list, "All Cards"),
           ),
@@ -90,7 +91,7 @@ class _drawerState extends State<drawer> {
           drawerListTile(Icons.backup, "Backup"),
           InkWell(
             onTap: () {
-              launch('mailto:prabir0712@gmail.com');
+              launch('mailto:chowdhuryrahulc@gmail.com');
             },
             child: drawerListTile(Icons.mail, "Contact Us"),
           ),
